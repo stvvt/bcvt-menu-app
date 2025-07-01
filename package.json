@@ -13,9 +13,11 @@
     "@chakra-ui/react": "^2.10.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@types/react-datepicker": "^7.0.0",
     "framer-motion": "^12.22.0",
     "next": "15.3.4",
     "react": "^19.0.0",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {

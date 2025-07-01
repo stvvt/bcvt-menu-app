@@ -1,33 +1,47 @@
 'use client';
 
-import { Box, Heading, Text, Button, VStack, HStack } from "@chakra-ui/react";
+import { Box, Heading, VStack, Input } from "@chakra-ui/react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import DatePicker from 'react-datepicker';
+import DailyMenu from '@/components/DailyMenu';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const params = new URLSearchParams(searchParams);
+      params.set('date', date.toISOString().split('T')[0]);
+      router.push(`/?${params.toString()}`);
+    }
+  };
+
   return (
-    <Box
-      minH="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      p={8}
-    >
-      <VStack spacing={8} textAlign="center">
-        <Heading size="2xl" color="brand.500">
-          Welcome to Next.js with Chakra UI
+    <Box minH="100vh" p={8}>
+      <VStack spacing={8} maxW="800px" mx="auto">
+        <Heading size="xl" textAlign="center">
+          Menu for {selectedDate.toDateString()}
         </Heading>
         
-        <Text fontSize="lg" color="gray.600" maxW="md">
-          Your Next.js app is now set up with TypeScript, App Router, src directory, and Chakra UI v2 with a custom theme.
-        </Text>
+        <DatePicker
+          selected={selectedDate}
+          onChange={handleDateChange}
+          customInput={
+            <Input 
+              placeholder="Select a date"
+              size="lg"
+              cursor="pointer"
+              readOnly
+            />
+          }
+          dateFormat="dd.MM.yyyy"
+        />
         
-        <HStack spacing={4}>
-          <Button size="lg">
-            Get Started
-          </Button>
-          <Button variant="outline" size="lg">
-            Learn More
-          </Button>
-        </HStack>
+        <DailyMenu date={selectedDate} />
       </VStack>
     </Box>
   );
