@@ -24,7 +24,7 @@ export default function Home() {
     <Box minH="100vh" p={8}>
       <VStack spacing={8} maxW="800px" mx="auto">
         <Heading size="xl" textAlign="center">
-          Menu for {selectedDate.toDateString()}
+          BCVT Menu for {selectedDate.toDateString()}
         </Heading>
         
         <DatePicker
