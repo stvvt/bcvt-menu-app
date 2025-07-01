@@ -2,11 +2,12 @@
 
 import { Box, Heading, VStack, Input } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import DatePicker from 'react-datepicker';
 import DailyMenu from '@/components/DailyMenu';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
@@ -44,5 +45,13 @@ export default function Home() {
         <DailyMenu date={selectedDate} />
       </VStack>
     </Box>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<Box p={8}>Loading...</Box>}>
+      <HomeContent />
+    </Suspense>
   );
 }
