@@ -45,8 +45,11 @@ export default function DailyMenu({ date }: DailyMenuProps) {
           setMenuData(data);
         }
       } catch (err) {
+        if (!(err instanceof Error)) {
+          throw err;
+        }
         if (isMounted) {
-          setError('Failed to load menu data');
+          setError(`Failed to load menu data ${err.message}`);
         }
       } finally {
         if (isMounted) {
