@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { 
   Box, 
   Grid, 
@@ -10,24 +10,16 @@ import {
   AlertIcon,
   Card,
   CardBody,
-  CardHeader,
-  Badge,
   Heading,
-  Divider
 } from '@chakra-ui/react';
 import { getMenu } from '@/backend/getMenu';
 import { MealGroup } from '@/types/Meal';
-
-interface MenuData {
-  date: string;
-  meals: MealGroup[];
-}
 
 interface DailyMenuProps {
   date: Date;
 }
 
-export default function DailyMenu({ date }: DailyMenuProps) {
+const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
   const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -123,4 +115,6 @@ export default function DailyMenu({ date }: DailyMenuProps) {
         ))}
     </Box>
   );
-} 
+};
+
+export default DailyMenu;
