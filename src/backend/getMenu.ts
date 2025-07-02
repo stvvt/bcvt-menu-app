@@ -31,26 +31,41 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     const categories = await getCategories();
     
     // Enrich menu data with categories
-    const enrichedMeals = menuData.meals?.map((meal: Meal) => ({
+    const enrichedMeals: Meal[] = menuData.meals?.map((meal: Meal) => ({
       ...meal,
       category: categories[meal.name]
     })) || [];
     
+    // Define category order
+    const categoryOrder = [
+      'закуски',
+      'супи', 
+      'салати',
+      'предястия',
+      'основни ястия',
+      'гарнитури',
+      'десерти',
+      'напитки'
+    ];
+
     // Group meals by category
-    const groupedByCategory = enrichedMeals.reduce((acc: any, meal: any) => {
+    const mealsByCategory = enrichedMeals.reduce((acc: Record<string, Meal[]>, meal: Meal) => {
       if (!meal.category) return acc;
       
-      const existingGroup = acc.find((group: any) => group.category === meal.category);
-      if (existingGroup) {
-        existingGroup.meals.push(meal);
-      } else {
-        acc.push({
-          category: meal.category,
-          meals: [meal]
-        });
+      if (!acc[meal.category]) {
+        acc[meal.category] = [];
       }
+      acc[meal.category].push(meal);
       return acc;
-    }, []);
+    }, {});
+    
+    // Return groups in the specified order with meals sorted by price
+    const groupedByCategory = categoryOrder
+      .filter(category => mealsByCategory[category]?.length > 0)
+      .map(category => ({
+        category,
+        meals: mealsByCategory[category].sort((a, b) => parseFloat(`${a.price}`) - parseFloat(`${b.price}`))
+      }));
     
     return groupedByCategory;
     
