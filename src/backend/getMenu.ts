@@ -8,7 +8,7 @@ export async function getMenu(date: Date) {
     // await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Replace with your actual API endpoint URL
-    const url = `https://raw.githubusercontent.com/stvvt/bcvt-menu-scraper/refs/heads/main/db/${formattedDate}.json`;
+    const url = `https://raw.githubusercontent.com/stvvt/bcvt-menu-scraper/refs/heads/main/db/daily/${formattedDate}.json`;
     
     const response = await fetch(url, {
       headers: {
