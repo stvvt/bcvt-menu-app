@@ -9,19 +9,18 @@ import {
   Alert, 
   AlertIcon,
   Card,
-  CardBody
+  CardBody,
+  CardHeader,
+  Badge,
+  Heading,
+  Divider
 } from '@chakra-ui/react';
 import { getMenu } from '@/backend/getMenu';
-
-interface Meal {
-  name: string;
-  price: string;
-  currency?: string;
-}
+import { MealGroup } from '@/types/Meal';
 
 interface MenuData {
   date: string;
-  meals: Meal[];
+  meals: MealGroup[];
 }
 
 interface DailyMenuProps {
@@ -29,7 +28,7 @@ interface DailyMenuProps {
 }
 
 export default function DailyMenu({ date }: DailyMenuProps) {
-  const [menuData, setMenuData] = useState<MenuData | null>(null);
+  const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,9 +84,9 @@ export default function DailyMenu({ date }: DailyMenuProps) {
     );
   }
 
-  const meals = menuData?.meals || [];
+  const groups = menuData || [];
 
-  if (meals.length === 0) {
+  if (groups.length === 0) {
     return (
       <Box textAlign="center" py={8}>
         <Text color="gray.500">No meals available for this date.</Text>
@@ -97,26 +96,31 @@ export default function DailyMenu({ date }: DailyMenuProps) {
 
   return (
     <Box>
-      <Grid
-        templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-        gap={4}
-        w="100%"
-      >
-        {meals.map((meal, index) => (
-          <Card key={index} variant="outline">
-            <CardBody>
-              <HStack justify="space-between" align="flex-start">
-                <Text fontWeight="medium" flex="1">
-                  {meal.name}
-                </Text>
-                <Text fontWeight="bold" color="green.600" flexShrink={0}>
-                  {meal.price} {meal.currency || 'лв'}
-                </Text>
-              </HStack>
-            </CardBody>
-          </Card>
+        {groups.map((group) => (
+          <VStack key={group.category} pb={16}>
+            <Heading size="md" textAlign="center" background="blue.500" color="white" mb={4} p={2} borderRadius="md">{group.category?.toUpperCase()}</Heading>
+            <Grid
+              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+              gap={4}
+              w="100%"
+            >
+              {group.meals.map((meal, index) => (
+                <Card key={index} variant="outline">
+                  <CardBody>
+                    <HStack justify="space-between" align="flex-start">
+                      <Text fontWeight="medium" flex="1">
+                        {meal.name}
+                      </Text>
+                      <Text fontWeight="bold" color="green.600" flexShrink={0}>
+                        {meal.price} {meal.currency || 'лв'}
+                      </Text>
+                    </HStack>
+                  </CardBody>
+                </Card>
+              ))}
+            </Grid>
+          </VStack>
         ))}
-      </Grid>
     </Box>
   );
 } 

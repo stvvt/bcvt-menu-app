@@ -1,6 +1,9 @@
 'use server'
 
-export async function getMenu(date: Date) {
+import { getCategories } from './getCategories';
+import { MealGroup, type Meal } from '@/types/Meal';
+
+export async function getMenu(date: Date): Promise<MealGroup[]> {
   try {
     // Format the date as needed for the URL (adjust format as required)
     const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
@@ -23,7 +26,33 @@ export async function getMenu(date: Date) {
     }
 
     const menuData = await response.json();
-    return menuData;
+    
+    // Fetch categories and enrich menu data
+    const categories = await getCategories();
+    
+    // Enrich menu data with categories
+    const enrichedMeals = menuData.meals?.map((meal: Meal) => ({
+      ...meal,
+      category: categories[meal.name]
+    })) || [];
+    
+    // Group meals by category
+    const groupedByCategory = enrichedMeals.reduce((acc: any, meal: any) => {
+      if (!meal.category) return acc;
+      
+      const existingGroup = acc.find((group: any) => group.category === meal.category);
+      if (existingGroup) {
+        existingGroup.meals.push(meal);
+      } else {
+        acc.push({
+          category: meal.category,
+          meals: [meal]
+        });
+      }
+      return acc;
+    }, []);
+    
+    return groupedByCategory;
     
   } catch (error) {
     console.error('Error fetching menu:', error);
