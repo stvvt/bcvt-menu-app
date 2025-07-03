@@ -4,5 +4,6 @@ export type PriceHistoryItem = {
     dateText: string;
     date: string;
     price: string;
+    currency?: string;
   }[];
 }; 

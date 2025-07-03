@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { getMenu } from '@/backend/getMenu';
 import { MealGroup } from '@/types/Meal';
+import DashWidget from './DashWidget';
+import PriceInfo from './PriceInfo';
 
 interface DailyMenuProps {
   date: Date;
@@ -103,10 +105,9 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
                       <Text fontWeight="medium" flex="1">
                         {meal.name}
                       </Text>
-                      <Text fontWeight="bold" color="green.600" flexShrink={0}>
-                        {meal.price} {meal.currency || 'лв'}
-                      </Text>
+                      <PriceInfo meal={meal} />
                     </HStack>
+                    <DashWidget priceHistory={meal.priceHistory} />
                   </CardBody>
                 </Card>
               ))}
