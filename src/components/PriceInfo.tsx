@@ -6,11 +6,14 @@ import { Meal } from '@/types/Meal';
 
 interface PriceInfoProps {
   meal: Meal;
+  refDate: Date;
 }
 
-const PriceInfo: FC<PriceInfoProps> = ({ meal }) => {
+const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const getPriceDisplay = () => {
-    const { priceHistory } = meal;
+    const { priceHistory: priceHistoryProp } = meal;
+
+    const priceHistory = priceHistoryProp.filter(item => refDate >= new Date(item.date));
     
     // Rule 1: Need at least 2 elements
     if (!priceHistory || priceHistory.length < 2) {
@@ -22,7 +25,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal }) => {
     
     // Rule 2: Last item older than 3 days
     const lastItem = priceHistory[priceHistory.length - 1];
-    const daysSinceLastPrice = differenceInDays(new Date(), new Date(lastItem.date));
+    const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
     if (daysSinceLastPrice > 3) {
       return {
         arrow: null,

@@ -105,9 +105,9 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
                       <Text fontWeight="medium" flex="1">
                         {meal.name}
                       </Text>
-                      <PriceInfo meal={meal} />
+                      <PriceInfo meal={meal} refDate={date} />
                     </HStack>
-                    <DashWidget priceHistory={meal.priceHistory} />
+                    <DashWidget meal={meal} refDate={date} />
                   </CardBody>
                 </Card>
               ))}

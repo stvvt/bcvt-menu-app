@@ -1,13 +1,16 @@
 import { type FC } from 'react';
 import { Box, HStack, Popover, PopoverTrigger, PopoverContent, PopoverBody, Text } from '@chakra-ui/react';
 import { formatDistanceToNow } from 'date-fns';
-import { PriceHistoryItem } from '@/types/PriceHistoryItem';
+import { Meal } from '@/types/Meal';
 
 interface DashWidgetProps {
-  priceHistory: PriceHistoryItem['prices'];
+  meal: Meal;
+  refDate: Date;
 }
 
-const DashWidget: FC<DashWidgetProps> = ({ priceHistory }) => {
+const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
+  const priceHistory = meal.priceHistory.filter(item => refDate >= new Date(item.date));
+
   if (!priceHistory || priceHistory.length <= 1) {
     return null;
   }
