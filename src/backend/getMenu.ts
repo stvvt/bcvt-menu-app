@@ -49,7 +49,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     ];
 
     // Group meals by category
-    const mealsByCategory = enrichedMeals.reduce((acc: Record<string, Meal[]>, meal: Meal) => {
+    const mealsByCategory = enrichedMeals.reduce<Record<string, Meal[]>>((acc, meal) => {
       if (!meal.category) return acc;
       
       if (!acc[meal.category]) {
