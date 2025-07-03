@@ -1,7 +1,9 @@
 'use server'
 
 import { getCategories } from './getCategories';
+import { getPriceHistory } from './getPriceHistory';
 import { MealGroup, type Meal } from '@/types/Meal';
+import { PriceHistoryItem } from '@/types/PriceHistoryItem';
 
 export async function getMenu(date: Date): Promise<MealGroup[]> {
   try {
@@ -27,13 +29,23 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
 
     const menuData = await response.json();
     
-    // Fetch categories and enrich menu data
-    const categories = await getCategories();
+    // Fetch categories and price history data
+    const [categories, priceHistoryData] = await Promise.all([
+      getCategories(),
+      getPriceHistory()
+    ]);
     
-    // Enrich menu data with categories
+    // Create a map of price history by meal name for efficient lookup
+    const priceHistoryMap = new Map<string, PriceHistoryItem['prices']>();
+    priceHistoryData.forEach((item: PriceHistoryItem) => {
+      priceHistoryMap.set(item.name, item.prices);
+    });
+    
+    // Enrich menu data with categories and price history
     const enrichedMeals: Meal[] = menuData.meals?.map((meal: Meal) => ({
       ...meal,
-      category: categories[meal.name]
+      category: categories[meal.name],
+      priceHistory: priceHistoryMap.get(meal.name) || []
     })) || [];
     
     // Define category order
