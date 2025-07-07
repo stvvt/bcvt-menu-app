@@ -1,11 +1,12 @@
 'use server'
 
+import config from '@/config';
 import fetchJson from '@/utils/fetchJson';
 
 export async function getCategories() {
   try {
     // URL for categories data
-    const url = `https://raw.githubusercontent.com/stvvt/bcvt-menu-scraper/refs/heads/main/db/categories.json`;
+    const url = `${config.DATA_BASE_URL}/db/categories.json`;
     
     const categoriesData = await fetchJson(url, {
       // Add cache control if needed

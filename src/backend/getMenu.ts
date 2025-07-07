@@ -5,6 +5,7 @@ import { getCategories } from './getCategories';
 import { getPriceHistory } from './getPriceHistory';
 import { MealGroup, type Meal } from '@/types/Meal';
 import { PriceHistoryItem } from '@/types/PriceHistoryItem';
+import config from '@/config';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mock = (meals: Meal[], name: string, date?: string, price?: string) => {
@@ -28,7 +29,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Replace with your actual API endpoint URL
-    const url = `https://raw.githubusercontent.com/stvvt/bcvt-menu-scraper/refs/heads/main/db/daily/${formattedDate}.json`;
+    const url = `${config.DATA_BASE_URL}/db/daily/${formattedDate}.json`;
     
     const menuData = await fetchJson(url, {
       // Add cache control if needed
