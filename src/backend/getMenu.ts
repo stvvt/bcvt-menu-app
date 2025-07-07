@@ -1,5 +1,6 @@
 'use server'
 
+import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
 import { getPriceHistory } from './getPriceHistory';
 import { MealGroup, type Meal } from '@/types/Meal';
@@ -29,20 +30,11 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // Replace with your actual API endpoint URL
     const url = `https://raw.githubusercontent.com/stvvt/bcvt-menu-scraper/refs/heads/main/db/daily/${formattedDate}.json`;
     
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const menuData = await fetchJson(url, {
       // Add cache control if needed
       next: { revalidate: 3600 } // Revalidate every hour
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch menu: ${response.status} ${response.statusText}`);
-    }
-
-    const menuData = await response.json();
-    
     // Fetch categories and price history data
     const [categories, priceHistoryData] = await Promise.all([
       getCategories(),
