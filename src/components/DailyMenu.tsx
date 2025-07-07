@@ -4,18 +4,14 @@ import {
   Grid, 
   Text, 
   VStack, 
-  HStack, 
   Spinner, 
   Alert, 
   AlertIcon,
-  Card,
-  CardBody,
   Heading,
 } from '@chakra-ui/react';
 import { getMenu } from '@/backend/getMenu';
 import { MealGroup } from '@/types/Meal';
-import DashWidget from './DashWidget';
-import PriceInfo from './PriceInfo';
+import MealCard from './MealCard';
 
 interface DailyMenuProps {
   date: Date;
@@ -99,17 +95,7 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
               w="100%"
             >
               {group.meals.map((meal, index) => (
-                <Card key={index} variant="outline">
-                  <CardBody>
-                    <HStack justify="space-between" align="flex-start">
-                      <Text fontWeight="medium" flex="1">
-                        {meal.name}
-                      </Text>
-                      <PriceInfo meal={meal} refDate={date} />
-                    </HStack>
-                    <DashWidget meal={meal} refDate={date} />
-                  </CardBody>
-                </Card>
+                <MealCard key={index} meal={meal} refDate={date} />
               ))}
             </Grid>
           </VStack>
