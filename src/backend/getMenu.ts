@@ -5,6 +5,20 @@ import { getPriceHistory } from './getPriceHistory';
 import { MealGroup, type Meal } from '@/types/Meal';
 import { PriceHistoryItem } from '@/types/PriceHistoryItem';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const mock = (meals: Meal[], name: string, date?: string, price?: string) => {
+  const x = meals.find(meal => meal.name === name); 
+
+  if (x) {
+    x.priceHistory.push({
+      dateText: date || '2025-07-07',
+      date: date || '2025-07-07',
+      price: price || '10.00',
+      currency: 'лв',
+    });
+  }
+};
+
 export async function getMenu(date: Date): Promise<MealGroup[]> {
   try {
     // Format the date as needed for the URL (adjust format as required)
@@ -47,7 +61,11 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
       category: categories[meal.name],
       priceHistory: priceHistoryMap.get(meal.name) || []
     })) || [];
-    
+
+    // mock(enrichedMeals, 'Болярска закуска с наденица');
+    // mock(enrichedMeals, 'Сандвич с кайма и кашкавал', '2025-07-05', '3.00');
+    // mock(enrichedMeals, 'Сандвич с кайма и кашкавал', '2025-07-07', '5.00');
+
     // Define category order
     const categoryOrder = [
       'закуски',

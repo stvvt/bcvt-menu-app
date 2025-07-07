@@ -9,6 +9,7 @@ interface DashWidgetProps {
 }
 
 const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
+  // Cut the history past refDate as if it doesn't exist
   const priceHistory = meal.priceHistory.filter(item => refDate >= new Date(item.date));
 
   if (!priceHistory || priceHistory.length <= 1) {
@@ -28,6 +29,10 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
     <Box mt={2}>
       <HStack spacing={1}>
         {limitedPriceHistory.map((item, index) => {
+          if (index === 0) {
+            return null;
+          }
+
           const currentPrice = parseFloat(item.price || '0');
           const previousPrice = index > 0 ? parseFloat(limitedPriceHistory[index - 1]?.price || '0') : currentPrice;
           const color = index === 0 ? 'gray.300' : getColorForPriceChange(currentPrice, previousPrice);
@@ -47,7 +52,8 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
               <PopoverContent>
                 <PopoverBody>
                   <Text fontSize="sm">
-                    {item.price} {item.currency || 'лв'} {timeAgo}
+                    {limitedPriceHistory[index-1].price} {limitedPriceHistory[index-1].currency || 'лв'} → {item.price} {item.currency || 'лв'}{' '} 
+                    <Text fontSize="xs" as="span" color="gray.500">{timeAgo}</Text>
                   </Text>
                 </PopoverBody>
               </PopoverContent>

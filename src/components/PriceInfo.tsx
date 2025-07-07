@@ -1,8 +1,8 @@
 import { type FC } from 'react';
-import { HStack, Text, IconButton, Popover, PopoverTrigger, PopoverContent, PopoverBody } from '@chakra-ui/react';
-import { InfoIcon } from '@chakra-ui/icons';
+import { HStack, Text, Badge } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { Meal } from '@/types/Meal';
+import { getMealPriceAt } from '@/utils/mealUtils';
 
 interface PriceInfoProps {
   meal: Meal;
@@ -55,41 +55,87 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     };
   };
 
-  const getDaysSinceLastPrice = () => {
+  const getBadgeInfo = () => {
     const { priceHistory } = meal;
-    if (!priceHistory || priceHistory.length === 0) return 0;
+    if (!priceHistory || priceHistory.length === 0) {
+      return {
+        text: "0",
+        colorScheme: "gray"
+      };
+    }
     
+    // First appearance of this meal on refDate
+    if (priceHistory.length === 1) {
+      const refDateStr = refDate.toISOString().split('T')[0];
+      if (priceHistory[0].date === refDateStr) {
+        return {
+          text: "new",
+          colorScheme: "green"
+        };
+      }
+    }
+    
+    // Check if price changed at refDate
+    const refDateStr = refDate.toISOString().split('T')[0];
+    const priceAtRefDate = getMealPriceAt(meal, refDate);
+    
+    if (priceAtRefDate) {
+      // Find the previous price entry
+      const sortedHistory = [...priceHistory].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      const refDateIndex = sortedHistory.findIndex(item => item.date === refDateStr);
+      
+      if (refDateIndex > 0) {
+        const currentPrice = parseFloat(priceAtRefDate.price);
+        const previousPrice = parseFloat(sortedHistory[refDateIndex - 1].price);
+        
+        if (currentPrice !== previousPrice) {
+          return {
+            text: "updated",
+            colorScheme: currentPrice > previousPrice ? "red" : "green"
+          };
+        }
+      }
+    }
+    
+    // Otherwise - show days since last price change
     const lastItem = priceHistory[priceHistory.length - 1];
-    return differenceInDays(new Date(), new Date(lastItem.date));
+    const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
+    
+    return {
+      text: `${daysSinceLastPrice.toString()} days`,
+      colorScheme: "gray"
+    };
   };
 
   const { arrow, color } = getPriceDisplay();
-  const daysSince = getDaysSinceLastPrice();
+  const badgeInfo = getBadgeInfo();
 
   return (
     <HStack spacing={0.5} flexShrink={0} alignItems="top">
-      <HStack spacing={1} alignItems="center">
+      <HStack spacing={1} alignItems="center" position="relative">
         {arrow}
         <Text fontWeight="bold" color={color}>
           {meal.price} {meal.currency || 'лв'}
         </Text>
+        <Badge 
+          colorScheme={badgeInfo.colorScheme}
+          fontSize="2xs"
+          borderRadius="0"
+          borderTopRightRadius="5px"
+          minW="16px"
+          h="16px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          position="absolute"
+          top="-20px"
+          right="-20px"
+          px={1}
+          py={0}
+        >
+          {badgeInfo.text}
+        </Badge>
       </HStack>
-      <Popover>
-        <PopoverTrigger>
-          <IconButton
-            aria-label="Price information"
-            icon={<InfoIcon color="gray.500" />}
-            size="xs"
-            variant="ghost"
-            colorScheme="gray"
-          />
-        </PopoverTrigger>
-        <PopoverContent width="auto">
-          <PopoverBody>
-            <Text fontSize="xs">since {daysSince === 0 ? 'today' : `${daysSince} days ago`}</Text>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
     </HStack>
   );
 };
