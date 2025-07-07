@@ -29,7 +29,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Replace with your actual API endpoint URL
-    const url = `${config.DATA_BASE_URL}/db/daily/${formattedDate}.json`;
+    const url = `${config.DATA_BASE_URL}/daily/${formattedDate}.json`;
     
     const menuData = await fetchJson(url, {
       // Add cache control if needed

@@ -7,7 +7,7 @@ import fetchJson from '@/utils/fetchJson';
 export async function getPriceHistory() {
   try {
     // URL for price history data
-    const url = `${config.DATA_BASE_URL}/db/merged.json`;
+    const url = `${config.DATA_BASE_URL}/merged.json`;
     
     const priceHistoryData: PriceHistoryItem[] = await fetchJson(url, {
       // Add cache control if needed

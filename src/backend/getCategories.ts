@@ -6,7 +6,7 @@ import fetchJson from '@/utils/fetchJson';
 export async function getCategories() {
   try {
     // URL for categories data
-    const url = `${config.DATA_BASE_URL}/db/categories.json`;
+    const url = `${config.DATA_BASE_URL}/categories.json`;
     
     const categoriesData = await fetchJson(url, {
       // Add cache control if needed
