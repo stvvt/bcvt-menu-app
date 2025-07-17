@@ -5,6 +5,8 @@ export type Meal = {
   price: string;
   currency?: string;
   category?: string;
+  imageUrl?: string;
+  ean?: string;
   priceHistory: PriceHistoryItem['prices'];
 };
 

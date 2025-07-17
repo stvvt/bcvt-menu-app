@@ -1,9 +1,12 @@
 import { type FC } from 'react';
 import { 
   HStack, 
+  VStack,
   Text,
   Card,
   CardBody,
+  Image,
+  Box,
 } from '@chakra-ui/react';
 import { Meal } from '@/types/Meal';
 import DashWidget from './DashWidget';
@@ -17,14 +20,30 @@ interface MealCardProps {
 const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
   return (
     <Card variant="outline">
-      <CardBody>
-        <HStack justify="space-between" align="flex-start">
-          <Text fontWeight="medium" flex="1">
-            {meal.name}
-          </Text>
-          <PriceInfo meal={meal} refDate={refDate} />
+      <CardBody p={0}>
+        <HStack spacing={0} align="stretch">
+          {meal.imageUrl ? (
+            <Image
+              src={meal.imageUrl}
+              alt={meal.name}
+              w="96px"
+              minH="96px"
+              objectFit="cover"
+              borderLeftRadius="md"
+            />
+          ) : (
+            <Box w="96px" minW="96px" minH="96px" bg="gray.100" />
+          )}
+          <VStack flex="1" p={4} align="stretch" spacing={3}>
+            <HStack justify="space-between" align="flex-start">
+              <Text fontWeight="medium" flex="1">
+                {meal.name}
+              </Text>
+              <PriceInfo meal={meal} refDate={refDate} />
+            </HStack>
+            <DashWidget meal={meal} refDate={refDate} />
+          </VStack>
         </HStack>
-        <DashWidget meal={meal} refDate={refDate} />
       </CardBody>
     </Card>
   );

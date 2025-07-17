@@ -131,8 +131,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
           alignItems="center"
           justifyContent="center"
           position="absolute"
-          top="-20px"
-          right="-20px"
+          top="-24px"
+          right="-24px"
           px={1}
           py={0}
         >
