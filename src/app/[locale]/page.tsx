@@ -32,7 +32,7 @@ function HomeContent() {
   };
 
   return (
-    <Box minH="100vh" p={8}>
+    <Box minH="100vh" p={{ base: 2, md: 8 }}>
       <VStack spacing={8} maxW="800px" mx="auto">
           BCVT Menu for{' '}
           <HStack spacing={3} display="inline-flex" alignItems="center">

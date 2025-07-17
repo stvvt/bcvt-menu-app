@@ -26,13 +26,13 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
             <Image
               src={meal.imageUrl}
               alt={meal.name}
-              w="96px"
-              minH="96px"
+              w="80px"
+              minH="80px"
               objectFit="cover"
               borderLeftRadius="md"
             />
           ) : (
-            <Box w="96px" minW="96px" minH="96px" bg="gray.100" />
+            <Box w="80px" minW="80px" minH="80px" bg="gray.100" />
           )}
           <VStack flex="1" p={4} align="stretch" spacing={3}>
             <HStack justify="space-between" align="flex-start">
