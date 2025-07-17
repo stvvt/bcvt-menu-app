@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
 import NextLink from 'next/link';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 function isToday(date: Date) {
   return date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
@@ -53,6 +54,9 @@ function HomeContent() {
               dateFormat="dd.MM.yyyy"
             />
             {!isToday(selectedDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
+            <Box flexGrow={1} textAlign="right">
+              <LanguageSwitcher />
+            </Box>
           </HStack>
         
         <DailyMenu date={selectedDate} />

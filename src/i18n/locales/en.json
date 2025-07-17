@@ -1,3 +1,14 @@
 {
-  "hello": "Hello"
+  "hello": "Hello",
+  "language": "Language",
+  "new": "New",
+  "days": "{count, plural, =1 {day} other {# days}}",
+  "закуски": "Breakfasts",
+  "супи": "Soups",
+  "салати": "Salads",
+  "десерти": "Desserts",
+  "предястия": "Starters",
+  "основни ястия": "Main Dishes",
+  "гарнитури": "Side Dishes",
+  "напитки": "Beverages"
 }

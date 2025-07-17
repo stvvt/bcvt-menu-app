@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import { HStack, Text, Badge } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
+import { useTranslations } from 'next-intl';
 import { Meal } from '@/types/Meal';
 import { getMealPriceAt } from '@/utils/mealUtils';
 
@@ -10,6 +11,8 @@ interface PriceInfoProps {
 }
 
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
+  const t = useTranslations();
+  
   const getPriceDisplay = () => {
     const { priceHistory: priceHistoryProp } = meal;
 
@@ -69,7 +72,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       const refDateStr = refDate.toISOString().split('T')[0];
       if (priceHistory[0].date === refDateStr) {
         return {
-          text: "new",
+          text: t('new'),
           colorScheme: "green"
         };
       }
@@ -102,7 +105,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
     
     return {
-      text: `${daysSinceLastPrice.toString()} days`,
+      text: t('days', {count: daysSinceLastPrice}),
       colorScheme: "gray"
     };
   };

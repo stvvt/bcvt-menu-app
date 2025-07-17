@@ -12,6 +12,7 @@ import {
 import { getMenu } from '@/backend/getMenu';
 import { MealGroup } from '@/types/Meal';
 import MealCard from './MealCard';
+import { useTranslations } from 'next-intl';
 
 interface DailyMenuProps {
   date: Date;
@@ -21,6 +22,7 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
   const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations();
 
   useEffect(() => {
     let isMounted = true;
@@ -88,7 +90,7 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
     <Box>
         {groups.map((group) => (
           <VStack key={group.category} pb={16}>
-            <Heading size="md" textAlign="center" background="blue.500" color="white" mb={4} p={2} borderRadius="md">{group.category?.toUpperCase()}</Heading>
+            <Heading size="md" textAlign="center" background="blue.500" color="white" mb={4} p={2} borderRadius="md">{t(group.category?.toLowerCase() ?? '')?.toUpperCase()}</Heading>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
               gap={4}
