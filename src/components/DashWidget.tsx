@@ -26,7 +26,7 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
   };
 
   return (
-    <Box mt={2}>
+    <Box>
       <HStack spacing={1}>
         {limitedPriceHistory.map((item, index) => {
           if (index === 0) {
@@ -35,6 +35,11 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
 
           const currentPrice = parseFloat(item.price || '0');
           const previousPrice = index > 0 ? parseFloat(limitedPriceHistory[index - 1]?.price || '0') : currentPrice;
+
+          if (currentPrice === previousPrice) {
+            return null;
+          }
+
           const color = index === 0 ? 'gray.300' : getColorForPriceChange(currentPrice, previousPrice);
           const timeAgo = formatDistanceToNow(new Date(item.date), { addSuffix: true });
           

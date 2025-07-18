@@ -122,17 +122,15 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}
-          fontSize="2xs"
-          borderRadius="0"
-          borderTopRightRadius="5px"
+          fontSize="3xs"
           minW="16px"
           h="16px"
           display="flex"
           alignItems="center"
           justifyContent="center"
           position="absolute"
-          top="-24px"
-          right="-24px"
+          top="-16px"
+          right="-16px"
           px={1}
           py={0}
         >
