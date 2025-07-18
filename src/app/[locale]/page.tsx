@@ -1,12 +1,12 @@
 'use client';
 
 import { Box, Heading, VStack, Button, HStack, Text, Link } from "@chakra-ui/react";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { format } from 'date-fns';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
-import NextLink from 'next/link';
+import { useRouter,Link as NextLink } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 function isToday(date: Date) {
