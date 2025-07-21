@@ -2,6 +2,7 @@
   "hello": "Hello",
   "language": "Language",
   "new": "New",
+  "updated": "Updated",
   "days": "{count, plural, =1 {day} other {# days}}",
   "закуски": "Breakfasts",
   "супи": "Soups",

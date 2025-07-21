@@ -93,7 +93,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
         
         if (currentPrice !== previousPrice) {
           return {
-            text: "updated",
+            text: t('updated'),
             colorScheme: currentPrice > previousPrice ? "red" : "green"
           };
         }
