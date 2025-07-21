@@ -4,36 +4,23 @@ import {
   Text,
   Card,
   CardBody,
-  Image,
-  Box,
   CardFooter,
   Stack,
 } from '@chakra-ui/react';
 import type { EnrichedMeal } from '@/types/app';
 import DashWidget from './DashWidget';
 import PriceInfo from './PriceInfo';
+import MealImage from './MealImage';
 
 interface MealCardProps {
   meal: EnrichedMeal;
   refDate: Date;
 }
 
-const avatarSize = '72px';
-
 const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
   return (
     <Card variant="outline" direction="row">
-      {meal.images.length > 0 ? (
-        <Image
-          src={meal.images[meal.images.length - 1].imageUrl}
-          alt={meal.name}
-          w={avatarSize}
-          objectFit="cover"
-          borderLeftRadius="md"
-        />
-      ) : (
-        <Box minW={avatarSize} minH={avatarSize} bg="gray.100" borderLeftRadius="md" />
-      )}
+      <MealImage meal={meal} />
       <Stack flex="1">
         <CardBody p={3} pb={0}>
           <HStack justify="space-between" align="flex-start">
