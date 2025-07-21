@@ -1,13 +1,16 @@
 import { PriceHistoryItem } from './PriceHistoryItem';
 
-export type Meal = {
+export type MealObject = {
   name: string;
-  price: string;
-  currency?: string;
   category?: string;
   imageUrl?: string;
-  ean?: string;
   priceHistory: PriceHistoryItem['prices'];
+};
+
+export type Meal = MealObject & {
+  price: string;
+  currency?: string;
+  ean?: string;
 };
 
 export type MealGroup = {

@@ -8,7 +8,7 @@ export async function getCategories() {
     // URL for categories data
     const url = `${config.DATA_BASE_URL}/categories.json`;
     
-    const categoriesData = await fetchJson(url, {
+    const categoriesData = await fetchJson<Record<string, string>>(url, {
       // Add cache control if needed
       next: { revalidate: 3600 } // Revalidate every hour
     });

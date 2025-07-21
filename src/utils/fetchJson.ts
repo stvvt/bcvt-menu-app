@@ -7,7 +7,7 @@ import { readFile } from 'fs/promises';
  * @param init - The fetch init object.
  * @returns The parsed JSON response.
  */
-async function fetchJson(...args: Parameters<typeof fetch>) {
+async function fetchJson<T>(...args: Parameters<typeof fetch>): Promise<T> {
   const [url, init] = args;
   const parsed = new URL(url.toString());
 
@@ -33,7 +33,7 @@ async function fetchJson(...args: Parameters<typeof fetch>) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
   }
 
-  return response.json();
+  return response.json() as Promise<T>;
 }
 
 export default fetchJson;

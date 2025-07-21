@@ -11,5 +11,7 @@
   "предястия": "Starters",
   "основни ястия": "Main Dishes",
   "гарнитури": "Side Dishes",
-  "напитки": "Beverages"
+  "напитки": "Beverages",
+  "date": "Date",
+  "price": "Price"
 }

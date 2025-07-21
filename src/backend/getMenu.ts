@@ -21,6 +21,11 @@ const mock = (meals: Meal[], name: string, date?: string, price?: string) => {
   }
 };
 
+type MenuData = {
+  date: string;
+  meals: Omit<Meal, 'priceHistory' | 'category'>[];
+};
+
 export async function getMenu(date: Date): Promise<MealGroup[]> {
   try {
     // Format the date as needed for the URL (adjust format as required)
@@ -31,7 +36,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // Replace with your actual API endpoint URL
     const url = `${config.DATA_BASE_URL}/daily/${formattedDate}.json`;
     
-    const menuData = await fetchJson(url, {
+    const menuData = await fetchJson<MenuData>(url, {
       // Add cache control if needed
       next: { revalidate: 3600 } // Revalidate every hour
     });
@@ -49,7 +54,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     });
     
     // Enrich menu data with categories and price history
-    const enrichedMeals: Meal[] = menuData.meals?.map((meal: Meal) => ({
+    const enrichedMeals: Meal[] = menuData.meals?.map((meal) => ({
       ...meal,
       category: categories[meal.name],
       priceHistory: priceHistoryMap.get(meal.name) || []

@@ -13,6 +13,7 @@ import { getMenu } from '@/backend/getMenu';
 import { MealGroup } from '@/types/Meal';
 import MealCard from './MealCard';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 interface DailyMenuProps {
   date: Date;
@@ -97,7 +98,17 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
               w="100%"
             >
               {group.meals.map((meal, index) => (
-                <MealCard key={index} meal={meal} refDate={date} />
+                <Link key={index} href={`/${meal.name}`}>
+                  <Box 
+                    cursor="pointer" 
+                    _hover={{ 
+                      '> div': { borderColor: 'blue.500' }
+                    }} 
+                    transition="all 0.2s"
+                  >
+                    <MealCard meal={meal} refDate={date} />
+                  </Box>
+                </Link>
               ))}
             </Grid>
           </VStack>

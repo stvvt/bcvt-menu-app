@@ -9,7 +9,7 @@ export async function getPriceHistory() {
     // URL for price history data
     const url = `${config.DATA_BASE_URL}/merged.json`;
     
-    const priceHistoryData: PriceHistoryItem[] = await fetchJson(url, {
+    const priceHistoryData  = await fetchJson<PriceHistoryItem[]>(url, {
       // Add cache control if needed
       next: { revalidate: 3600 } // Revalidate every hour
     });

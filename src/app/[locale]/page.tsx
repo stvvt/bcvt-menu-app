@@ -1,13 +1,12 @@
 'use client';
 
-import { Box, Heading, VStack, Button, HStack, Text, Link } from "@chakra-ui/react";
+import { Box, Heading, Button, HStack, Text, Link } from "@chakra-ui/react";
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { format } from 'date-fns';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
 import { useRouter,Link as NextLink } from '@/i18n/navigation';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 function isToday(date: Date) {
   return date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
@@ -32,36 +31,30 @@ function HomeContent() {
   };
 
   return (
-    <Box minH="100vh" p={{ base: 2, md: 8 }}>
-      <VStack spacing={8} maxW="800px" mx="auto">
-          BCVT Menu for{' '}
-          <HStack spacing={3} display="inline-flex" alignItems="center">
-            <Heading size="lg" textAlign="center">
-              <Text color="gray.500" as="span">BCVT Menu{' '}</Text>
-              <strong>{format(selectedDate, 'dd.MM.yyyy')}</strong>
-            </Heading>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              customInput={
-                <Button
-                  variant="outline"
-                  size="sm"
-                >
-                  📅
-                </Button>
-              }
-              dateFormat="dd.MM.yyyy"
-            />
-            {!isToday(selectedDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
-            <Box flexGrow={1} textAlign="right">
-              <LanguageSwitcher />
-            </Box>
-          </HStack>
-        
-        <DailyMenu date={selectedDate} />
-      </VStack>
-    </Box>
+    <>
+      <HStack spacing={3} display="inline-flex" alignItems="center">
+        <Heading size="lg" textAlign="center">
+          <Text color="gray.500" as="span">BCVT Menu{' '}</Text>
+          <strong>{format(selectedDate, 'dd.MM.yyyy')}</strong>
+        </Heading>
+        <DatePicker
+          selected={selectedDate}
+          onChange={handleDateChange}
+          customInput={
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              📅
+            </Button>
+          }
+          dateFormat="dd.MM.yyyy"
+        />
+        {!isToday(selectedDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
+      </HStack>
+      
+      <DailyMenu date={selectedDate} />
+    </>
   );
 }
 

@@ -5,6 +5,8 @@ import type { FC, PropsWithChildren } from 'react';
 import { routing } from '@/i18n/routing';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { Box, VStack } from '@chakra-ui/react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -25,7 +27,14 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
       <body>
         <Providers>
           <NextIntlClientProvider>
-            {children}
+            <Box position={{ md: 'fixed' }} top={{md: 2}} right={{md: 2}} zIndex={1000}>
+              <LanguageSwitcher />
+            </Box>
+            <Box minH="100vh" p={{ base: 2, md: 8 }}>
+              <VStack spacing={8} maxW="800px" mx="auto">
+                {children}
+              </VStack>
+            </Box>
           </NextIntlClientProvider>
         </Providers>
       </body>
