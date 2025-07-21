@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import path from 'path';
 
 /**
  * Fetch JSON from a URL or a local file.
@@ -12,8 +13,8 @@ async function fetchJson<T>(...args: Parameters<typeof fetch>): Promise<T> {
   const parsed = new URL(url.toString());
 
   if (parsed.protocol === 'file:') {
-    const path = parsed.pathname;
-    const content = await readFile(path, 'utf-8');
+    const resolvedPath = path.resolve(process.cwd(), path.join(parsed.hostname, parsed.pathname));
+    const content = await readFile(resolvedPath, 'utf-8');
     return JSON.parse(content);
   }
 
