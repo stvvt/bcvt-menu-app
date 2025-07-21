@@ -18,6 +18,8 @@ interface MealCardProps {
   refDate: Date;
 }
 
+const avatarSize = '72px';
+
 const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
   return (
     <Card variant="outline" direction="row">
@@ -25,12 +27,12 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
         <Image
           src={meal.imageUrl}
           alt={meal.name}
-          w="72px"
+          w={avatarSize}
           objectFit="cover"
           borderLeftRadius="md"
         />
       ) : (
-        <Box minW="72px" minH="72px" bg="gray.100" />
+        <Box minW={avatarSize} minH={avatarSize} bg="gray.100" borderLeftRadius="md" />
       )}
       <Stack flex="1">
         <CardBody p={3} pb={0}>
