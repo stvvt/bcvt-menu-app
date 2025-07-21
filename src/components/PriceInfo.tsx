@@ -2,11 +2,11 @@ import { type FC } from 'react';
 import { HStack, Text, Badge } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { useTranslations } from 'next-intl';
-import { Meal } from '@/types/Meal';
 import { getMealPriceAt } from '@/utils/mealUtils';
+import type { EnrichedMeal } from '@/types/app';
 
 interface PriceInfoProps {
-  meal: Meal;
+  meal: EnrichedMeal;
   refDate: Date;
 }
 
@@ -14,7 +14,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
   
   const getPriceDisplay = () => {
-    const { priceHistory: priceHistoryProp } = meal;
+    const { prices: priceHistoryProp } = meal;
 
     const priceHistory = priceHistoryProp.filter(item => refDate >= new Date(item.date));
     
@@ -59,7 +59,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   };
 
   const getBadgeInfo = () => {
-    const { priceHistory } = meal;
+    const { prices:priceHistory } = meal;
     if (!priceHistory || priceHistory.length === 0) {
       return {
         text: "0",
@@ -118,7 +118,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       <HStack spacing={1} alignItems="center" position="relative">
         {arrow}
         <Text fontWeight="bold" color={color}>
-          {meal.price} {meal.currency || 'лв'}
+          {meal.prices[meal.prices.length - 1].price} {meal.prices[meal.prices.length - 1].currency || 'лв'}
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}

@@ -10,11 +10,15 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import { getMenu } from '@/backend/getMenu';
-import { MealGroup } from '@/types/Meal';
 import MealCard from './MealCard';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import type { EnrichedMeal } from '@/types/app';
 
+type MealGroup = {
+  category?: string;
+  meals: EnrichedMeal[];
+};
 interface DailyMenuProps {
   date: Date;
 }

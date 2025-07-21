@@ -1,9 +1,9 @@
 import { getCategories } from '@/backend/getCategories';
 import { getPriceHistory } from "@/backend/getPriceHistory";
-import type { MealObject } from '@/types/Meal';
+import type { EnrichedMeal } from '@/types/app';
 import { notFound } from 'next/navigation';
 
-async function getMeal(mealName: string): Promise<MealObject> {
+async function getMeal(mealName: string): Promise<EnrichedMeal> {
   const allMeals = await getPriceHistory();
   const meal = allMeals.find((meal) => meal.name === mealName);
   if (!meal) {
@@ -14,8 +14,9 @@ async function getMeal(mealName: string): Promise<MealObject> {
   const category = categories[mealName];
   return {
     name: meal.name,
-    priceHistory: meal.prices,
+    prices: meal.prices,
     category,
+    images: meal.images,
   };
 }
 

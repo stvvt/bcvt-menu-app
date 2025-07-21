@@ -1,4 +1,4 @@
-import { Meal } from '@/types/Meal';
+import type { EnrichedMeal } from '@/types/app';
 
 /**
  * Returns the most recent price history item with date prior or equal to refDate
@@ -6,15 +6,15 @@ import { Meal } from '@/types/Meal';
  * @param refDate - The reference date to compare against
  * @returns The most recent price history item or undefined if none found
  */
-export function getMealPriceAt(meal: Meal, refDate: Date) {
-  const { priceHistory } = meal;
+export function getMealPriceAt(meal: EnrichedMeal, refDate: Date) {
+  const { prices } = meal;
   
-  if (!priceHistory || priceHistory.length === 0) {
+  if (!prices || prices.length === 0) {
     return undefined;
   }
   
   // Filter items with date <= refDate
-  const validItems = priceHistory.filter(item => new Date(item.date) <= refDate);
+  const validItems = prices.filter(item => new Date(item.date) <= refDate);
   
   if (validItems.length === 0) {
     return undefined;

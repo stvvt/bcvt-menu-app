@@ -26,7 +26,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {mealData.priceHistory.map((price) => (
+          {mealData.prices.map((price) => (
             <Tr key={price.date}>
               <Td>{price.date}</Td>
               <Td>{price.price} {price.currency}</Td>

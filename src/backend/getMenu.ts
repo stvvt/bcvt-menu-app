@@ -3,16 +3,16 @@
 import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
 import { getPriceHistory } from './getPriceHistory';
-import { MealGroup, type Meal } from '@/types/Meal';
-import { PriceHistoryItem } from '@/types/PriceHistoryItem';
 import config from '@/config';
+import type { DailyMenu, MergedMealItem } from '@/types/db';
+import type { EnrichedMeal } from '@/types/app';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mock = (meals: Meal[], name: string, date?: string, price?: string) => {
+const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string) => {
   const x = meals.find(meal => meal.name === name); 
 
   if (x) {
-    x.priceHistory.push({
+    x.prices.push({
       dateText: date || '2025-07-07',
       date: date || '2025-07-07',
       price: price || '10.00',
@@ -21,12 +21,7 @@ const mock = (meals: Meal[], name: string, date?: string, price?: string) => {
   }
 };
 
-type MenuData = {
-  date: string;
-  meals: Omit<Meal, 'priceHistory' | 'category'>[];
-};
-
-export async function getMenu(date: Date): Promise<MealGroup[]> {
+export async function getMenu(date: Date) {
   try {
     // Format the date as needed for the URL (adjust format as required)
     const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
@@ -36,7 +31,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // Replace with your actual API endpoint URL
     const url = `${config.DATA_BASE_URL}/daily/${formattedDate}.json`;
     
-    const menuData = await fetchJson<MenuData>(url, {
+    const menuData = await fetchJson<DailyMenu>(url, {
       // Add cache control if needed
       next: { revalidate: 3600 } // Revalidate every hour
     });
@@ -48,17 +43,20 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     ]);
     
     // Create a map of price history by meal name for efficient lookup
-    const priceHistoryMap = new Map<string, PriceHistoryItem['prices']>();
-    priceHistoryData.forEach((item: PriceHistoryItem) => {
-      priceHistoryMap.set(item.name, item.prices);
+    const priceHistoryMap = new Map<string, MergedMealItem>();
+    priceHistoryData.forEach((item) => {
+      priceHistoryMap.set(item.name, item);
     });
     
     // Enrich menu data with categories and price history
-    const enrichedMeals: Meal[] = menuData.meals?.map((meal) => ({
-      ...meal,
-      category: categories[meal.name],
-      priceHistory: priceHistoryMap.get(meal.name) || []
-    })) || [];
+    const enrichedMeals = menuData.meals?.map((meal) => {
+      return {
+        name: meal.name,
+        category: categories[meal.name],
+        prices: priceHistoryMap.get(meal.name)?.prices ?? [],
+        images: priceHistoryMap.get(meal.name)?.images ?? []
+      }
+    }) || [];
 
     // mock(enrichedMeals, 'Болярска закуска с наденица');
     // mock(enrichedMeals, 'Сандвич с кайма и кашкавал', '2025-07-05', '3.00');
@@ -77,7 +75,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     ];
 
     // Group meals by category
-    const mealsByCategory = enrichedMeals.reduce<Record<string, Meal[]>>((acc, meal) => {
+    const mealsByCategory = enrichedMeals.reduce<Record<string, EnrichedMeal[]>>((acc, meal) => {
       if (!meal.category) return acc;
       
       if (!acc[meal.category]) {
@@ -90,10 +88,12 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     // Return groups in the specified order with meals sorted by price
     const groupedByCategory = categoryOrder
       .filter(category => mealsByCategory[category]?.length > 0)
-      .map(category => ({
-        category,
-        meals: mealsByCategory[category].sort((a, b) => parseFloat(`${a.price}`) - parseFloat(`${b.price}`))
-      }));
+      .map(category => {
+        return {
+          category,
+          meals: mealsByCategory[category].sort((a, b) => parseFloat(`${a.prices[a.prices.length - 1].price}`) - parseFloat(`${b.prices[b.prices.length - 1].price}`)),
+        }
+      });
     
     return groupedByCategory;
     
