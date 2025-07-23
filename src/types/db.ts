@@ -1,7 +1,10 @@
-export type Meal = {
+export type Price = {
+  price: string;
+  currency?: string;
+};
+
+export type Meal = Price & {
   name: string;
-  price: number;
-  currency: string;
   imageUrl?: string;
   ean?: string;
 };
@@ -11,11 +14,9 @@ export type DailyMenu = {
   meals: Meal[];
 };
 
-export type MergedPrice = {
+export type MergedPrice = Price & {
   dateText: string;
   date: string;
-  price: string;
-  currency?: string;
 };
 
 export type MergedImage = {
