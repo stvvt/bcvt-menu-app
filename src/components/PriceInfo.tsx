@@ -1,11 +1,11 @@
 import { type FC } from 'react';
 import { HStack, Text, Badge, VStack } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { getMealPriceAt } from '@/utils/mealUtils';
 import type { EnrichedMeal } from '@/types/app';
-import currencyConverter from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
+import FormatPrice from '@/components/FormatPrice';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
@@ -21,7 +21,6 @@ function getPriceAt(meal: EnrichedMeal, refDate: Date) {
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
   const { prices:priceHistory } = meal;
-  const format = useFormatter();
   
   const getPriceDisplay = () => {
     const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
@@ -121,15 +120,12 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const badgeInfo = getBadgeInfo();
   const price = getPriceAt(meal, refDate);
 
-  const priceInBaseCurrency = currencyConverter(price, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
-  const priceInSecondaryCurrency = currencyConverter(price, clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE);
-
   return (
     <VStack align="flex-end" spacing={0}>
       <HStack spacing={1} alignItems="center" position="relative">
         {arrow}
         <Text fontWeight="bold" color={color}>
-          {format.number(priceInBaseCurrency.amount, {style: 'currency', currency: priceInBaseCurrency.currency})}
+          <FormatPrice price={price} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}
@@ -149,7 +145,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
         </Badge>
       </HStack>
       <Text align="right" fontSize="xs" color={color}>
-        {format.number(priceInSecondaryCurrency.amount, {style: 'currency', currency: priceInSecondaryCurrency.currency})}
+        <FormatPrice price={price} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
       </Text>
     </VStack>
   );

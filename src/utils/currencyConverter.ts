@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { Price } from '@/types/db';
 import { CurrencyCodeSchema } from '@/config/client';
 
-type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
+export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
 
 function roundTo(value: number, decimals: number): number {
   const factor = Math.pow(10, decimals);
