@@ -6,6 +6,7 @@ import { getMealPriceAt } from '@/utils/mealUtils';
 import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
+import currencyConverter from '@/utils/currencyConverter';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
@@ -44,15 +45,15 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 3: Show corresponding arrow and matching color
-    const currentPrice = parseFloat(activePriceHistory[activePriceHistory.length - 1]?.price || '0');
-    const previousPrice = parseFloat(activePriceHistory[activePriceHistory.length - 2]?.price || '0');
+    const currentAmount = currencyConverter(activePriceHistory[activePriceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+    const previousAmount = currencyConverter(activePriceHistory[activePriceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
     
-    if (currentPrice > previousPrice) {
+    if (currentAmount > previousAmount) {
       return {
         arrow: <Text color="red.500" fontSize="sm">↗</Text>,
         color: 'red.500'
       };
-    } else if (currentPrice < previousPrice) {
+    } else if (currentAmount < previousAmount) {
       return {
         arrow: <Text color="green.500" fontSize="sm">↘</Text>,
         color: 'green.500'
@@ -90,17 +91,17 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     
     if (priceAtRefDate) {
       // Find the previous price entry
-      const sortedHistory = [...priceHistory].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      const sortedHistory = priceHistory;
       const refDateIndex = sortedHistory.findIndex(item => item.date === refDateStr);
       
       if (refDateIndex > 0) {
-        const currentPrice = parseFloat(priceAtRefDate.price);
-        const previousPrice = parseFloat(sortedHistory[refDateIndex - 1].price);
+        const currentAmount = currencyConverter(priceAtRefDate, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+        const previousAmount = currencyConverter(sortedHistory[refDateIndex - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
         
-        if (currentPrice !== previousPrice) {
+        if (currentAmount !== previousAmount) {
           return {
             text: t('updated'),
-            colorScheme: currentPrice > previousPrice ? "red" : "green"
+            colorScheme: currentAmount > previousAmount ? "red" : "green"
           };
         }
       }

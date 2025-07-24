@@ -2,6 +2,9 @@ import { type FC } from 'react';
 import { Box, HStack, Popover, PopoverTrigger, PopoverContent, PopoverBody, Text } from '@chakra-ui/react';
 import { formatDistanceToNow } from 'date-fns';
 import type { EnrichedMeal } from '@/types/app';
+import clientConfig from '@/config/client';
+import currencyConverter from '@/utils/currencyConverter';
+import FormatPrice from '@/components/FormatPrice';
 
 interface DashWidgetProps {
   meal: EnrichedMeal;
@@ -19,9 +22,9 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
   // Limit to last 10 entries
   const limitedPriceHistory = priceHistory.slice(-10);
 
-  const getColorForPriceChange = (currentPrice: number, previousPrice: number) => {
-    if (currentPrice > previousPrice) return 'red.400';
-    if (currentPrice < previousPrice) return 'green.400';
+  const getColorForPriceChange = (currentAmount: number, previousAmount: number) => {
+    if (currentAmount > previousAmount) return 'red.400';
+    if (currentAmount < previousAmount) return 'green.400';
     return 'gray.300';
   };
 
@@ -33,14 +36,18 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
             return null;
           }
 
-          const currentPrice = parseFloat(item.price || '0');
-          const previousPrice = index > 0 ? parseFloat(limitedPriceHistory[index - 1]?.price || '0') : currentPrice;
+          const currentAmount = currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+          const previousAmount = index > 0 ? currencyConverter(limitedPriceHistory[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount : currentAmount;
 
-          if (currentPrice === previousPrice) {
+          if (currentAmount === previousAmount) {
             return null;
           }
 
-          const color = index === 0 ? 'gray.300' : getColorForPriceChange(currentPrice, previousPrice);
+          if (currentAmount === previousAmount) {
+            return null;
+          }
+
+          const color = index === 0 ? 'gray.300' : getColorForPriceChange(currentAmount, previousAmount);
           const timeAgo = formatDistanceToNow(new Date(item.date), { addSuffix: true });
           
           return (
@@ -57,7 +64,10 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
               <PopoverContent>
                 <PopoverBody>
                   <Text fontSize="sm">
-                    {limitedPriceHistory[index-1].price} {limitedPriceHistory[index-1].currency || 'лв'} → {item.price} {item.currency || 'лв'}{' '} 
+                    <FormatPrice price={limitedPriceHistory[index-1]} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
+                    {' → '}
+                    <FormatPrice price={item} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
+                    {' '}
                     <Text fontSize="xs" as="span" color="gray.500">{timeAgo}</Text>
                   </Text>
                 </PopoverBody>
