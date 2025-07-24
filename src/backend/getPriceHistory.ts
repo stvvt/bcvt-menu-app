@@ -1,6 +1,6 @@
 'use server'
 
-import config from '@/config';
+import config from '@/config/server';
 import type { Merged } from '@/types/db';
 import fetchJson from '@/utils/fetchJson';
 

@@ -1,6 +1,6 @@
 'use server'
 
-import config from '@/config';
+import config from '@/config/server';
 import fetchJson from '@/utils/fetchJson';
 import { Categories } from '@/types/db';
 

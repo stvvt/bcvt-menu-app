@@ -1,25 +1,33 @@
 import { type FC } from 'react';
-import { HStack, Text, Badge } from '@chakra-ui/react';
+import { HStack, Text, Badge, VStack } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { getMealPriceAt } from '@/utils/mealUtils';
 import type { EnrichedMeal } from '@/types/app';
+import currencyConverter from '@/utils/currencyConverter';
+import clientConfig from '@/config/client';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
   refDate: Date;
 }
 
+function getPriceAt(meal: EnrichedMeal, refDate: Date) {
+  const { prices:priceHistory } = meal;
+  const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
+  return activePriceHistory[activePriceHistory.length - 1];
+}
+
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
+  const { prices:priceHistory } = meal;
+  const format = useFormatter();
   
   const getPriceDisplay = () => {
-    const { prices: priceHistoryProp } = meal;
-
-    const priceHistory = priceHistoryProp.filter(item => refDate >= new Date(item.date));
+    const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
     
     // Rule 1: Need at least 2 elements
-    if (!priceHistory || priceHistory.length < 2) {
+    if (!activePriceHistory || activePriceHistory.length < 2) {
       return {
         arrow: null,
         color: 'black'
@@ -27,7 +35,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 2: Last item older than 3 days
-    const lastItem = priceHistory[priceHistory.length - 1];
+    const lastItem = activePriceHistory[activePriceHistory.length - 1];
     const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
     if (daysSinceLastPrice > 3) {
       return {
@@ -37,8 +45,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 3: Show corresponding arrow and matching color
-    const currentPrice = parseFloat(priceHistory[priceHistory.length - 1]?.price || '0');
-    const previousPrice = parseFloat(priceHistory[priceHistory.length - 2]?.price || '0');
+    const currentPrice = parseFloat(activePriceHistory[activePriceHistory.length - 1]?.price || '0');
+    const previousPrice = parseFloat(activePriceHistory[activePriceHistory.length - 2]?.price || '0');
     
     if (currentPrice > previousPrice) {
       return {
@@ -59,7 +67,6 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   };
 
   const getBadgeInfo = () => {
-    const { prices:priceHistory } = meal;
     if (!priceHistory || priceHistory.length === 0) {
       return {
         text: "0",
@@ -112,13 +119,17 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
 
   const { arrow, color } = getPriceDisplay();
   const badgeInfo = getBadgeInfo();
+  const price = getPriceAt(meal, refDate);
+
+  const priceInBaseCurrency = currencyConverter(price, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+  const priceInSecondaryCurrency = currencyConverter(price, clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE);
 
   return (
-    <HStack spacing={0.5} flexShrink={0} alignItems="top">
+    <VStack align="flex-end" spacing={0}>
       <HStack spacing={1} alignItems="center" position="relative">
         {arrow}
         <Text fontWeight="bold" color={color}>
-          {meal.prices[meal.prices.length - 1].price} {meal.prices[meal.prices.length - 1].currency || 'лв'}
+          {format.number(priceInBaseCurrency.amount, {style: 'currency', currency: priceInBaseCurrency.currency})}
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}
@@ -137,7 +148,10 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
           {badgeInfo.text}
         </Badge>
       </HStack>
-    </HStack>
+      <Text align="right" fontSize="xs" color={color}>
+        {format.number(priceInSecondaryCurrency.amount, {style: 'currency', currency: priceInSecondaryCurrency.currency})}
+      </Text>
+    </VStack>
   );
 };
 

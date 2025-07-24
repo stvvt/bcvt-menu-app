@@ -3,7 +3,7 @@
 import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
 import { getPriceHistory } from './getPriceHistory';
-import config from '@/config';
+import config from '@/config/server';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
 import type { EnrichedMeal } from '@/types/app';
 
