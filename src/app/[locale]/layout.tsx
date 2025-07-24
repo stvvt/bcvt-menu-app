@@ -5,8 +5,11 @@ import type { FC, PropsWithChildren } from 'react';
 import { routing } from '@/i18n/routing';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, VStack, HStack } from '@chakra-ui/react';
+import { ColorModeScript } from '@chakra-ui/react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ColorModeToggle from '@/components/ColorModeToggle';
+import { initialColorMode } from '@/app/theme';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -25,10 +28,14 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
   return (
     <html lang={locale}>
       <body>
+        <ColorModeScript initialColorMode={initialColorMode} />
         <Providers>
           <NextIntlClientProvider>
             <Box position={{ md: 'fixed' }} top={{md: 2}} right={{md: 2}} zIndex={1000}>
-              <LanguageSwitcher />
+              <HStack spacing={2}>
+                <ColorModeToggle />
+                <LanguageSwitcher />
+              </HStack>
             </Box>
             <Box minH="100vh" p={{ base: 2, md: 8 }}>
               <VStack spacing={8} maxW="800px" mx="auto">
