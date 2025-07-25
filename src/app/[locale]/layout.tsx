@@ -26,8 +26,8 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
     notFound();
   }
   return (
-    <html lang={locale}>
-      <body>
+    <html lang={locale} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <ColorModeScript initialColorMode={initialColorMode} />
         <Providers>
           <NextIntlClientProvider>
