@@ -95,7 +95,7 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
     <Box>
         {groups.map((group) => (
           <VStack key={group.category} pb={16}>
-            <Heading size="md" textAlign="center" background="blue.500" color="white" mb={4} p={2} borderRadius="md">{t(group.category?.toLowerCase() ?? '')?.toUpperCase()}</Heading>
+            <Heading size="sm" textAlign="center" background="blue.300" color="whiteAlpha.1000" mb={4} p={2} borderRadius="md">{t(group.category?.toLowerCase() ?? '')?.toUpperCase()}</Heading>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
               gap={4}

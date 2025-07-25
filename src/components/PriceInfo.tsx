@@ -30,7 +30,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     if (!activePriceHistory || activePriceHistory.length < 2) {
       return {
         arrow: null,
-        color: 'black'
+        color: 'black.500'
       };
     }
     
@@ -40,7 +40,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     if (daysSinceLastPrice > 3) {
       return {
         arrow: null,
-        color: 'black'
+        color: 'black.500'
       };
     }
     
@@ -50,12 +50,12 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     
     if (currentAmount > previousAmount) {
       return {
-        arrow: <Text color="red.500" fontSize="sm">↗</Text>,
+        arrow: '↗',
         color: 'red.500'
       };
     } else if (currentAmount < previousAmount) {
       return {
-        arrow: <Text color="green.500" fontSize="sm">↘</Text>,
+        arrow: '↘',
         color: 'green.500'
       };
     }
@@ -124,8 +124,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   return (
     <VStack align="flex-end" spacing={0}>
       <HStack spacing={1} alignItems="center" position="relative">
-        {arrow}
         <Text fontWeight="bold" color={color}>
+          {arrow}{' '}
           <FormatPrice price={price} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
         </Text>
         <Badge 
