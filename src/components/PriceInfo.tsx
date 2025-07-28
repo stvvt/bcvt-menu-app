@@ -21,7 +21,8 @@ function getPriceAt(meal: EnrichedMeal, refDate: Date) {
 
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
-  const { prices:priceHistory } = meal;
+  const { prices } = meal;
+  const priceHistory = prices.filter(item => refDate >= new Date(item.date));
   
   const getPriceDisplay = () => {
     const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
