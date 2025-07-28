@@ -6,7 +6,7 @@ import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import currencyConverter from '@/utils/currencyConverter';
-import { useMenuData } from '@/contexts/MenuDataContext';
+import getMealPrices from '@/utils/getMealPrices';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
@@ -15,7 +15,6 @@ interface PriceInfoProps {
 
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
-  const { getMealPrices } = useMenuData();
   const priceHistory = getMealPrices(meal, refDate);
   const recentPrice = priceHistory[priceHistory.length - 1];
   

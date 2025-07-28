@@ -1,18 +1,54 @@
 'use client';
 
+import { getMenu, type MealGroup } from '@/backend/getMenu';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
-import { useMenuData } from '@/contexts/MenuDataContext';
-import { Link as NextLink } from '@/i18n/navigation';
-import { Button, Heading, HStack, Link, Text } from "@chakra-ui/react";
+import { Link as NextLink, useRouter } from '@/i18n/navigation';
+import { Alert, AlertIcon, Box, Button, Heading, HStack, Link, Spinner, Text, VStack } from "@chakra-ui/react";
 import { format } from 'date-fns';
+import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 function isToday(date: Date) {
   return date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
 }
 
 function HomeContent() {
-  const { loadingDate, changeDate } = useMenuData();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
+  const loadingDate = useMemo(() => dateParam ? new Date(dateParam) : new Date(), [dateParam]);
+  const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
+  const [error, setError] = useState<string>();
+  const [date, setDate] = useState<Date>();
+
+  const handleDateChange = useCallback((date: Date | null) => {
+    date = date || new Date();
+    const params = new URLSearchParams(searchParams);
+    params.set('date', date.toISOString().split('T')[0]);
+    router.push(`/?${params.toString()}`);
+  }, [router, searchParams]);
+
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        setError(undefined);
+        const data = await getMenu(loadingDate);
+        setMenuData(data);
+      } catch (err) {
+        if (!(err instanceof Error)) {
+          throw err;
+        }
+        setError(`Failed to load menu data ${err.message}`);
+        setMenuData(null);
+      } finally {
+        setDate(loadingDate);
+      }
+    }
+
+    fetchMenu();
+  }, [loadingDate]);
 
   return (
     <>
@@ -23,7 +59,7 @@ function HomeContent() {
         </Heading>
         <DatePicker
           selected={loadingDate}
-          onChange={changeDate}
+          onChange={handleDateChange}
           customInput={
             <Button
               variant="outline"
@@ -36,8 +72,22 @@ function HomeContent() {
         />
         {!isToday(loadingDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
       </HStack>
-      
-      <DailyMenu />
+
+      {error ? (
+        <Alert status="error">
+          <AlertIcon />
+          {error}
+        </Alert>
+      ) : !menuData ? (
+        <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+          <VStack spacing={4}>
+            <Spinner size="lg" />
+            <Text>Loading menu data...</Text>
+          </VStack>
+        </Box>
+      ) : (
+        <DailyMenu menuData={menuData} refDate={date!} />
+      )}
     </>
   );
 }

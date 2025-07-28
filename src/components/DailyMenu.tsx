@@ -4,41 +4,20 @@ import {
   Grid, 
   Text, 
   VStack, 
-  Spinner, 
-  Alert, 
-  AlertIcon,
   Heading,
 } from '@chakra-ui/react';
 import MealCard from './MealCard';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { useMenuData } from '@/contexts/MenuDataContext';
+import type { MealGroup } from '@/backend/getMenu';
 
-type DailyMenuProps = unknown;
+type DailyMenuProps = {
+  menuData: MealGroup[];
+  refDate: Date;
+};
 
-const DailyMenu: FC<DailyMenuProps> = () => {
-  const { date, menuData, error } = useMenuData();
+const DailyMenu: FC<DailyMenuProps> = ({ menuData, refDate }) => {
   const t = useTranslations();
-
-  if (error) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        {error}
-      </Alert>
-    );
-  }
-
-  if (!date || !menuData) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-        <VStack spacing={4}>
-          <Spinner size="lg" />
-          <Text>Loading menu data...</Text>
-        </VStack>
-      </Box>
-    );
-  }
 
   const groups = menuData || [];
 
@@ -69,7 +48,7 @@ const DailyMenu: FC<DailyMenuProps> = () => {
                     }} 
                     transition="all 0.2s"
                   >
-                    <MealCard meal={meal} refDate={date} />
+                    <MealCard meal={meal} refDate={refDate} />
                   </Box>
                 </Link>
               ))}

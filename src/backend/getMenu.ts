@@ -21,7 +21,12 @@ const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string
   }
 };
 
-export async function getMenu(date: Date) {
+export type MealGroup = {
+  category: string;
+  meals: EnrichedMeal[];
+};
+
+export async function getMenu(date: Date): Promise<MealGroup[]> {
   try {
     // Format the date as needed for the URL (adjust format as required)
     const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format

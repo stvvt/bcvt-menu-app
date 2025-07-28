@@ -5,7 +5,7 @@ import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
 import currencyConverter from '@/utils/currencyConverter';
 import FormatPrice from '@/components/FormatPrice';
-import { useMenuData } from '@/contexts/MenuDataContext';
+import getMealPrices from '@/utils/getMealPrices';
 
 interface DashWidgetProps {
   meal: EnrichedMeal;
@@ -13,7 +13,6 @@ interface DashWidgetProps {
 }
 
 const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
-  const { getMealPrices } = useMenuData();
   const priceHistory = getMealPrices(meal, refDate);
 
   if (priceHistory.length <= 1) {
