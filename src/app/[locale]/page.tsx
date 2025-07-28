@@ -4,7 +4,7 @@ import { getMenu, type MealGroup } from '@/backend/getMenu';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
 import { Link as NextLink, useRouter } from '@/i18n/navigation';
-import { Alert, AlertIcon, Box, Button, Heading, HStack, Link, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, Link, Spinner, Text, VStack } from "@chakra-ui/react";
 import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -20,7 +20,7 @@ function HomeContent() {
 
   const loadingDate = useMemo(() => dateParam ? new Date(dateParam) : new Date(), [dateParam]);
   const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<Error>();
   const [date, setDate] = useState<Date>();
 
   const handleDateChange = useCallback((date: Date | null) => {
@@ -40,15 +40,23 @@ function HomeContent() {
         if (!(err instanceof Error)) {
           throw err;
         }
-        setError(`Failed to load menu data ${err.message}`);
         setMenuData(null);
+        setError(err);
       } finally {
         setDate(loadingDate);
       }
     }
 
     fetchMenu();
+
+    return () => {
+      setError(undefined);
+    };
   }, [loadingDate]);
+
+  if (error) {
+    throw error;
+  }
 
   return (
     <>
@@ -73,12 +81,7 @@ function HomeContent() {
         {!isToday(loadingDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
       </HStack>
 
-      {error ? (
-        <Alert status="error">
-          <AlertIcon />
-          {error}
-        </Alert>
-      ) : !menuData ? (
+      {!menuData ? (
         <Box display="flex" justifyContent="center" alignItems="center" py={8}>
           <VStack spacing={4}>
             <Spinner size="lg" />
