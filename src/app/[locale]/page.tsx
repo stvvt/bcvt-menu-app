@@ -1,12 +1,11 @@
 'use client';
 
-import { Box, Heading, Button, HStack, Text, Link } from "@chakra-ui/react";
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-import { format } from 'date-fns';
 import DailyMenu from '@/components/DailyMenu';
 import DatePicker from '@/components/DatePicker';
-import { useRouter,Link as NextLink } from '@/i18n/navigation';
+import { Link as NextLink, useRouter } from '@/i18n/navigation';
+import { Button, Heading, HStack, Link, Text } from "@chakra-ui/react";
+import { format } from 'date-fns';
+import { useSearchParams } from 'next/navigation';
 
 function isToday(date: Date) {
   return date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
@@ -58,10 +57,4 @@ function HomeContent() {
   );
 }
 
-export default function Home() {
-  return (
-    <Suspense fallback={<Box p={8}>Loading...</Box>}>
-      <HomeContent />
-    </Suspense>
-  );
-}
+export default HomeContent;

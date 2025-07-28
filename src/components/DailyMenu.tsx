@@ -23,54 +23,31 @@ interface DailyMenuProps {
   date: Date;
 }
 
-const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
+const DailyMenu: FC<DailyMenuProps> = ({ date: dateProp }) => {
   const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>();
   const t = useTranslations();
 
   useEffect(() => {
-    let isMounted = true;
-    
     async function fetchMenu() {
       try {
-        setLoading(true);
         setError(null);
-        const data = await getMenu(date);
-        if (isMounted) {
-          setMenuData(data);
-        }
+        const data = await getMenu(dateProp);
+        setMenuData(data);
       } catch (err) {
         if (!(err instanceof Error)) {
           throw err;
         }
-        if (isMounted) {
-          setError(`Failed to load menu data ${err.message}`);
-        }
+        setError(`Failed to load menu data ${err.message}`);
+        setMenuData(null);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setDate(dateProp);
       }
     }
 
     fetchMenu();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [date]);
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-        <VStack spacing={4}>
-          <Spinner size="lg" />
-          <Text>Loading menu data...</Text>
-        </VStack>
-      </Box>
-    );
-  }
+  }, [dateProp]);
 
   if (error) {
     return (
@@ -78,6 +55,17 @@ const DailyMenu: FC<DailyMenuProps> = ({ date }) => {
         <AlertIcon />
         {error}
       </Alert>
+    );
+  }
+
+  if (!date || !menuData) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+        <VStack spacing={4}>
+          <Spinner size="lg" />
+          <Text>Loading menu data...</Text>
+        </VStack>
+      </Box>
     );
   }
 
