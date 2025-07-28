@@ -1,4 +1,4 @@
-import { useState, useEffect, type FC } from 'react';
+import { type FC } from 'react';
 import { 
   Box, 
   Grid, 
@@ -9,45 +9,16 @@ import {
   AlertIcon,
   Heading,
 } from '@chakra-ui/react';
-import { getMenu } from '@/backend/getMenu';
 import MealCard from './MealCard';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import type { EnrichedMeal } from '@/types/app';
+import { useMenuData } from '@/contexts/MenuDataContext';
 
-type MealGroup = {
-  category?: string;
-  meals: EnrichedMeal[];
-};
-interface DailyMenuProps {
-  date: Date;
-}
+type DailyMenuProps = unknown;
 
-const DailyMenu: FC<DailyMenuProps> = ({ date: dateProp }) => {
-  const [menuData, setMenuData] = useState<MealGroup[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>();
+const DailyMenu: FC<DailyMenuProps> = () => {
+  const { date, menuData, error } = useMenuData();
   const t = useTranslations();
-
-  useEffect(() => {
-    async function fetchMenu() {
-      try {
-        setError(null);
-        const data = await getMenu(dateProp);
-        setMenuData(data);
-      } catch (err) {
-        if (!(err instanceof Error)) {
-          throw err;
-        }
-        setError(`Failed to load menu data ${err.message}`);
-        setMenuData(null);
-      } finally {
-        setDate(dateProp);
-      }
-    }
-
-    fetchMenu();
-  }, [dateProp]);
 
   if (error) {
     return (
