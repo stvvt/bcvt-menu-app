@@ -2,6 +2,7 @@
 
 import { getMenu } from '@/backend/getMenu';
 import type { EnrichedMeal } from '@/types/app';
+import type { MergedMealItem } from '@/types/db';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type FC, type PropsWithChildren } from "react";
 
@@ -12,6 +13,7 @@ type MenuDataContextType = {
   menuData: MealGroup[] | null;
   error: string | null;
   loading: boolean;
+  getMealPrices: (meal: EnrichedMeal, refDate?: Date) => MergedMealItem['prices'];
 };
 
 type MealGroup = {
@@ -39,6 +41,13 @@ const MenuDataProvider: FC<PropsWithChildren> = ({ children }) => {
     router.push(`/?${params.toString()}`);
   }, [router, searchParams]);
 
+  const getMealPrices = useCallback((meal: EnrichedMeal, refDate?: Date) => {
+    if (!refDate) {
+      return meal.prices;
+    }
+    return meal.prices.filter(item => refDate >= new Date(item.date));
+  }, []);
+
 
   useEffect(() => {
     async function fetchMenu() {
@@ -65,7 +74,10 @@ const MenuDataProvider: FC<PropsWithChildren> = ({ children }) => {
   const loading = useMemo(() => fetching || !error && (!date || !menuData), [date, menuData, error, fetching]);
 
   return (
-    <MenuDataContext.Provider value={{ date, loadingDate, changeDate, menuData, error, loading }}>{children}</MenuDataContext.Provider>
+    <MenuDataContext.Provider
+      value={{ date, loadingDate, changeDate, menuData, error, loading, getMealPrices }}>
+        {children}
+    </MenuDataContext.Provider>
   );
 };
 

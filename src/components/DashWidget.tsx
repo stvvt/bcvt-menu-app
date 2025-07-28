@@ -5,6 +5,7 @@ import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
 import currencyConverter from '@/utils/currencyConverter';
 import FormatPrice from '@/components/FormatPrice';
+import { useMenuData } from '@/contexts/MenuDataContext';
 
 interface DashWidgetProps {
   meal: EnrichedMeal;
@@ -12,8 +13,8 @@ interface DashWidgetProps {
 }
 
 const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
-  // Cut the history past refDate as if it doesn't exist
-  const priceHistory = meal.prices.filter(item => refDate >= new Date(item.date));
+  const { getMealPrices } = useMenuData();
+  const priceHistory = getMealPrices(meal, refDate);
 
   if (priceHistory.length <= 1) {
     return null;
@@ -38,10 +39,6 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
 
           const currentAmount = currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
           const previousAmount = index > 0 ? currencyConverter(limitedPriceHistory[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount : currentAmount;
-
-          if (currentAmount === previousAmount) {
-            return null;
-          }
 
           if (currentAmount === previousAmount) {
             return null;

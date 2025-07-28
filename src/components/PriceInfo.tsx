@@ -2,27 +2,22 @@ import { type FC } from 'react';
 import { HStack, Text, Badge, VStack } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { useTranslations } from 'next-intl';
-import { getMealPriceAt } from '@/utils/mealUtils';
 import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import currencyConverter from '@/utils/currencyConverter';
+import { useMenuData } from '@/contexts/MenuDataContext';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
   refDate: Date;
 }
 
-function getPriceAt(meal: EnrichedMeal, refDate: Date) {
-  const { prices:priceHistory } = meal;
-  const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
-  return activePriceHistory[activePriceHistory.length - 1];
-}
-
 const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
-  const { prices } = meal;
-  const priceHistory = prices.filter(item => refDate >= new Date(item.date));
+  const { getMealPrices } = useMenuData();
+  const priceHistory = getMealPrices(meal, refDate);
+  const recentPrice = priceHistory[priceHistory.length - 1];
   
   const getPriceDisplay = () => {
     // Rule 1: Need at least 2 elements
@@ -34,8 +29,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 2: Last item older than 3 days
-    const lastItem = priceHistory[priceHistory.length - 1];
-    const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
+    const daysSinceLastPrice = differenceInDays(refDate, new Date(recentPrice.date));
     if (daysSinceLastPrice > 3) {
       return {
         arrow: null,
@@ -86,29 +80,25 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     
     // Check if price changed at refDate
     const refDateStr = refDate.toISOString().split('T')[0];
-    const priceAtRefDate = getMealPriceAt(meal, refDate);
+    const priorPrice = priceHistory[priceHistory.length - 2];
     
-    if (priceAtRefDate) {
-      // Find the previous price entry
-      const sortedHistory = priceHistory;
-      const refDateIndex = sortedHistory.findIndex(item => item.date === refDateStr);
+    // Find the previous price entry
+    const refDateIndex = priceHistory.findIndex(item => item.date === refDateStr);
+    
+    if (refDateIndex > 0) {
+      const currentAmount = currencyConverter(recentPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+      const previousAmount = currencyConverter(priorPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
       
-      if (refDateIndex > 0) {
-        const currentAmount = currencyConverter(priceAtRefDate, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-        const previousAmount = currencyConverter(sortedHistory[refDateIndex - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-        
-        if (currentAmount !== previousAmount) {
-          return {
-            text: t('updated'),
-            colorScheme: currentAmount > previousAmount ? "red" : "green"
-          };
-        }
+      if (currentAmount !== previousAmount) {
+        return {
+          text: t('updated'),
+          colorScheme: currentAmount > previousAmount ? "red" : "green"
+        };
       }
     }
     
     // Otherwise - show days since last price change
-    const lastItem = priceHistory[priceHistory.length - 1];
-    const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
+    const daysSinceLastPrice = differenceInDays(refDate, new Date(recentPrice.date));
     
     return {
       text: t('days', {count: daysSinceLastPrice}),
@@ -118,14 +108,13 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
 
   const { arrow, color } = getPriceDisplay();
   const badgeInfo = getBadgeInfo();
-  const price = getPriceAt(meal, refDate);
 
   return (
     <VStack align="flex-end" spacing={0}>
       <HStack spacing={1} alignItems="center" position="relative">
         <Text fontWeight="bold" color={color}>
           {arrow}{' '}
-          <FormatPrice price={price} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
+          <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}
@@ -145,7 +134,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
         </Badge>
       </HStack>
       <Text align="right" fontSize="xs" color={color}>
-        <FormatPrice price={price} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
+        <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
       </Text>
     </VStack>
   );

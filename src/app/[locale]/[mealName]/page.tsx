@@ -10,12 +10,12 @@ import FormatDate from '@/components/FormatDate';
 interface MealPageProps {
   params: Promise<{
     locale: string;
-    meal: string;
+    mealName: string;
   }>;
 }
 
 const MealPage: FC<MealPageProps> = async ({ params }) => {
-  const { meal: mealName } = await params;
+  const { mealName } = await params;
   const { NEXT_PUBLIC_BASE_CURRENCY_CODE, NEXT_PUBLIC_SECONDARY_CURRENCY_CODE } = clientConfig;
 
   const mealData = await getMeal(decodeURIComponent(mealName));
