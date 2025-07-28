@@ -15,7 +15,7 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
   // Cut the history past refDate as if it doesn't exist
   const priceHistory = meal.prices.filter(item => refDate >= new Date(item.date));
 
-  if (!priceHistory || priceHistory.length <= 1) {
+  if (priceHistory.length <= 1) {
     return null;
   }
 

@@ -25,10 +25,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const priceHistory = prices.filter(item => refDate >= new Date(item.date));
   
   const getPriceDisplay = () => {
-    const activePriceHistory = priceHistory.filter(item => refDate >= new Date(item.date));
-    
     // Rule 1: Need at least 2 elements
-    if (!activePriceHistory || activePriceHistory.length < 2) {
+    if (priceHistory.length < 2) {
       return {
         arrow: null,
         color: 'black.500'
@@ -36,7 +34,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 2: Last item older than 3 days
-    const lastItem = activePriceHistory[activePriceHistory.length - 1];
+    const lastItem = priceHistory[priceHistory.length - 1];
     const daysSinceLastPrice = differenceInDays(refDate, new Date(lastItem.date));
     if (daysSinceLastPrice > 3) {
       return {
@@ -46,8 +44,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 3: Show corresponding arrow and matching color
-    const currentAmount = currencyConverter(activePriceHistory[activePriceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-    const previousAmount = currencyConverter(activePriceHistory[activePriceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+    const currentAmount = currencyConverter(priceHistory[priceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+    const previousAmount = currencyConverter(priceHistory[priceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
     
     if (currentAmount > previousAmount) {
       return {
