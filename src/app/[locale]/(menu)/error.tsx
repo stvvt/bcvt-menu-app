@@ -16,6 +16,14 @@ const ErrorPage = ({ error, reset }: { error: Error, reset: () => void } ) => {
     }
   }, [searchParams, reset]);
 
+  if (error.name === 'NotFoundError') {
+    return (
+      <Alert status="warning" variant="subtle">
+        There is no menu data for this date.
+      </Alert>
+    );
+  }
+
   return (
     <Alert status="error" variant="subtle">
       <AlertIcon />

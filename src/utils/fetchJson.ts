@@ -1,3 +1,4 @@
+import { isErrnoException, NotFoundError } from '@/errors/NotFoundError';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
@@ -14,8 +15,15 @@ async function fetchJson<T>(...args: Parameters<typeof fetch>): Promise<T> {
 
   if (parsed.protocol === 'file:') {
     const resolvedPath = path.resolve(process.cwd(), path.join(parsed.hostname, parsed.pathname));
-    const content = await readFile(resolvedPath, 'utf-8');
-    return JSON.parse(content);
+    try {
+      const content = await readFile(resolvedPath, 'utf-8');
+      return JSON.parse(content);
+    } catch (error) {
+      if (isErrnoException(error) && error.code === 'ENOENT') {
+        throw new NotFoundError(`File not found: ${resolvedPath}`);
+      }
+      throw error;
+    }
   }
 
   const fetchInit = {
@@ -31,6 +39,9 @@ async function fetchJson<T>(...args: Parameters<typeof fetch>): Promise<T> {
   const response = await fetch(url, fetchInit);
 
   if (!response.ok) {
+    if (response.status === 404) {
+      throw new NotFoundError(`${response.statusText}: ${url}`);
+    }
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
   }
 
