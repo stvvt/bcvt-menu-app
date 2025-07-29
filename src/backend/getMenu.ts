@@ -6,6 +6,7 @@ import { getPriceHistory } from './getPriceHistory';
 import config from '@/config/server';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
 import type { EnrichedMeal } from '@/types/app';
+import { NotFoundError } from '@/errors/NotFoundError';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string) => {
@@ -35,10 +36,18 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
   // Replace with your actual API endpoint URL
   const url = `${config.DATA_BASE_URL}/daily/${formattedDate}.json`;
   
-  const menuData = await fetchJson<DailyMenu>(url, {
-    // Add cache control if needed
-    next: { revalidate: 3600 } // Revalidate every hour
-  });
+  let menuData: DailyMenu;
+  try {
+    menuData = await fetchJson<DailyMenu>(url, {
+      // Add cache control if needed
+      next: { revalidate: 3600 } // Revalidate every hour
+    });
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return [];
+    }
+    throw error;
+  }
 
   // Fetch categories and price history data
   const [categories, priceHistoryData] = await Promise.all([

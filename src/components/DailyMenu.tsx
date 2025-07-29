@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { use, type FC } from 'react';
 import { 
   Box, 
   Grid, 
@@ -12,14 +12,14 @@ import { Link } from '@/i18n/navigation';
 import type { MealGroup } from '@/backend/getMenu';
 
 type DailyMenuProps = {
-  menuData: MealGroup[];
+  menuData: Promise<MealGroup[]>;
   refDate: Date;
 };
 
 const DailyMenu: FC<DailyMenuProps> = ({ menuData, refDate }) => {
   const t = useTranslations();
 
-  const groups = menuData || [];
+  const groups = use(menuData);
 
   if (groups.length === 0) {
     return (
