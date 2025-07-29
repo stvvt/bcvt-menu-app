@@ -11,19 +11,6 @@ import currencyConverter from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
 import transformPriceHistory from '@/utils/transformPriceHistory';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string) => {
-  const x = meals.find(meal => meal.name === name); 
-
-  if (x) {
-    x.prices.push({
-      date: new Date(date || '2025-07-07'),
-      amount: 10,
-      currencyCode: 'BGN',
-    });
-  }
-};
-
 export type MealGroup = {
   category: string;
   meals: EnrichedMeal[];
@@ -72,10 +59,6 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
       images: priceHistoryMap.get(meal.name)?.images ?? []
     }
   }) || [];
-
-  // mock(enrichedMeals, 'Болярска закуска с наденица');
-  // mock(enrichedMeals, 'Сандвич с кайма и кашкавал', '2025-07-05', '3.00');
-  // mock(enrichedMeals, 'Сандвич с кайма и кашкавал', '2025-07-07', '5.00');
 
   // Define category order
   const categoryOrder = [

@@ -5,6 +5,8 @@ export type PriceHistoryItem = {
   date: Date;
   amount: number;
   currencyCode: CurrencyCode;
+  // delta is the difference between the current and previous price in the same currency
+  delta: number;
 }
 
 export type EnrichedMeal = Omit<MergedMealItem, 'prices'> & {

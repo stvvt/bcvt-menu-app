@@ -6,20 +6,28 @@ import currencyConverter from '@/utils/currencyConverter';
 
 function transformPriceHistoryItem(raw: MergedPrice): PriceHistoryItem {
   const currencyCode = !raw.currency || raw.currency === 'лв' ? 'BGN' : raw.currency as CurrencyCode;
-  return ({
+  return {
     date: new Date(raw.date),
     amount: parseFloat(raw.price),
     currencyCode,
-  });
+    delta: 0,
+  };
 }
 
 function transformPriceHistory(history: Array<MergedPrice>): PriceHistoryItem[] {
-  return history
+  const transformed = history
     .map(transformPriceHistoryItem)
-    .filter((item, index, transformed) => {
-      return index === 0 
-        || currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE) !== currencyConverter(transformed[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+    .map((item, index, transformed) => {
+      return {
+        ...item,
+        delta: index > 0 ? currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE)/currencyConverter(transformed[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE) - 1 : 0,
+      };
+    })
+    .filter((item, index) => {
+      return index === 0 || item.delta > Number.EPSILON || item.delta < -Number.EPSILON;
     });
+
+  return transformed;
 }
 
 export default transformPriceHistory;
