@@ -1,6 +1,7 @@
 import { getCategories } from '@/backend/getCategories';
 import { getPriceHistory } from "@/backend/getPriceHistory";
 import type { EnrichedMeal } from '@/types/app';
+import transformPriceHistory from '@/utils/transformPriceHistory';
 import { notFound } from 'next/navigation';
 
 async function getMeal(mealName: string): Promise<EnrichedMeal> {
@@ -14,7 +15,7 @@ async function getMeal(mealName: string): Promise<EnrichedMeal> {
   const category = categories[mealName];
   return {
     name: meal.name,
-    prices: meal.prices,
+    prices: transformPriceHistory(meal.prices),
     category,
     images: meal.images,
   };

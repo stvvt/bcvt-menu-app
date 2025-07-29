@@ -1,17 +1,17 @@
-import type { Price } from '@/types/db';
+import type { PriceHistoryItem } from '@/types/app';
 import type { CurrencyCode } from '@/utils/currencyConverter';
 import currencyConverter from '@/utils/currencyConverter';
 import { useFormatter } from 'next-intl';
 import type { FC } from 'react';
 
 type Props = {
-  price: Price;
+  price: PriceHistoryItem;
   currency: CurrencyCode;
 };
 const FormatPrice: FC<Props> = ({ price, currency }) => {
   const format = useFormatter();
-  const convertedPrice = currencyConverter(price, currency);
-  return format.number(convertedPrice.amount, { style: 'currency', currency: convertedPrice.currency });
+  const convertedAmount = currencyConverter(price, currency);
+  return format.number(convertedAmount, { style: 'currency', currency });
 };
 
 export default FormatPrice;

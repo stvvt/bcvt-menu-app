@@ -36,9 +36,9 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {mealData.prices.map((price) => {
+                  {mealData.prices.map((price, index) => {
                     return (
-                      <Tr key={price.date}>
+                      <Tr key={index}>
                         <Td><FormatDate date={new Date(price.date)} /></Td>
                         <Td><FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} /></Td>
                         <Td>

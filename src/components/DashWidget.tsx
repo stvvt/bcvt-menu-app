@@ -36,8 +36,8 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
             return null;
           }
 
-          const currentAmount = currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-          const previousAmount = index > 0 ? currencyConverter(limitedPriceHistory[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount : currentAmount;
+          const currentAmount = currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+          const previousAmount = index > 0 ? currencyConverter(limitedPriceHistory[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE) : currentAmount;
 
           if (currentAmount === previousAmount) {
             return null;

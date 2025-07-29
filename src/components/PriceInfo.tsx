@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { HStack, Text, Badge, VStack } from '@chakra-ui/react';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, isSameDay } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
@@ -37,8 +37,8 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     }
     
     // Rule 3: Show corresponding arrow and matching color
-    const currentAmount = currencyConverter(priceHistory[priceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-    const previousAmount = currencyConverter(priceHistory[priceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+    const currentAmount = currencyConverter(priceHistory[priceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+    const previousAmount = currencyConverter(priceHistory[priceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
     
     if (currentAmount > previousAmount) {
       return {
@@ -68,8 +68,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     
     // First appearance of this meal on refDate
     if (priceHistory.length === 1) {
-      const refDateStr = refDate.toISOString().split('T')[0];
-      if (priceHistory[0].date === refDateStr) {
+      if (isSameDay(priceHistory[0].date, refDate)) {
         return {
           text: t('new'),
           colorScheme: "green"
@@ -77,16 +76,11 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       }
     }
     
-    // Check if price changed at refDate
-    const refDateStr = refDate.toISOString().split('T')[0];
-    const priorPrice = priceHistory[priceHistory.length - 2];
-    
-    // Find the previous price entry
-    const refDateIndex = priceHistory.findIndex(item => item.date === refDateStr);
+    const refDateIndex = priceHistory.findIndex(item => isSameDay(item.date, refDate));
     
     if (refDateIndex > 0) {
-      const currentAmount = currencyConverter(recentPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
-      const previousAmount = currencyConverter(priorPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).amount;
+      const currentAmount = currencyConverter(priceHistory[refDateIndex], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+      const previousAmount = currencyConverter(priceHistory[refDateIndex - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
       
       if (currentAmount !== previousAmount) {
         return {
@@ -96,8 +90,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       }
     }
     
-    // Otherwise - show days since last price change
-    const daysSinceLastPrice = differenceInDays(refDate, new Date(recentPrice.date));
+    const daysSinceLastPrice = differenceInDays(refDate, recentPrice.date);
     
     return {
       text: t('days', {count: daysSinceLastPrice}),

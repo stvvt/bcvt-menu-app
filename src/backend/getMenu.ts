@@ -7,6 +7,9 @@ import config from '@/config/server';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
 import type { EnrichedMeal } from '@/types/app';
 import { NotFoundError } from '@/errors/NotFoundError';
+import currencyConverter from '@/utils/currencyConverter';
+import clientConfig from '@/config/client';
+import transformPriceHistory from '@/utils/transformPriceHistory';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string) => {
@@ -14,10 +17,9 @@ const mock = (meals: EnrichedMeal[], name: string, date?: string, price?: string
 
   if (x) {
     x.prices.push({
-      dateText: date || '2025-07-07',
-      date: date || '2025-07-07',
-      price: price || '10.00',
-      currency: 'лв',
+      date: new Date(date || '2025-07-07'),
+      amount: 10,
+      currencyCode: 'BGN',
     });
   }
 };
@@ -66,7 +68,7 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     return {
       name: meal.name,
       category: categories[meal.name],
-      prices: priceHistoryMap.get(meal.name)?.prices ?? [],
+      prices: transformPriceHistory(priceHistoryMap.get(meal.name)?.prices ?? []),
       images: priceHistoryMap.get(meal.name)?.images ?? []
     }
   }) || [];
@@ -104,7 +106,10 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     .map(category => {
       return {
         category,
-        meals: mealsByCategory[category].sort((a, b) => parseFloat(`${a.prices[a.prices.length - 1].price}`) - parseFloat(`${b.prices[b.prices.length - 1].price}`)),
+        meals: mealsByCategory[category].sort((a, b) => (
+          currencyConverter(a.prices[a.prices.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE) 
+            - currencyConverter(b.prices[b.prices.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE))
+        ),
       }
     });
   
