@@ -7,6 +7,7 @@ import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import currencyConverter from '@/utils/currencyConverter';
 import getMealPrices from '@/utils/getMealPrices';
+import getPriceDisplay from '@/i18n/getPriceDisplay';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
@@ -18,46 +19,6 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const priceHistory = getMealPrices(meal, refDate);
   const recentPrice = priceHistory[priceHistory.length - 1];
   
-  const getPriceDisplay = () => {
-    // Rule 1: Need at least 2 elements
-    if (priceHistory.length < 2) {
-      return {
-        arrow: null,
-        color: 'black.500'
-      };
-    }
-    
-    // Rule 2: Last item older than 3 days
-    const daysSinceLastPrice = differenceInDays(refDate, new Date(recentPrice.date));
-    if (daysSinceLastPrice > 3) {
-      return {
-        arrow: null,
-        color: 'black.500'
-      };
-    }
-    
-    // Rule 3: Show corresponding arrow and matching color
-    const currentAmount = currencyConverter(priceHistory[priceHistory.length - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
-    const previousAmount = currencyConverter(priceHistory[priceHistory.length - 2], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
-    
-    if (currentAmount > previousAmount) {
-      return {
-        arrow: '↗',
-        color: 'red.500'
-      };
-    } else if (currentAmount < previousAmount) {
-      return {
-        arrow: '↘',
-        color: 'green.500'
-      };
-    }
-    
-    return {
-      arrow: null,
-      color: undefined
-    };
-  };
-
   const getBadgeInfo = () => {
     if (!priceHistory || priceHistory.length === 0) {
       return {
@@ -98,7 +59,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     };
   };
 
-  const { arrow, color } = getPriceDisplay();
+  const { arrow, color } = getPriceDisplay(recentPrice) ?? { arrow: '', color: 'black' };
   const badgeInfo = getBadgeInfo();
 
   return (
@@ -106,7 +67,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       <HStack spacing={1} alignItems="center" position="relative">
         <Text fontWeight="bold" color={color}>
           {arrow}{' '}
-          <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
+          <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
         </Text>
         <Badge 
           colorScheme={badgeInfo.colorScheme}

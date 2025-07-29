@@ -6,6 +6,7 @@ import MealImage from '@/components/MealImage';
 import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import FormatDate from '@/components/FormatDate';
+import getPriceDisplay from '@/i18n/getPriceDisplay';
 
 interface MealPageProps {
   params: Promise<{
@@ -32,16 +33,23 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                 <Thead>
                   <Tr>
                     <Th w="100%">{t('date')}</Th>
-                    <Th colSpan={2} textAlign="center">{t('price')}</Th>
+                    <Th padding={0}></Th>
+                    <Th paddingLeft={1}>{t('price')}</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {mealData.prices.map((price, index) => {
+                    const displayPrice = getPriceDisplay(price);
                     return (
                       <Tr key={index}>
                         <Td><FormatDate date={new Date(price.date)} /></Td>
-                        <Td><FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} /></Td>
-                        <Td>
+                        <Td whiteSpace="nowrap" color={displayPrice?.color} align="right" padding={0}>
+                          {displayPrice?.arrow}
+                        </Td>
+                        <Td whiteSpace="nowrap" color={displayPrice?.color} align="right" paddingLeft={1}>
+                          <FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
+                        </Td>
+                        <Td whiteSpace="nowrap">
                           <Text align="right" fontSize="xs" color="gray.500">
                             <FormatPrice price={price} currency={NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
                           </Text>
