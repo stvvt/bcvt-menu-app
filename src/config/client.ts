@@ -5,6 +5,7 @@ export const CurrencyCodeSchema = z.enum(['BGN', 'EUR']);
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_BASE_CURRENCY_CODE: CurrencyCodeSchema.optional().default('BGN'),
   NEXT_PUBLIC_SECONDARY_CURRENCY_CODE: CurrencyCodeSchema.optional().default('EUR'),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string(),
 });
 
 function validateClientEnv() {
@@ -12,6 +13,7 @@ function validateClientEnv() {
     const env = clientEnvSchema.parse({
       NEXT_PUBLIC_BASE_CURRENCY_CODE: process.env.NEXT_PUBLIC_BASE_CURRENCY_CODE,
       NEXT_PUBLIC_SECONDARY_CURRENCY_CODE: process.env.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE,
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     });
     return env;
   } catch (error) {

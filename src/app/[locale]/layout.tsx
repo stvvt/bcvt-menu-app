@@ -10,6 +10,7 @@ import { ColorModeScript } from '@chakra-ui/react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ColorModeToggle from '@/components/ColorModeToggle';
 import { initialColorMode } from '@/app/theme';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -28,6 +29,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
   return (
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
+        <GoogleAnalytics />
         <ColorModeScript initialColorMode={initialColorMode} />
         <Providers>
           <NextIntlClientProvider>
