@@ -11,6 +11,8 @@ function transformPriceHistoryItem(raw: MergedPrice): PriceHistoryItem {
     amount: parseFloat(raw.price),
     currencyCode,
     delta: 0,
+    weight: raw.weight,
+    unit: raw.unit,
   };
 }
 
@@ -23,8 +25,17 @@ function transformPriceHistory(history: Array<MergedPrice>): PriceHistoryItem[] 
         delta: index > 0 ? currencyConverter(item, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE)/currencyConverter(transformed[index - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE) - 1 : 0,
       };
     })
-    .filter((item, index) => {
-      return index === 0 || item.delta > Number.EPSILON || item.delta < -Number.EPSILON;
+    .filter((item, index, transformed) => {
+      if (index === 0) {
+        return true;
+      }
+      const previousItem = transformed[index - 1];
+
+      if (item.weight !== previousItem.weight || item.unit !== previousItem.unit) {
+        return true;
+      }
+
+      return (item.delta > Number.EPSILON || item.delta < -Number.EPSILON);
     });
 
   return transformed;
