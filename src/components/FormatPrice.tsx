@@ -18,7 +18,7 @@ const FormatPrice: FC<Props> = ({ price, currency, showDelta = false }) => {
       return <>
         {format.number(convertedAmount, { style: 'currency', currency })}
         <Text as="span" fontSize="xs">
-          {' '}({percent > 0 ? `+${percent}%` : percent < 0 ? `-${percent}%` : ''})
+          {' '}({percent > 0 ? `+${percent}%` : percent < 0 ? `${percent}%` : ''})
           </Text>
       </>;
   }
