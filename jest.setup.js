@@ -70,6 +70,11 @@ jest.mock('next-intl/navigation', () => ({
   redirect: jest.fn(),
 }))
 
+// Mock environment variables for validation
+process.env.DATA_BASE_URL = 'https://test-database.example.com'
+process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-TEST123456'
+Object.defineProperty(process.env, 'NODE_ENV', { value: 'test', writable: true })
+
 // Set up global test environment
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
