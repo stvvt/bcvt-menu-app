@@ -1,6 +1,8 @@
 export type Price = {
   price: string;
   currency?: string;
+  weight?: string;
+  unit?: string;
 };
 
 export type Meal = Price & {

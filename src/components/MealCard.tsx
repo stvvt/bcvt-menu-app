@@ -11,6 +11,7 @@ import type { EnrichedMeal } from '@/types/app';
 import DashWidget from './DashWidget';
 import PriceInfo from './PriceInfo';
 import MealImage from './MealImage';
+import getMealPrices from '@/utils/getMealPrices';
 
 interface MealCardProps {
   meal: EnrichedMeal;
@@ -18,6 +19,11 @@ interface MealCardProps {
 }
 
 const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
+  const priceHistory = getMealPrices(meal, refDate);
+  const recentPrice = priceHistory[priceHistory.length - 1];
+
+  const weight = recentPrice?.weight && recentPrice.unit ? `${recentPrice.weight} ${recentPrice.unit}` : undefined;
+
   return (
     <Card variant="outline" direction="row">
       <MealImage meal={meal} />
@@ -26,6 +32,9 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
           <HStack justify="space-between" align="flex-start">
             <Text fontWeight="medium" flex="1">
               {meal.name}
+              {weight && <Text as="span" fontSize="xs" color="gray.500" ml={2}>
+                {weight}
+              </Text>}
             </Text>
             <PriceInfo meal={meal} refDate={refDate} />
           </HStack>
