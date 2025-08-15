@@ -40,13 +40,17 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     const refDateIndex = priceHistory.findIndex(item => isSameDay(item.date, refDate));
     
     if (refDateIndex > 0) {
-      const currentAmount = currencyConverter(priceHistory[refDateIndex], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
-      const previousAmount = currencyConverter(priceHistory[refDateIndex - 1], clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+      const currentPrice = priceHistory[refDateIndex];
+      const previousPrice = priceHistory[refDateIndex - 1];
+      const currentAmount = currencyConverter(currentPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+      const previousAmount = currencyConverter(previousPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+      const amountChanged = currentAmount !== previousAmount;
+      const weightChanged = currentPrice.weight !== previousPrice.weight || currentPrice.unit !== previousPrice.unit;
       
-      if (currentAmount !== previousAmount) {
+      if (amountChanged || weightChanged) {
         return {
           text: t('updated'),
-          colorScheme: currentAmount > previousAmount ? "red" : "green"
+          colorScheme: amountChanged ? (currentAmount > previousAmount ? "red" : "green") : (weightChanged ? "yellow" : "gray")
         };
       }
     }

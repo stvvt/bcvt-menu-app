@@ -42,7 +42,12 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                     const displayPrice = getPriceDisplay(price);
                     return (
                       <Tr key={index}>
-                        <Td><FormatDate date={new Date(price.date)} /></Td>
+                        <Td>
+                          <FormatDate date={new Date(price.date)} />
+                          {price.weight && price.unit && <Text as="span" fontSize="xs" color="gray.500" ml={2}>
+                            {price.weight} {price.unit}
+                          </Text>}
+                        </Td>
                         <Td whiteSpace="nowrap" color={displayPrice?.color} align="right" padding={0}>
                           {displayPrice?.arrow}
                         </Td>
