@@ -1,4 +1,4 @@
-import { use, type FC } from 'react';
+import { type FC } from 'react';
 import { 
   Box, 
   Grid, 
@@ -7,19 +7,19 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import MealCard from './MealCard';
-import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { MealGroup } from '@/backend/getMenu';
+import { getTranslations } from 'next-intl/server';
 
 type DailyMenuProps = {
   menuData: Promise<MealGroup[]>;
   refDate: Date;
 };
 
-const DailyMenu: FC<DailyMenuProps> = ({ menuData, refDate }) => {
-  const t = useTranslations();
+const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate }) => {
+  const t = await getTranslations();
 
-  const groups = use(menuData);
+  const groups = await menuData;
 
   if (groups.length === 0) {
     return (
