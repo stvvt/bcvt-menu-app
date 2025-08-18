@@ -32,9 +32,9 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
           <HStack justify="space-between" align="flex-start">
             <Text fontWeight="medium" flex="1">
               {meal.name}
-              {weight && <Text as="span" fontSize="xs" color="gray.500" ml={2}>
+              {weight && <>{' '}<Text as="span" fontSize="xs" color="gray.500" whiteSpace="nowrap">
                 {weight}
-              </Text>}
+              </Text></>}
             </Text>
             <PriceInfo meal={meal} refDate={refDate} />
           </HStack>
