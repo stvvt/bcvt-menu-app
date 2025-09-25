@@ -2,6 +2,7 @@
 
 import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
+import { getMealInfo } from './getMealInfo';
 import { getPriceHistory } from './getPriceHistory';
 import config from '@/config/server';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
@@ -16,7 +17,7 @@ export type MealGroup = {
   meals: EnrichedMeal[];
 };
 
-export async function getMenu(date: Date): Promise<MealGroup[]> {
+export async function getMenu(date: Date, locale: string): Promise<MealGroup[]> {
   // Format the date as needed for the URL (adjust format as required)
   const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
 
@@ -38,10 +39,11 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     throw error;
   }
 
-  // Fetch categories and price history data
-  const [categories, priceHistoryData] = await Promise.all([
+  // Fetch categories, price history data, and meal info
+  const [categories, priceHistoryData, mealInfo] = await Promise.all([
     getCategories(),
-    getPriceHistory()
+    getPriceHistory(),
+    getMealInfo()
   ]);
   
   // Create a map of price history by meal name for efficient lookup
@@ -50,13 +52,14 @@ export async function getMenu(date: Date): Promise<MealGroup[]> {
     priceHistoryMap.set(item.name, item);
   });
   
-  // Enrich menu data with categories and price history
+  // Enrich menu data with categories, price history, and meal info
   const enrichedMeals = menuData.meals?.map((meal) => {
     return {
       name: meal.name,
       category: categories[meal.name],
       prices: transformPriceHistory(priceHistoryMap.get(meal.name)?.prices ?? []),
-      images: priceHistoryMap.get(meal.name)?.images ?? []
+      images: priceHistoryMap.get(meal.name)?.images ?? [],
+      info: mealInfo[meal.name]?.[locale]
     }
   }) || [];
 

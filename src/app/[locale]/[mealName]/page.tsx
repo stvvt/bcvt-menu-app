@@ -16,14 +16,17 @@ interface MealPageProps {
 }
 
 const MealPage: FC<MealPageProps> = async ({ params }) => {
-  const { mealName } = await params;
+  const { mealName, locale } = await params;
   const { NEXT_PUBLIC_BASE_CURRENCY_CODE, NEXT_PUBLIC_SECONDARY_CURRENCY_CODE } = clientConfig;
 
-  const mealData = await getMeal(decodeURIComponent(mealName));
+  const mealData = await getMeal(decodeURIComponent(mealName), locale);
   const t = await getTranslations();
   return (
     <>
-      <Heading mb={4}>{mealData.name}{' '}<Badge colorScheme="blue">{mealData.category}</Badge></Heading>
+      <Heading mb={4}>{mealData.info?.name}{' '}<Badge colorScheme="blue">{mealData.category}</Badge></Heading>
+      <Text mb={6} color="gray.600" lineHeight="1.6">
+        {mealData.info?.description}
+      </Text>
       <Card w="full" variant="unstyled">
         <CardBody>
           <Flex>

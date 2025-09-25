@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@/utils/currencyConverter';
-import type { MergedMealItem } from './db';
+import type { MergedMealItem, MealLocaleInfo } from './db';
 
 export type PriceHistoryItem = {
   date: Date;
@@ -14,4 +14,5 @@ export type PriceHistoryItem = {
 export type EnrichedMeal = Omit<MergedMealItem, 'prices'> & {
   category: string;
   prices: PriceHistoryItem[];
+  info?: MealLocaleInfo;
 };

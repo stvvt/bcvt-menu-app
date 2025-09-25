@@ -31,7 +31,7 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
         <CardBody p={3} pb={0}>
           <HStack justify="space-between" align="flex-start">
             <Text fontWeight="medium" flex="1">
-              {meal.name}
+              {meal.info?.name || meal.name}
               {weight && <>{' '}<Text as="span" fontSize="xs" color="gray.500" whiteSpace="nowrap">
                 {weight}
               </Text></>}
