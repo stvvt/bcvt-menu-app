@@ -35,3 +35,12 @@ export type MergedMealItem = {
 export type Merged = Array<MergedMealItem>;
 
 export type Categories = Record<string, string>;
+
+export type MealLocaleInfo = {
+  name: string;
+  description: string;
+};
+
+export type MealInfo = Record<string, MealLocaleInfo>;
+
+export type MealInfoData = Record<string, MealInfo>;
