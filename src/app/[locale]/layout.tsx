@@ -40,7 +40,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
               </HStack>
             </Box>
             <Box minH="100vh" p={{ base: 2, md: 8 }}>
-              <VStack spacing={8} maxW="800px" mx="auto">
+              <VStack spacing={8} maxW="800px" mx="auto" align="left">
                 {children}
               </VStack>
             </Box>

@@ -18,6 +18,6 @@ export async function getMealInfo() {
     
   } catch (error) {
     console.error('Error fetching meal info:', error);
-    throw new Error('Failed to fetch meal info data');
+    return {};
   }
 }

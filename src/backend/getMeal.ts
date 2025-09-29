@@ -18,7 +18,7 @@ async function getMeal(mealName: string, locale: string): Promise<EnrichedMeal> 
   ]);
   
   const category = categories[mealName];
-  const info = mealInfo[mealName]?.[locale];
+  const info = mealInfo[mealName]?.[locale] ?? { name: mealName };
   
   return {
     name: meal.name,

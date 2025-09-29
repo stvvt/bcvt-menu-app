@@ -23,10 +23,10 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   const t = await getTranslations();
   return (
     <>
-      <Heading mb={4}>{mealData.info?.name}{' '}<Badge colorScheme="blue">{mealData.category}</Badge></Heading>
-      <Text mb={6} color="gray.600" lineHeight="1.6">
-        {mealData.info?.description}
-      </Text>
+      <Heading>{mealData.info?.name}{' '}<Badge colorScheme="blue">{mealData.category}</Badge></Heading>
+      {mealData.info?.description && <Text color="gray.600" lineHeight="1.6">
+        {mealData.info.description}
+      </Text>}
       <Card w="full" variant="unstyled">
         <CardBody>
           <Flex>
