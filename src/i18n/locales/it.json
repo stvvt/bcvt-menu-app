@@ -1,0 +1,17 @@
+{
+  "hello": "Ciao",
+  "language": "Lingua",
+  "new": "Nuovo",
+  "updated": "Aggiornato",
+  "days": "{count, plural, =1 {giorno} other {# giorni}}",
+  "закуски": "Colazioni",
+  "супи": "Zuppe",
+  "салати": "Insalate",
+  "десерти": "Dolci",
+  "предястия": "Antipasti",
+  "основни ястия": "Piatti Principali",
+  "гарнитури": "Contorni",
+  "напитки": "Bevande",
+  "date": "Data",
+  "price": "Prezzo"
+}
