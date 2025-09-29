@@ -63,14 +63,14 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     };
   };
 
-  const { arrow, color } = getPriceDisplay(recentPrice) ?? { arrow: '', color: 'black' };
+  const { arrow, color } = getPriceDisplay(recentPrice, refDate) ?? { arrow: '', color: 'black' };
   const badgeInfo = getBadgeInfo();
 
   return (
     <VStack align="flex-end" spacing={0}>
       <HStack spacing={1} alignItems="center" position="relative">
         <Text fontWeight="bold" color={color}>
-          {arrow}{' '}
+          {arrow ? <>{arrow}{' '}</> : undefined} 
           <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
         </Text>
         <Badge 

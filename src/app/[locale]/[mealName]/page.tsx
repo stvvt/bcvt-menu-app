@@ -39,7 +39,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                 </Thead>
                 <Tbody>
                   {mealData.prices.map((price, index) => {
-                    const displayPrice = getPriceDisplay(price);
+                    const displayPrice = getPriceDisplay(price, price.date);
                     return (
                       <Tr key={index}>
                         <Td>
