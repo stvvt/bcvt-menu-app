@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { FC } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Link } from '@chakra-ui/react';
+import { Button } from '@/components/ui/button';
 import DatePicker from '@/components/DatePicker';
 import { format, isToday } from 'date-fns';
 import { Link as NextLink } from '@/i18n/navigation';
@@ -44,7 +44,11 @@ const RefDate: FC = () => {
         }
         dateFormat="dd.MM.yyyy"
       />
-      {!isToday(loadingDate) && <Link href="/" color="blue.500" as={NextLink} fontSize="sm">today</Link>}
+      {!isToday(loadingDate) && (
+        <NextLink href="/" className="text-sm text-blue-500 hover:text-blue-700 underline">
+          today
+        </NextLink>
+      )}
     </>
   );
 };

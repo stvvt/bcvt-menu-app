@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { HStack, Text, Badge, VStack } from '@chakra-ui/react';
+// Badge component no longer needed - using custom div with Tailwind classes
 import { differenceInDays, isSameDay } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import type { EnrichedMeal } from '@/types/app';
@@ -23,7 +23,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     if (!priceHistory || priceHistory.length === 0) {
       return {
         text: "0",
-        colorScheme: "gray"
+        type: "default" as const
       };
     }
     
@@ -32,7 +32,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       if (isSameDay(priceHistory[0].date, refDate)) {
         return {
           text: t('new'),
-          colorScheme: "green"
+          type: "new" as const
         };
       }
     }
@@ -50,7 +50,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       if (amountChanged || weightChanged) {
         return {
           text: t('updated'),
-          colorScheme: amountChanged ? (currentAmount > previousAmount ? "red" : "green") : (weightChanged ? "yellow" : "gray")
+          type: amountChanged ? "amountChanged" as const : "weightChanged" as const
         };
       }
     }
@@ -59,41 +59,43 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     
     return {
       text: t('days', {count: daysSinceLastPrice}),
-      colorScheme: "gray"
+      type: "default" as const
     };
   };
 
   const { arrow, color } = getPriceDisplay(recentPrice, refDate) ?? { arrow: '', color: 'black' };
   const badgeInfo = getBadgeInfo();
 
+  const getBadgeClasses = (type: string) => {
+    const baseClasses = "text-[10px] leading-none min-w-4 h-4 flex items-center justify-center absolute -top-4 -right-9 px-1 py-0 font-medium rounded-full";
+    
+    switch (type) {
+      case "new":
+        return `${baseClasses} bg-green-500 text-white`;
+      case "weightChanged":
+        return `${baseClasses} bg-yellow-500 text-black`;
+      case "amountChanged":
+        return `${baseClasses} bg-red-500 text-white`;
+      default:
+        return `${baseClasses} bg-gray-400 text-white`;
+    }
+  };
+
   return (
-    <VStack align="flex-end" spacing={0}>
-      <HStack spacing={1} alignItems="center" position="relative">
-        <Text fontWeight="bold" color={color}>
+    <div className="flex flex-col items-end gap-0">
+      <div className="flex items-center gap-1 relative">
+        <div className="font-bold" style={{ color }}>
           {arrow ? <>{arrow}{' '}</> : undefined} 
           <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
-        </Text>
-        <Badge 
-          colorScheme={badgeInfo.colorScheme}
-          fontSize="3xs"
-          minW="16px"
-          h="16px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          position="absolute"
-          top="-16px"
-          right="-16px"
-          px={1}
-          py={0}
-        >
+        </div>
+        <div className={getBadgeClasses(badgeInfo.type)}>
           {badgeInfo.text}
-        </Badge>
-      </HStack>
-      <Text align="right" fontSize="xs" color={color}>
+        </div>
+      </div>
+      <div className="text-right text-xs" style={{ color }}>
         <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
-      </Text>
-    </VStack>
+      </div>
+    </div>
   );
 };
 

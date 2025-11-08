@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Image, Box } from '@chakra-ui/react';
+import Image from 'next/image';
 import type { EnrichedMeal } from '@/types/app';
 
 interface MealImageProps {
@@ -9,15 +9,19 @@ interface MealImageProps {
 
 const MealImage: FC<MealImageProps> = ({ meal, size = '72px' }) => {
   return meal.images.length > 0 ? (
-    <Image
-      src={meal.images[meal.images.length - 1].imageUrl}
-      alt={meal.name}
-      w={size}
-      objectFit="cover"
-      borderLeftRadius="md"
-    />
+    <div className="relative flex-shrink-0 self-stretch" style={{ width: size, minHeight: size }}>
+      <Image
+        src={meal.images[meal.images.length - 1].imageUrl}
+        alt={meal.name}
+        fill
+        className="object-cover"
+      />
+    </div>
   ) : (
-    <Box minW={size} minH={size} bg="gray.100" borderLeftRadius="md" />
+    <div 
+      className="bg-gray-100 flex-shrink-0 self-stretch" 
+      style={{ width: size, minHeight: size }}
+    />
   );
 };
 

@@ -1,11 +1,5 @@
 import { type FC } from 'react';
-import { 
-  Box, 
-  Grid, 
-  Text, 
-  VStack, 
-  Heading,
-} from '@chakra-ui/react';
+// No UI imports needed - using Tailwind classes
 import MealCard from './MealCard';
 import { Link } from '@/i18n/navigation';
 import type { MealGroup } from '@/backend/getMenu';
@@ -23,39 +17,31 @@ const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate }) => {
 
   if (groups.length === 0) {
     return (
-      <Box textAlign="center" py={8}>
-        <Text color="gray.500">No meals available for this date.</Text>
-      </Box>
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">No meals available for this date.</p>
+      </div>
     );
   }
 
   return (
-    <Box>
+    <div>
         {groups.map((group) => (
-          <VStack key={group.category} pb={16}>
-            <Heading size="sm" textAlign="center" background="blue.300" color="whiteAlpha.1000" mb={4} p={2} borderRadius="md">{t(group.category?.toLowerCase() ?? '')?.toUpperCase()}</Heading>
-            <Grid
-              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-              gap={4}
-              w="100%"
-            >
+          <div key={group.category} className="pb-16 flex flex-col items-center gap-4">
+            <h2 className="text-sm font-semibold text-center bg-blue-300 text-white mb-4 p-2 rounded-md">
+              {t(group.category?.toLowerCase() ?? '')?.toUpperCase()}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
               {group.meals.map((meal, index) => (
-                <Link key={index} href={`/${meal.name}`}>
-                  <Box 
-                    cursor="pointer" 
-                    _hover={{ 
-                      '> div': { borderColor: 'blue.500' }
-                    }} 
-                    transition="all 0.2s"
-                  >
+                <Link key={index} href={`/${meal.name}`} className="h-full">
+                  <div className="cursor-pointer transition-all duration-200 hover:[&>div]:border-blue-500 h-full">
                     <MealCard meal={meal} refDate={refDate} />
-                  </Box>
+                  </div>
                 </Link>
               ))}
-            </Grid>
-          </VStack>
+            </div>
+          </div>
         ))}
-    </Box>
+    </div>
   );
 };
 

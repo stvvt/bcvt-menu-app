@@ -1,12 +1,5 @@
 import { type FC } from 'react';
-import { 
-  HStack, 
-  Text,
-  Card,
-  CardBody,
-  CardFooter,
-  Stack,
-} from '@chakra-ui/react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import type { EnrichedMeal } from '@/types/app';
 import DashWidget from './DashWidget';
 import PriceInfo from './PriceInfo';
@@ -25,24 +18,26 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
   const weight = recentPrice?.weight && recentPrice.unit ? `${recentPrice.weight} ${recentPrice.unit}` : undefined;
 
   return (
-    <Card variant="outline" direction="row">
+    <Card className="flex flex-row border overflow-visible h-full">
       <MealImage meal={meal} />
-      <Stack flex="1">
-        <CardBody p={3} pb={0}>
-          <HStack justify="space-between" align="flex-start">
-            <Text fontWeight="medium" flex="1">
+      <div className="flex-1 flex flex-col justify-between">
+        <CardContent className="px-3 py-1.5 pb-1 pr-8">
+          <div className="flex justify-between items-start">
+            <div className="font-medium flex-1">
               {meal.info?.name || meal.name}
-              {weight && <>{' '}<Text as="span" fontSize="xs" color="gray.500" whiteSpace="nowrap">
-                {weight}
-              </Text></>}
-            </Text>
+              {weight && (
+                <span className="text-xs text-muted-foreground whitespace-nowrap ml-1">
+                  {weight}
+                </span>
+              )}
+            </div>
             <PriceInfo meal={meal} refDate={refDate} />
-          </HStack>
-        </CardBody>
-        <CardFooter p={3} pt={0} pb={0}>
+          </div>
+        </CardContent>
+        <CardFooter className="px-3 pb-1.5 pt-0 pr-8">
           <DashWidget meal={meal} refDate={refDate} />
         </CardFooter>
-      </Stack>
+      </div>
     </Card>
   );
 };
