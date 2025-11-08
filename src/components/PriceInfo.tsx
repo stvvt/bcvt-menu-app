@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-// Badge component no longer needed - using custom div with Tailwind classes
+import { Badge } from '@/components/ui/badge';
 import { differenceInDays, isSameDay } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import type { EnrichedMeal } from '@/types/app';
@@ -67,7 +67,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const badgeInfo = getBadgeInfo();
 
   const getBadgeClasses = (type: string) => {
-    const baseClasses = "text-[10px] leading-none min-w-4 h-4 flex items-center justify-center absolute -top-4 -right-9 px-1 py-0 font-medium rounded-full";
+    const baseClasses = "text-[10px] leading-none min-w-4 h-4 flex items-center justify-center absolute -top-3.5 -right-4 px-1 py-0 font-medium rounded-full";
     
     switch (type) {
       case "new":
@@ -88,9 +88,9 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
           {arrow ? <>{arrow}{' '}</> : undefined} 
           <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
         </div>
-        <div className={getBadgeClasses(badgeInfo.type)}>
+        <Badge className={getBadgeClasses(badgeInfo.type)}>
           {badgeInfo.text}
-        </div>
+        </Badge>
       </div>
       <div className="text-right text-xs" style={{ color }}>
         <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />

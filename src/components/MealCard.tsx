@@ -18,10 +18,10 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
   const weight = recentPrice?.weight && recentPrice.unit ? `${recentPrice.weight} ${recentPrice.unit}` : undefined;
 
   return (
-    <Card className="flex flex-row border overflow-visible h-full">
+    <Card className="flex flex-row border h-full hover:border-blue-500">
       <MealImage meal={meal} />
       <div className="flex-1 flex flex-col justify-between">
-        <CardContent className="px-3 py-1.5 pb-1 pr-8">
+        <CardContent className="px-3 py-1.5 pb-1">
           <div className="flex justify-between items-start">
             <div className="font-medium flex-1">
               {meal.info?.name || meal.name}
@@ -34,7 +34,7 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
             <PriceInfo meal={meal} refDate={refDate} />
           </div>
         </CardContent>
-        <CardFooter className="px-3 pb-1.5 pt-0 pr-8">
+        <CardFooter className="px-3 py-0">
           <DashWidget meal={meal} refDate={refDate} />
         </CardFooter>
       </div>

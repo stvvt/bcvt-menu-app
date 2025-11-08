@@ -33,9 +33,7 @@ const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
               {group.meals.map((meal, index) => (
                 <Link key={index} href={`/${meal.name}`} className="h-full">
-                  <div className="cursor-pointer transition-all duration-200 hover:[&>div]:border-blue-500 h-full">
                     <MealCard meal={meal} refDate={refDate} />
-                  </div>
                 </Link>
               ))}
             </div>
