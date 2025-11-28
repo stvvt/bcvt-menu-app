@@ -1,6 +1,7 @@
 'use client';
 
-import { Alert, AlertIcon  } from '@chakra-ui/react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle, Info } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -18,16 +19,21 @@ const ErrorPage = ({ error, reset }: { error: Error, reset: () => void } ) => {
 
   if (error.name === 'NotFoundError') {
     return (
-      <Alert status="warning" variant="subtle">
-        There is no menu data for this date.
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertDescription>
+          There is no menu data for this date.
+        </AlertDescription>
       </Alert>
     );
   }
 
   return (
-    <Alert status="error" variant="subtle">
-      <AlertIcon />
-      {error.message}
+    <Alert variant="destructive">
+      <AlertTriangle className="h-4 w-4" />
+      <AlertDescription>
+        {error.message}
+      </AlertDescription>
     </Alert>
   );
 };

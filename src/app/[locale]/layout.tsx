@@ -5,11 +5,8 @@ import type { FC, PropsWithChildren } from 'react';
 import { routing } from '@/i18n/routing';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { Box, VStack, HStack } from '@chakra-ui/react';
-import { ColorModeScript } from '@chakra-ui/react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ColorModeToggle from '@/components/ColorModeToggle';
-import { initialColorMode } from '@/app/theme';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
@@ -30,20 +27,19 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <GoogleAnalytics />
-        <ColorModeScript initialColorMode={initialColorMode} />
         <Providers>
           <NextIntlClientProvider>
-            <Box position={{ md: 'fixed' }} top={{md: 2}} right={{md: 2}} zIndex={1000}>
-              <HStack spacing={2}>
+            <div className="fixed top-2 right-2 z-50 md:block">
+              <div className="flex items-center gap-2">
                 <ColorModeToggle />
                 <LanguageSwitcher />
-              </HStack>
-            </Box>
-            <Box minH="100vh" p={{ base: 2, md: 8 }}>
-              <VStack spacing={8} maxW="800px" mx="auto">
+              </div>
+            </div>
+            <div className="min-h-screen p-2 md:p-8">
+              <div className="flex flex-col gap-8 max-w-3xl mx-auto">
                 {children}
-              </VStack>
-            </Box>
+              </div>
+            </div>
           </NextIntlClientProvider>
         </Providers>
       </body>

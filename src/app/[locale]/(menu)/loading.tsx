@@ -1,12 +1,12 @@
-import { Box, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Loader2 } from 'lucide-react';
 
 const LoadingFallback = () => (
-  <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-    <VStack spacing={4}>
-      <Spinner size="lg" />
-      <Text>Loading menu data...</Text>
-    </VStack>
-  </Box>
+  <div className="flex justify-center items-center py-8">
+    <div className="flex flex-col items-center gap-4">
+      <Loader2 className="h-8 w-8 animate-spin" />
+      <p className="text-muted-foreground">Loading menu data...</p>
+    </div>
+  </div>
 );
 
 export default LoadingFallback;

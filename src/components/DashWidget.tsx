@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Box, HStack, Popover, PopoverTrigger, PopoverContent, PopoverBody, Text } from '@chakra-ui/react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
 import type { EnrichedMeal } from '@/types/app';
 import clientConfig from '@/config/client';
@@ -23,14 +23,14 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
   const limitedPriceHistory = priceHistory.slice(-10);
 
   const getColorForPriceChange = (currentAmount: number, previousAmount: number) => {
-    if (currentAmount > previousAmount) return 'red.400';
-    if (currentAmount < previousAmount) return 'green.400';
-    return 'gray.300';
+    if (currentAmount > previousAmount) return 'rgb(248 113 113)'; // red-400
+    if (currentAmount < previousAmount) return 'rgb(74 222 128)'; // green-400
+    return 'rgb(209 213 219)'; // gray-300
   };
 
   return (
-    <Box>
-      <HStack spacing={1}>
+    <div>
+      <div className="flex gap-1">
         {limitedPriceHistory.map((item, index) => {
           if (index === 0) {
             return null;
@@ -43,36 +43,33 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
             return null;
           }
 
-          const color = index === 0 ? 'gray.300' : getColorForPriceChange(currentAmount, previousAmount);
+          const color = index === 0 ? 'rgb(209 213 219)' : getColorForPriceChange(currentAmount, previousAmount);
           const timeAgo = formatDistanceToNow(new Date(item.date), { addSuffix: true });
           
           return (
-            <Popover key={`${item.date}-${index}`} trigger="hover">
+            <Popover key={`${item.date}-${index}`}>
               <PopoverTrigger>
-                <Box
-                  width="12px"
-                  height="4px"
-                  bg={color}
-                  borderRadius="1px"
-                  cursor="pointer"
+                <div
+                  className="w-3 h-1 rounded-sm cursor-pointer"
+                  style={{ backgroundColor: color }}
                 />
               </PopoverTrigger>
               <PopoverContent>
-                <PopoverBody>
-                  <Text fontSize="sm">
+                <div className="p-3">
+                  <div className="text-sm">
                     <FormatPrice price={limitedPriceHistory[index-1]} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
                     {' → '}
                     <FormatPrice price={item} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
                     {' '}
-                    <Text fontSize="xs" as="span" color="gray.500">{timeAgo}</Text>
-                  </Text>
-                </PopoverBody>
+                    <span className="text-xs text-muted-foreground">{timeAgo}</span>
+                  </div>
+                </div>
               </PopoverContent>
             </Popover>
           );
         })}
-      </HStack>
-    </Box>
+      </div>
+    </div>
   );
 };
 

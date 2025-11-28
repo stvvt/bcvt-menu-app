@@ -3,7 +3,7 @@
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
-import { Button, ButtonGroup } from '@chakra-ui/react';
+import { Button } from '@/components/ui/button';
 import { useSearchParams } from 'next/navigation';
 
 const LanguageSwitcher = () => {
@@ -17,18 +17,21 @@ const LanguageSwitcher = () => {
   };
 
   return (
-    <ButtonGroup isAttached variant="outline" size="sm">
-      {routing.locales.map((loc) => (
+    <div className="flex">
+      {routing.locales.map((loc, index) => (
         <Button
           key={loc}
           onClick={() => handleLocaleChange(loc)}
-          colorScheme={locale === loc ? 'blue' : 'gray'}
-          variant={locale === loc ? 'solid' : 'outline'}
+          variant={locale === loc ? 'default' : 'outline'}
+          size="sm"
+          className={`${
+            index === 0 ? 'rounded-r-none' : index === routing.locales.length - 1 ? 'rounded-l-none' : 'rounded-none'
+          } ${index > 0 ? 'border-l-0' : ''}`}
         >
           {loc.toUpperCase()}
         </Button>
       ))}
-    </ButtonGroup>
+    </div>
   );
 };
 

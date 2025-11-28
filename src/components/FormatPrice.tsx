@@ -1,7 +1,7 @@
 import type { PriceHistoryItem } from '@/types/app';
 import type { CurrencyCode } from '@/utils/currencyConverter';
 import currencyConverter from '@/utils/currencyConverter';
-import { Text } from '@chakra-ui/react';
+// No UI imports needed - using plain JSX
 import { useFormatter } from 'next-intl';
 import type { FC } from 'react';
 
@@ -17,9 +17,9 @@ const FormatPrice: FC<Props> = ({ price, currency, showDelta = false }) => {
   if (showDelta && percent != 0) {
       return <>
         {format.number(convertedAmount, { style: 'currency', currency })}
-        <Text as="span" fontSize="xs">
+        <span className="text-xs">
           {' '}({percent > 0 ? `+${percent}%` : percent < 0 ? `${percent}%` : ''})
-          </Text>
+        </span>
       </>;
   }
 

@@ -1,5 +1,7 @@
 import getMeal from '@/backend/getMeal';
-import { Badge, Heading, Table, Tbody, Td, Th, Thead, Tr, Card, CardBody, Flex, Box, Text } from '@chakra-ui/react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getTranslations } from 'next-intl/server';
 import { type FC } from 'react';
 import MealImage from '@/components/MealImage';
@@ -23,53 +25,66 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   const t = await getTranslations();
   return (
     <>
-      <Heading>{mealData.info?.name}{' '}<Badge colorScheme="blue">{t(mealData.category)}</Badge></Heading>
-      {mealData.info?.description && <Text color="gray.600" lineHeight="1.6">
-        {mealData.info.description}
-      </Text>}
-      <Card w="full" variant="unstyled">
-        <CardBody>
-          <Flex>
+      <h1 className="text-3xl font-bold flex items-center gap-2">
+        {mealData.info?.name}
+        <Badge variant="default">{t(mealData.category)}</Badge>
+      </h1>
+      {mealData.info?.description && (
+        <p className="text-muted-foreground leading-relaxed">
+          {mealData.info.description}
+        </p>
+      )}
+      <Card className="w-full">
+        <CardContent className="p-0">
+          <div className="flex">
             <MealImage meal={mealData} size="200px" />
-            <Box flex="1" ml={4}>
-              <Table w="full" size="sm">
-                <Thead>
-                  <Tr>
-                    <Th w="100%">{t('date')}</Th>
-                    <Th padding={0}></Th>
-                    <Th paddingLeft={1}>{t('price')}</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
+            <div className="flex-1 p-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-full">{t('date')}</TableHead>
+                    <TableHead className="p-0"></TableHead>
+                    <TableHead className="pl-1">{t('price')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {mealData.prices.map((price, index) => {
                     const displayPrice = getPriceDisplay(price, price.date);
                     return (
-                      <Tr key={index}>
-                        <Td>
+                      <TableRow key={index}>
+                        <TableCell>
                           <FormatDate date={new Date(price.date)} />
-                          {price.weight && price.unit && <Text as="span" fontSize="xs" color="gray.500" ml={2}>
-                            {price.weight} {price.unit}
-                          </Text>}
-                        </Td>
-                        <Td whiteSpace="nowrap" color={displayPrice?.color} align="right" padding={0}>
+                          {price.weight && price.unit && (
+                            <span className="text-xs text-muted-foreground ml-2">
+                              {price.weight} {price.unit}
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell 
+                          className="whitespace-nowrap text-right p-0" 
+                          style={{ color: displayPrice?.color }}
+                        >
                           {displayPrice?.arrow}
-                        </Td>
-                        <Td whiteSpace="nowrap" color={displayPrice?.color} align="right" paddingLeft={1}>
+                        </TableCell>
+                        <TableCell 
+                          className="whitespace-nowrap text-right pl-1" 
+                          style={{ color: displayPrice?.color }}
+                        >
                           <FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
-                        </Td>
-                        <Td whiteSpace="nowrap">
-                          <Text align="right" fontSize="xs" color="gray.500">
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="text-right text-xs text-muted-foreground">
                             <FormatPrice price={price} currency={NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
-                          </Text>
-                        </Td>
-                      </Tr>
+                          </div>
+                        </TableCell>
+                      </TableRow>
                     )})
                   }
-                </Tbody>
+                </TableBody>
               </Table>
-            </Box>
-          </Flex>
-        </CardBody>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </>
   );
