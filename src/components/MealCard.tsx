@@ -22,7 +22,7 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
       <MealImage meal={meal} />
       <div className="flex-1 flex flex-col justify-between">
         <CardContent className="px-3 py-1.5 pb-1">
-          <div className="flex justify-between items-start">
+          <div className="gap-2 flex justify-between items-start">
             <div className="font-medium flex-1">
               {meal.info?.name || meal.name}
               {weight && (

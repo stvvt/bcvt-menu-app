@@ -9,7 +9,15 @@ interface MealImageProps {
 
 const MealImage: FC<MealImageProps> = ({ meal, size = '72px' }) => {
   return meal.images.length > 0 ? (
-    <div className="relative flex-shrink-0 self-stretch rounded-l-lg overflow-hidden" style={{ width: size, minHeight: size }}>
+    <div 
+      className="relative flex-shrink-0 self-stretch overflow-hidden" 
+      style={{ 
+        width: size, 
+        minHeight: size,
+        borderTopLeftRadius: 'calc(var(--radius) - 1px)',
+        borderBottomLeftRadius: 'calc(var(--radius) - 1px)'
+      }}
+    >
       <Image
         src={meal.images[meal.images.length - 1].imageUrl}
         alt={meal.name}
@@ -19,8 +27,13 @@ const MealImage: FC<MealImageProps> = ({ meal, size = '72px' }) => {
     </div>
   ) : (
     <div 
-      className="bg-gray-100 flex-shrink-0 self-stretch" 
-      style={{ width: size, minHeight: size }}
+      className="bg-gray-100 flex-shrink-0 self-stretch overflow-hidden" 
+      style={{ 
+        width: size, 
+        minHeight: size,
+        borderTopLeftRadius: 'calc(var(--radius) - 1px)',
+        borderBottomLeftRadius: 'calc(var(--radius) - 1px)'
+      }}
     />
   );
 };

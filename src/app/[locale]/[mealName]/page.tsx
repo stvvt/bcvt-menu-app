@@ -25,8 +25,8 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   const t = await getTranslations();
   return (
     <>
-      <h1 className="text-3xl font-bold">
-        {mealData.info?.name}{' '}
+      <h1 className="text-3xl font-bold flex items-center gap-2">
+        {mealData.info?.name}
         <Badge variant="default">{t(mealData.category)}</Badge>
       </h1>
       {mealData.info?.description && (
@@ -35,10 +35,10 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
         </p>
       )}
       <Card className="w-full">
-        <CardContent>
+        <CardContent className="p-0">
           <div className="flex">
             <MealImage meal={mealData} size="200px" />
-            <div className="flex-1 ml-4">
+            <div className="flex-1 p-4">
               <Table>
                 <TableHeader>
                   <TableRow>
