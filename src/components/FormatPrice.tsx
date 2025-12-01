@@ -14,12 +14,14 @@ const FormatPrice: FC<Props> = ({ price, currency, showDelta = false }) => {
   const format = useFormatter();
   const convertedAmount = currencyConverter(price, currency);
   const percent = Math.round(price.delta * 100);
+  const arrow = percent > 0 ? '↗' : percent < 0 ? '↘' : '';
   if (showDelta && percent != 0) {
       return <>
-        {format.number(convertedAmount, { style: 'currency', currency })}
-        <span className="text-xs">
-          {' '}({percent > 0 ? `+${percent}%` : percent < 0 ? `${percent}%` : ''})
+        <span className="text-xs text-muted-foreground font-normal">
+          {arrow}{`${Math.abs(percent)}%`}
         </span>
+        {' '}
+        {format.number(convertedAmount, { style: 'currency', currency })}
       </>;
   }
 

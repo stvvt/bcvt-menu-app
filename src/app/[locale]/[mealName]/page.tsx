@@ -43,8 +43,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-full">{t('date')}</TableHead>
-                    <TableHead className="p-0"></TableHead>
-                    <TableHead className="pl-1">{t('price')}</TableHead>
+                    <TableHead className="text-center" colSpan={3} align="center">{t('price')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -61,13 +60,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                           )}
                         </TableCell>
                         <TableCell 
-                          className="whitespace-nowrap text-right p-0" 
-                          style={{ color: displayPrice?.color }}
-                        >
-                          {displayPrice?.arrow}
-                        </TableCell>
-                        <TableCell 
-                          className="whitespace-nowrap text-right pl-1" 
+                          className="whitespace-nowrap text-right" 
                           style={{ color: displayPrice?.color }}
                         >
                           <FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>

@@ -18,7 +18,9 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   const t = useTranslations();
   const priceHistory = getMealPrices(meal, refDate);
   const recentPrice = priceHistory[priceHistory.length - 1];
-  
+
+  const daysSinceLastPrice = differenceInDays(refDate, recentPrice.date);
+
   const getBadgeInfo = () => {
     if (!priceHistory || priceHistory.length === 0) {
       return {
@@ -55,15 +57,13 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
       }
     }
     
-    const daysSinceLastPrice = differenceInDays(refDate, recentPrice.date);
-    
     return {
       text: t('days', {count: daysSinceLastPrice}),
       type: "default" as const
     };
   };
 
-  const { arrow, color } = getPriceDisplay(recentPrice, refDate) ?? { arrow: '', color: 'black' };
+  const { color } = getPriceDisplay(recentPrice, refDate) ?? { color: 'black' };
   const badgeInfo = getBadgeInfo();
 
   const getBadgeClasses = (type: string) => {
@@ -85,8 +85,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     <div className="flex flex-col items-end gap-0">
       <div className="flex items-center gap-1 relative">
         <div className="font-bold" style={{ color }}>
-          {arrow ? <>{arrow}{' '}</> : undefined} 
-          <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
+          <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta={daysSinceLastPrice < 3}/>
         </div>
         <Badge className={getBadgeClasses(badgeInfo.type)}>
           {badgeInfo.text}

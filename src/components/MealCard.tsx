@@ -19,7 +19,7 @@ const MealCard: FC<MealCardProps> = ({ meal, refDate }) => {
 
   return (
     <Card className="flex flex-row border h-full hover:border-blue-500">
-      <MealImage meal={meal} />
+      <MealImage meal={meal} size="66px"/>
       <div className="flex-1 flex flex-col justify-between">
         <CardContent className="px-3 py-1.5 pb-1">
           <div className="gap-2 flex justify-between items-start">

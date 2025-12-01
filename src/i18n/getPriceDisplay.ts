@@ -7,12 +7,10 @@ const getPriceDisplay = (priceHistoryItem: PriceHistoryItem, refDate: Date) => {
   if (daysSinceLastPrice < 3) {
     if (priceHistoryItem.delta > Number.EPSILON) {
       return {
-        arrow: '↗',
         color: 'red.500'
       };
     } else if (priceHistoryItem.delta < -Number.EPSILON) {
       return {
-        arrow: '↘',
         color: 'green.500'
       };
     }
