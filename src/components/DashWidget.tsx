@@ -6,6 +6,7 @@ import clientConfig from '@/config/client';
 import currencyConverter from '@/utils/currencyConverter';
 import FormatPrice from '@/components/FormatPrice';
 import getMealPrices from '@/utils/getMealPrices';
+import { cn } from '@/lib/utils';
 
 interface DashWidgetProps {
   meal: EnrichedMeal;
@@ -23,9 +24,9 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
   const limitedPriceHistory = priceHistory.slice(-10);
 
   const getColorForPriceChange = (currentAmount: number, previousAmount: number) => {
-    if (currentAmount > previousAmount) return 'rgb(248 113 113)'; // red-400
-    if (currentAmount < previousAmount) return 'rgb(74 222 128)'; // green-400
-    return 'rgb(209 213 219)'; // gray-300
+    if (currentAmount > previousAmount) return 'bg-red-400';
+    if (currentAmount < previousAmount) return 'bg-green-400';
+    return 'bg-gray-300';
   };
 
   return (
@@ -43,21 +44,22 @@ const DashWidget: FC<DashWidgetProps> = ({ meal, refDate }) => {
             return null;
           }
 
-          const color = index === 0 ? 'rgb(209 213 219)' : getColorForPriceChange(currentAmount, previousAmount);
+          const colorClass = index === 0 ? 'bg-gray-300' : getColorForPriceChange(currentAmount, previousAmount);
           const timeAgo = formatDistanceToNow(new Date(item.date), { addSuffix: true });
+          const previousPrice = limitedPriceHistory[index - 1];
           
           return (
             <Popover key={`${item.date}-${index}`}>
-              <PopoverTrigger>
-                <div
-                  className="w-3 h-1 rounded-sm cursor-pointer"
-                  style={{ backgroundColor: color }}
+              <PopoverTrigger asChild>
+                <button
+                  className={cn("w-3 h-1 rounded-sm cursor-pointer border-none p-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500", colorClass)}
+                  aria-label={`Price changed ${timeAgo}`}
                 />
               </PopoverTrigger>
               <PopoverContent>
                 <div className="p-3">
                   <div className="text-sm">
-                    <FormatPrice price={limitedPriceHistory[index-1]} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
+                    <FormatPrice price={previousPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
                     {' → '}
                     <FormatPrice price={item} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}/>
                     {' '}
