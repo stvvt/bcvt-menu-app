@@ -1,5 +1,6 @@
 import { getMenu } from '@/backend/getMenu';
 import DailyMenu from '@/components/DailyMenu';
+import PriceSurprises from '@/components/PriceSurprises';
 import { type FC } from 'react';
 
 const HomeContent: FC<{ 
@@ -10,8 +11,13 @@ const HomeContent: FC<{
 
   const loadingDate = dateParam.date ? new Date(dateParam.date) : new Date();
 
+  const menuData = await getMenu(loadingDate, locale);
+
   return (
-    <DailyMenu menuData={getMenu(loadingDate, locale)} refDate={loadingDate} />
+    <>
+      <PriceSurprises menuData={menuData} refDate={loadingDate} />
+      <DailyMenu menuData={Promise.resolve(menuData)} refDate={loadingDate} />
+    </>
   );
 }
 
