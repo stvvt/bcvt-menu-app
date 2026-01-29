@@ -9,6 +9,7 @@ import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import FormatDate from '@/components/FormatDate';
 import getPriceDisplay from '@/i18n/getPriceDisplay';
+import { cn } from '@/lib/utils';
 
 interface MealPageProps {
   params: Promise<{
@@ -60,8 +61,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                           )}
                         </TableCell>
                         <TableCell 
-                          className="whitespace-nowrap text-right" 
-                          style={{ color: displayPrice?.color }}
+                          className={cn("whitespace-nowrap text-right", displayPrice?.colorClass)}
                         >
                           <FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
                         </TableCell>

@@ -8,6 +8,7 @@ import FormatPrice from '@/components/FormatPrice';
 import currencyConverter from '@/utils/currencyConverter';
 import getMealPrices from '@/utils/getMealPrices';
 import getPriceDisplay from '@/i18n/getPriceDisplay';
+import { cn } from '@/lib/utils';
 
 interface PriceInfoProps {
   meal: EnrichedMeal;
@@ -63,7 +64,7 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
     };
   };
 
-  const { color } = getPriceDisplay(recentPrice, refDate) ?? { color: 'black' };
+  const { colorClass } = getPriceDisplay(recentPrice, refDate) ?? {};
   const badgeInfo = getBadgeInfo();
 
   const getBadgeClasses = (type: string) => {
@@ -84,14 +85,14 @@ const PriceInfo: FC<PriceInfoProps> = ({ meal, refDate }) => {
   return (
     <div className="flex flex-col items-end gap-0">
       <div className="flex items-center gap-1 relative">
-        <div className="font-bold" style={{ color }}>
+        <div className={cn("font-bold", colorClass || "text-foreground")}>
           <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta={daysSinceLastPrice < 3}/>
         </div>
         <Badge className={getBadgeClasses(badgeInfo.type)}>
           {badgeInfo.text}
         </Badge>
       </div>
-      <div className="text-right text-xs" style={{ color }}>
+      <div className={cn("text-right text-xs", colorClass || "text-foreground")}>
         <FormatPrice price={recentPrice} currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
       </div>
     </div>
