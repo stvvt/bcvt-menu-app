@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "menu": "Daily menu"
+  },
   "hello": "Hello",
   "language": "Language",
   "new": "New",

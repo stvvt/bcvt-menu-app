@@ -5,9 +5,9 @@ import type { FC, PropsWithChildren } from 'react';
 import { routing } from '@/i18n/routing';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import ColorModeToggle from '@/components/ColorModeToggle';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import TopBar from '@/components/TopBar';
+import Sidebar from '@/components/Sidebar';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -29,15 +29,17 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
         <GoogleAnalytics />
         <Providers>
           <NextIntlClientProvider>
-            <div className="fixed top-2 right-2 z-50 md:block">
-              <div className="flex items-center gap-2">
-                <ColorModeToggle />
-                <LanguageSwitcher />
-              </div>
-            </div>
-            <div className="min-h-screen p-2 md:p-8">
-              <div className="flex flex-col gap-8 max-w-3xl mx-auto">
-                {children}
+            <div className="min-h-screen flex flex-col">
+              <TopBar />
+              <div className="flex flex-1">
+                {/* Desktop sidebar */}
+                <Sidebar className="hidden md:flex w-64 border-r bg-background" />
+                {/* Main content area */}
+                <main className="flex-1 p-4 md:p-8">
+                  <div className="flex flex-col gap-8 max-w-3xl mx-auto">
+                    {children}
+                  </div>
+                </main>
               </div>
             </div>
           </NextIntlClientProvider>
