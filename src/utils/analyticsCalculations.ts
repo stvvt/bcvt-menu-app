@@ -58,6 +58,12 @@ export function calculateAnalyticsSummary(
   const categoryData: Record<string, { prices: number[]; count: number }> = {};
   const newItems: EnrichedMeal[] = [];
 
+  // Counters for price changes using delta field
+  let itemsWithIncreases = 0;
+  let itemsWithDecreases = 0;
+  let totalIncreaseEvents = 0;
+  let totalDecreaseEvents = 0;
+
   for (const meal of meals) {
     const stats = calculateMealStats(meal, from, to);
     if (stats) {
@@ -71,6 +77,16 @@ export function calculateAnalyticsSummary(
       categoryData[meal.category].count++;
     }
 
+    // Count price changes using delta field within the date range
+    const filteredPrices = filterPricesByDateRange(meal.prices, from, to);
+    const increases = filteredPrices.filter(p => p.delta > Number.EPSILON);
+    const decreases = filteredPrices.filter(p => p.delta < -Number.EPSILON);
+
+    if (increases.length > 0) itemsWithIncreases++;
+    if (decreases.length > 0) itemsWithDecreases++;
+    totalIncreaseEvents += increases.length;
+    totalDecreaseEvents += decreases.length;
+
     // Check if this is a new item (first price within the date range)
     const sortedPrices = [...meal.prices].sort((a, b) => a.date.getTime() - b.date.getTime());
     if (sortedPrices.length > 0 && sortedPrices[0].date >= from && sortedPrices[0].date <= to) {
@@ -78,14 +94,26 @@ export function calculateAnalyticsSummary(
     }
   }
 
-  // Sort by price change
-  const sortedByChange = [...mealStats].sort((a, b) => b.priceChange - a.priceChange);
+  // Sort by price change - use max delta within period for better accuracy
+  // Recalculate price change based on max delta within period for sorting
+  const mealStatsWithDelta = mealStats.map(stat => {
+    const meal = meals.find(m => m.name === stat.mealName);
+    if (!meal) return stat;
+    const filteredPrices = filterPricesByDateRange(meal.prices, from, to);
+    const maxDelta = filteredPrices.reduce((max, p) => Math.max(max, p.delta), 0);
+    const minDelta = filteredPrices.reduce((min, p) => Math.min(min, p.delta), 0);
+    // Use the larger absolute change for sorting
+    const effectiveDelta = Math.abs(maxDelta) >= Math.abs(minDelta) ? maxDelta : minDelta;
+    return { ...stat, priceChange: effectiveDelta * 100 };
+  });
+
+  const sortedByChange = [...mealStatsWithDelta].sort((a, b) => b.priceChange - a.priceChange);
   const biggestIncreases = sortedByChange.filter(s => s.priceChange > 0).slice(0, 5);
   const biggestDecreases = sortedByChange.filter(s => s.priceChange < 0).slice(-5).reverse();
 
   // Calculate average price change
-  const avgPriceChange = mealStats.length > 0
-    ? mealStats.reduce((sum, s) => sum + s.priceChange, 0) / mealStats.length
+  const avgPriceChange = mealStatsWithDelta.length > 0
+    ? mealStatsWithDelta.reduce((sum, s) => sum + s.priceChange, 0) / mealStatsWithDelta.length
     : 0;
 
   // Build category breakdown
@@ -104,5 +132,9 @@ export function calculateAnalyticsSummary(
     biggestDecreases,
     newItems,
     categoryBreakdown,
+    itemsWithIncreases,
+    itemsWithDecreases,
+    totalIncreaseEvents,
+    totalDecreaseEvents,
   };
 }

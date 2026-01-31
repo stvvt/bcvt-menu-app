@@ -88,7 +88,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">
-              {summary.biggestIncreases.length}
+              {summary.itemsWithIncreases}
             </div>
             <p className="text-xs text-muted-foreground">
               {ta('itemsWithIncreases')}
@@ -103,7 +103,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {summary.biggestDecreases.length}
+              {summary.itemsWithDecreases}
             </div>
             <p className="text-xs text-muted-foreground">
               {ta('itemsWithDecreases')}

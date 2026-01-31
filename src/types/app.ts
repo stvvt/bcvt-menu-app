@@ -59,4 +59,8 @@ export interface AnalyticsSummary {
   biggestDecreases: MealPriceStats[];
   newItems: EnrichedMeal[];
   categoryBreakdown: Record<string, { count: number; avgPrice: number }>;
+  itemsWithIncreases: number;    // Count of items that had at least one price increase
+  itemsWithDecreases: number;    // Count of items that had at least one price decrease
+  totalIncreaseEvents: number;   // Total number of price increase events
+  totalDecreaseEvents: number;   // Total number of price decrease events
 }
