@@ -7,7 +7,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import TopBar from '@/components/TopBar';
-import Sidebar from '@/components/Sidebar';
+import SidebarContainer from '@/components/SidebarContainer';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -33,7 +33,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
               <TopBar />
               <div className="flex flex-1">
                 {/* Desktop sidebar */}
-                <Sidebar className="hidden md:flex w-64 border-r bg-background" />
+                <SidebarContainer />
                 {/* Main content area */}
                 <main className="flex-1 p-4 md:p-8">
                   <div className="flex flex-col gap-8 max-w-3xl mx-auto">

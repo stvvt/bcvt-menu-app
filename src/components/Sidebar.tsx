@@ -18,9 +18,10 @@ const navItems: NavItem[] = [
 interface SidebarProps {
   className?: string;
   onNavClick?: () => void;
+  isCollapsed?: boolean;
 }
 
-const Sidebar = ({ className, onNavClick }: SidebarProps) => {
+const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) => {
   const pathname = usePathname();
   const t = useTranslations('nav');
 
@@ -29,21 +30,24 @@ const Sidebar = ({ className, onNavClick }: SidebarProps) => {
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const label = t(item.labelKey);
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={onNavClick}
+              title={isCollapsed ? label : undefined}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 'hover:bg-accent hover:text-accent-foreground',
+                isCollapsed ? 'justify-center' : 'gap-3',
                 isActive
                   ? 'bg-accent text-accent-foreground'
                   : 'text-muted-foreground'
               )}
             >
               {item.icon}
-              {t(item.labelKey)}
+              {!isCollapsed && <span>{label}</span>}
             </Link>
           );
         })}
