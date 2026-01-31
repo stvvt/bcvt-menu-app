@@ -93,3 +93,10 @@ export function getDefaultDateRange(): DateRange {
     labelKey: 'last3months',
   };
 }
+
+// Helper to resolve a preset key to a DateRange
+export function getDateRangeFromPreset(key: string | null): DateRange | null {
+  const preset = presets.find(p => p.labelKey === key);
+  if (!preset) return null;
+  return { ...preset.getValue(), labelKey: preset.labelKey };
+}

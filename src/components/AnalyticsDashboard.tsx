@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PriceTrendChart from '@/components/PriceTrendChart';
-import DateRangePicker, { getDefaultDateRange, type DateRange } from '@/components/DateRangePicker';
+import DateRangePicker, { getDefaultDateRange, getDateRangeFromPreset, type DateRange } from '@/components/DateRangePicker';
 import { calculateAnalyticsSummary } from '@/utils/analyticsCalculations';
 import type { EnrichedMeal } from '@/types/app';
 import { TrendingUp, TrendingDown, Package, BarChart3 } from 'lucide-react';
@@ -16,7 +18,23 @@ interface AnalyticsDashboardProps {
 }
 
 const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
-  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Read period from URL, fallback to default
+  const dateRange = useMemo(() => {
+    const periodParam = searchParams.get('period');
+    return getDateRangeFromPreset(periodParam) ?? getDefaultDateRange();
+  }, [searchParams]);
+
+  // Update URL when period changes
+  const setDateRange = useCallback((range: DateRange) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('period', range.labelKey);
+    router.push(`${pathname}?${params.toString()}`);
+  }, [router, pathname, searchParams]);
+
   const [selectedMeal, setSelectedMeal] = useState<EnrichedMeal | null>(null);
   const t = useTranslations();
   const ta = useTranslations('analytics');
