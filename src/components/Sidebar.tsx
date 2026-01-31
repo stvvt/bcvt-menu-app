@@ -33,19 +33,10 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
   
   // Get current venue from URL params, or use first venue as default
   const currentVenueId = (params.venue as string) || venues[0]?.id || 'bcvt';
-  const currentVenue = venues.find(v => v.id === currentVenueId);
   const navItems = getNavItems(currentVenueId);
 
   return (
     <aside className={cn('flex flex-col gap-2 p-4', className)}>
-      {/* Venue indicator */}
-      {currentVenue && (
-        <div className="px-3 py-2 mb-2">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider">Venue</p>
-          <p className="font-semibold text-sm">{currentVenue.name}</p>
-        </div>
-      )}
-
       {/* Navigation */}
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
