@@ -39,8 +39,11 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
     <aside className={cn('flex flex-col gap-2 p-4', className)}>
       {/* Navigation */}
       <nav className="flex flex-col gap-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+        {navItems.map((item, index) => {
+          // For the first item (menu), only match exactly or paths not covered by other nav items
+          const isActive = index === 0
+            ? pathname === item.href || (pathname.startsWith(item.href + '/') && !navItems.slice(1).some(other => pathname.startsWith(other.href)))
+            : pathname === item.href || pathname.startsWith(item.href + '/');
           const label = t(item.labelKey);
           return (
             <Link
