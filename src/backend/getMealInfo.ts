@@ -1,13 +1,15 @@
 'use server'
 
-import config from '@/config/server';
+import { getVenueOrThrow } from '@/config/venues';
 import fetchJson from '@/utils/fetchJson';
 import { MealInfoData } from '@/types/db';
 
-export async function getMealInfo() {
+export async function getMealInfo(venueId: string) {
+  const venue = getVenueOrThrow(venueId);
+  
   try {
     // URL for meal info data
-    const url = `${config.DATA_BASE_URL}/categories_rich.json`;
+    const url = `${venue.dataUrl}/categories_rich.json`;
     
     const mealInfoData = await fetchJson<MealInfoData>(url, {
       // Add cache control if needed

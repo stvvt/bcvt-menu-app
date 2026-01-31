@@ -1,6 +1,9 @@
 {
   "nav": {
-    "menu": "Menu del giorno"
+    "menu": "Menu del giorno",
+    "analytics": "Analisi",
+    "compare": "Confronta prezzi",
+    "allVenues": "Tutti i locali"
   },
   "hello": "Ciao",
   "language": "Lingua",

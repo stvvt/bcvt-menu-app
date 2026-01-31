@@ -14,15 +14,16 @@ import { cn } from '@/lib/utils';
 interface MealPageProps {
   params: Promise<{
     locale: string;
+    venue: string;
     mealName: string;
   }>;
 }
 
 const MealPage: FC<MealPageProps> = async ({ params }) => {
-  const { mealName, locale } = await params;
+  const { mealName, locale, venue } = await params;
   const { NEXT_PUBLIC_BASE_CURRENCY_CODE, NEXT_PUBLIC_SECONDARY_CURRENCY_CODE } = clientConfig;
 
-  const mealData = await getMeal(decodeURIComponent(mealName), locale);
+  const mealData = await getMeal(venue, decodeURIComponent(mealName), locale);
   const t = await getTranslations();
   return (
     <>
@@ -83,4 +84,4 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   );
 };
 
-export default MealPage; 
+export default MealPage;

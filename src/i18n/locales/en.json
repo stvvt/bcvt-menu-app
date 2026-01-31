@@ -1,6 +1,9 @@
 {
   "nav": {
-    "menu": "Daily menu"
+    "menu": "Daily menu",
+    "analytics": "Analytics",
+    "compare": "Compare Prices",
+    "allVenues": "All Venues"
   },
   "hello": "Hello",
   "language": "Language",
