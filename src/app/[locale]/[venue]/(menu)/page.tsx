@@ -15,8 +15,8 @@ const HomeContent: FC<{
 
   return (
     <>
-      <PriceSurprises menuData={menuData} refDate={loadingDate} />
-      <DailyMenu menuData={Promise.resolve(menuData)} refDate={loadingDate} />
+      <PriceSurprises menuData={menuData} refDate={loadingDate} venue={venue} />
+      <DailyMenu menuData={Promise.resolve(menuData)} refDate={loadingDate} venue={venue} />
     </>
   );
 }

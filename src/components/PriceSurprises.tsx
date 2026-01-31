@@ -49,9 +49,10 @@ function getPriceSurprises(groups: MealGroup[], refDate: Date): SurpriseItem[] {
 interface PriceSurprisesProps {
   menuData: MealGroup[];
   refDate: Date;
+  venue: string;
 }
 
-const PriceSurprises: FC<PriceSurprisesProps> = ({ menuData, refDate }) => {
+const PriceSurprises: FC<PriceSurprisesProps> = ({ menuData, refDate, venue }) => {
   const t = useTranslations();
   const surprises = getPriceSurprises(menuData, refDate);
 
@@ -74,7 +75,7 @@ const PriceSurprises: FC<PriceSurprisesProps> = ({ menuData, refDate }) => {
           return (
             <li key={meal.name} className="flex items-center justify-between gap-2">
               <Link 
-                href={`/${meal.name}`} 
+                href={`/${venue}/${meal.name}`} 
                 className="hover:underline font-medium flex-1 truncate"
               >
                 {meal.info?.name || meal.name}
