@@ -19,6 +19,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
   const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
   const [selectedMeal, setSelectedMeal] = useState<EnrichedMeal | null>(null);
   const t = useTranslations();
+  const ta = useTranslations('analytics');
 
   const summary = useMemo(() => {
     return calculateAnalyticsSummary(meals, dateRange.from, dateRange.to);
@@ -28,7 +29,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">{venueName} - Analytics</h1>
+        <h1 className="text-2xl font-bold">{venueName} - {ta('title')}</h1>
         <DateRangePicker value={dateRange} onChange={setDateRange} />
       </div>
 
@@ -36,20 +37,20 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+            <CardTitle className="text-sm font-medium">{ta('totalItems')}</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{summary.totalMeals}</div>
             <p className="text-xs text-muted-foreground">
-              tracked in this period
+              {ta('trackedInPeriod')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Price Change</CardTitle>
+            <CardTitle className="text-sm font-medium">{ta('avgPriceChange')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -57,14 +58,14 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
               {summary.avgPriceChange > 0 ? '+' : ''}{summary.avgPriceChange.toFixed(1)}%
             </div>
             <p className="text-xs text-muted-foreground">
-              across all items
+              {ta('acrossAllItems')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Price Increases</CardTitle>
+            <CardTitle className="text-sm font-medium">{ta('priceIncreases')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -72,14 +73,14 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
               {summary.biggestIncreases.length}
             </div>
             <p className="text-xs text-muted-foreground">
-              items with price increases
+              {ta('itemsWithIncreases')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Price Decreases</CardTitle>
+            <CardTitle className="text-sm font-medium">{ta('priceDecreases')}</CardTitle>
             <TrendingDown className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -87,7 +88,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
               {summary.biggestDecreases.length}
             </div>
             <p className="text-xs text-muted-foreground">
-              items with price decreases
+              {ta('itemsWithDecreases')}
             </p>
           </CardContent>
         </Card>
@@ -100,7 +101,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-destructive" />
-              Biggest Price Increases
+              {ta('biggestIncreases')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -113,7 +114,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                     onClick={() => setSelectedMeal(meals.find(m => m.name === item.mealName) || null)}
                   >
                     <div>
-                      <p className="font-medium text-sm">{item.mealName}</p>
+                      <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
                       <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
                     </div>
                     <div className="text-right">
@@ -124,7 +125,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">No price increases in this period</p>
+              <p className="text-muted-foreground text-sm">{ta('noIncreases')}</p>
             )}
           </CardContent>
         </Card>
@@ -134,7 +135,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingDown className="h-5 w-5 text-green-600" />
-              Biggest Price Decreases
+              {ta('biggestDecreases')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -147,7 +148,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                     onClick={() => setSelectedMeal(meals.find(m => m.name === item.mealName) || null)}
                   >
                     <div>
-                      <p className="font-medium text-sm">{item.mealName}</p>
+                      <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
                       <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
                     </div>
                     <div className="text-right">
@@ -158,7 +159,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">No price decreases in this period</p>
+              <p className="text-muted-foreground text-sm">{ta('noDecreases')}</p>
             )}
           </CardContent>
         </Card>
@@ -169,12 +170,12 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Price History: {selectedMeal.info?.name || selectedMeal.name}</span>
+              <span>{ta('priceHistory')}: {selectedMeal.info?.name || selectedMeal.name}</span>
               <button 
                 onClick={() => setSelectedMeal(null)}
                 className="text-muted-foreground hover:text-foreground text-sm"
               >
-                Clear
+                {ta('clear')}
               </button>
             </CardTitle>
           </CardHeader>
@@ -187,7 +188,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       {/* Category Breakdown */}
       <Card>
         <CardHeader>
-          <CardTitle>Category Breakdown</CardTitle>
+          <CardTitle>{ta('categoryBreakdown')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -196,7 +197,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                 <p className="font-medium">{t(category)}</p>
                 <p className="text-2xl font-bold">{data.count}</p>
                 <p className="text-xs text-muted-foreground">
-                  Avg: {data.avgPrice.toFixed(2)} BGN
+                  {ta('avg')}: {data.avgPrice.toFixed(2)} BGN
                 </p>
               </div>
             ))}
@@ -208,7 +209,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       {summary.newItems.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>New Items in This Period</CardTitle>
+            <CardTitle>{ta('newItems')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">

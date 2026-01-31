@@ -20,5 +20,33 @@
   "напитки": "Напитки",
   "date": "Дата",
   "price": "Цена",
-  "todaysSurprises": "Изненадите днес"
+  "todaysSurprises": "Изненадите днес",
+  "analytics": {
+    "title": "Анализи",
+    "totalItems": "Общо артикули",
+    "trackedInPeriod": "проследени за периода",
+    "avgPriceChange": "Средна промяна",
+    "acrossAllItems": "за всички артикули",
+    "priceIncreases": "Поскъпвания",
+    "itemsWithIncreases": "артикули с увеличена цена",
+    "priceDecreases": "Поевтинявания",
+    "itemsWithDecreases": "артикули с намалена цена",
+    "biggestIncreases": "Най-големи поскъпвания",
+    "noIncreases": "Няма поскъпвания за този период",
+    "biggestDecreases": "Най-големи поевтинявания",
+    "noDecreases": "Няма поевтинявания за този период",
+    "priceHistory": "История на цената",
+    "clear": "Изчисти",
+    "categoryBreakdown": "По категории",
+    "avg": "Средно",
+    "newItems": "Нови артикули за периода"
+  },
+  "dateRange": {
+    "last7days": "Последните 7 дни",
+    "last30days": "Последните 30 дни",
+    "last3months": "Последните 3 месеца",
+    "last6months": "Последните 6 месеца",
+    "lastYear": "Последната година",
+    "allTime": "Всичко време"
+  }
 }

@@ -5,11 +5,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { subDays, subMonths } from 'date-fns';
+import { useTranslations } from 'next-intl';
 
 export type DateRange = {
   from: Date;
   to: Date;
-  label: string;
+  labelKey: string;
 };
 
 interface DateRangePickerProps {
@@ -17,39 +18,42 @@ interface DateRangePickerProps {
   onChange: (range: DateRange) => void;
 }
 
-const presets: { label: string; getValue: () => Omit<DateRange, 'label'> }[] = [
+type PresetKey = 'last7days' | 'last30days' | 'last3months' | 'last6months' | 'lastYear' | 'allTime';
+
+const presets: { labelKey: PresetKey; getValue: () => Omit<DateRange, 'labelKey'> }[] = [
   {
-    label: 'Last 7 days',
+    labelKey: 'last7days',
     getValue: () => ({ from: subDays(new Date(), 7), to: new Date() }),
   },
   {
-    label: 'Last 30 days',
+    labelKey: 'last30days',
     getValue: () => ({ from: subDays(new Date(), 30), to: new Date() }),
   },
   {
-    label: 'Last 3 months',
+    labelKey: 'last3months',
     getValue: () => ({ from: subMonths(new Date(), 3), to: new Date() }),
   },
   {
-    label: 'Last 6 months',
+    labelKey: 'last6months',
     getValue: () => ({ from: subMonths(new Date(), 6), to: new Date() }),
   },
   {
-    label: 'Last year',
+    labelKey: 'lastYear',
     getValue: () => ({ from: subMonths(new Date(), 12), to: new Date() }),
   },
   {
-    label: 'All time',
+    labelKey: 'allTime',
     getValue: () => ({ from: new Date(2020, 0, 1), to: new Date() }),
   },
 ];
 
 const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('dateRange');
 
   const handlePresetClick = (preset: typeof presets[0]) => {
     const range = preset.getValue();
-    onChange({ ...range, label: preset.label });
+    onChange({ ...range, labelKey: preset.labelKey });
     setOpen(false);
   };
 
@@ -58,19 +62,19 @@ const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
       <PopoverTrigger asChild>
         <Button variant="outline" className="justify-start text-left font-normal">
           <Calendar className="mr-2 h-4 w-4" />
-          {value.label}
+          {t(value.labelKey)}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2" align="start">
         <div className="flex flex-col gap-1">
           {presets.map((preset) => (
             <Button
-              key={preset.label}
-              variant={value.label === preset.label ? 'secondary' : 'ghost'}
+              key={preset.labelKey}
+              variant={value.labelKey === preset.labelKey ? 'secondary' : 'ghost'}
               className="justify-start"
               onClick={() => handlePresetClick(preset)}
             >
-              {preset.label}
+              {t(preset.labelKey)}
             </Button>
           ))}
         </div>
@@ -86,6 +90,6 @@ export function getDefaultDateRange(): DateRange {
   return {
     from: subMonths(new Date(), 3),
     to: new Date(),
-    label: 'Last 3 months',
+    labelKey: 'last3months',
   };
 }

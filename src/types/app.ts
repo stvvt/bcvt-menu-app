@@ -46,6 +46,7 @@ export interface PriceStats {
 
 export interface MealPriceStats extends PriceStats {
   mealName: string;
+  localizedName?: string;
   category: string;
   currentPrice: number;
   currencyCode: CurrencyCode;

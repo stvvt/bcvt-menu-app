@@ -20,5 +20,33 @@
   "напитки": "Beverages",
   "date": "Date",
   "price": "Price",
-  "todaysSurprises": "Today's Surprises"
+  "todaysSurprises": "Today's Surprises",
+  "analytics": {
+    "title": "Analytics",
+    "totalItems": "Total Items",
+    "trackedInPeriod": "tracked in this period",
+    "avgPriceChange": "Avg Price Change",
+    "acrossAllItems": "across all items",
+    "priceIncreases": "Price Increases",
+    "itemsWithIncreases": "items with price increases",
+    "priceDecreases": "Price Decreases",
+    "itemsWithDecreases": "items with price decreases",
+    "biggestIncreases": "Biggest Price Increases",
+    "noIncreases": "No price increases in this period",
+    "biggestDecreases": "Biggest Price Decreases",
+    "noDecreases": "No price decreases in this period",
+    "priceHistory": "Price History",
+    "clear": "Clear",
+    "categoryBreakdown": "Category Breakdown",
+    "avg": "Avg",
+    "newItems": "New Items in This Period"
+  },
+  "dateRange": {
+    "last7days": "Last 7 days",
+    "last30days": "Last 30 days",
+    "last3months": "Last 3 months",
+    "last6months": "Last 6 months",
+    "lastYear": "Last year",
+    "allTime": "All time"
+  }
 }

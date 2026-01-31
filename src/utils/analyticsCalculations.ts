@@ -36,6 +36,7 @@ export function calculateMealStats(
 
   return {
     mealName: meal.name,
+    localizedName: meal.info?.name,
     category: meal.category,
     currentPrice: lastPrice,
     currencyCode: filteredPrices[0].currencyCode,

@@ -20,5 +20,33 @@
   "напитки": "Bevande",
   "date": "Data",
   "price": "Prezzo",
-  "todaysSurprises": "Sorprese di oggi"
+  "todaysSurprises": "Sorprese di oggi",
+  "analytics": {
+    "title": "Analisi",
+    "totalItems": "Articoli totali",
+    "trackedInPeriod": "monitorati in questo periodo",
+    "avgPriceChange": "Variazione media",
+    "acrossAllItems": "su tutti gli articoli",
+    "priceIncreases": "Aumenti di prezzo",
+    "itemsWithIncreases": "articoli con prezzo aumentato",
+    "priceDecreases": "Riduzioni di prezzo",
+    "itemsWithDecreases": "articoli con prezzo ridotto",
+    "biggestIncreases": "Maggiori aumenti",
+    "noIncreases": "Nessun aumento di prezzo in questo periodo",
+    "biggestDecreases": "Maggiori riduzioni",
+    "noDecreases": "Nessuna riduzione di prezzo in questo periodo",
+    "priceHistory": "Storico prezzi",
+    "clear": "Cancella",
+    "categoryBreakdown": "Per categoria",
+    "avg": "Media",
+    "newItems": "Nuovi articoli in questo periodo"
+  },
+  "dateRange": {
+    "last7days": "Ultimi 7 giorni",
+    "last30days": "Ultimi 30 giorni",
+    "last3months": "Ultimi 3 mesi",
+    "last6months": "Ultimi 6 mesi",
+    "lastYear": "Ultimo anno",
+    "allTime": "Tutto il periodo"
+  }
 }
