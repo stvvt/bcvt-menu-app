@@ -1,4 +1,6 @@
 import type { EnrichedMeal, PriceHistoryItem, MealPriceStats, AnalyticsSummary } from '@/types/app';
+import { convert } from '@/utils/currencyConverter';
+import clientConfig from '@/config/client';
 
 export function filterPricesByDateRange(
   prices: PriceHistoryItem[],
@@ -69,11 +71,12 @@ export function calculateAnalyticsSummary(
     if (stats) {
       mealStats.push(stats);
 
-      // Aggregate category data
+      // Aggregate category data (convert to base currency)
       if (!categoryData[meal.category]) {
         categoryData[meal.category] = { prices: [], count: 0 };
       }
-      categoryData[meal.category].prices.push(stats.currentPrice);
+      const convertedPrice = convert(stats.currentPrice, stats.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE);
+      categoryData[meal.category].prices.push(convertedPrice);
       categoryData[meal.category].count++;
     }
 

@@ -197,7 +197,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                 <p className="font-medium">{t(category)}</p>
                 <p className="text-2xl font-bold">{data.count}</p>
                 <p className="text-xs text-muted-foreground">
-                  {ta('avg')}: {data.avgPrice.toFixed(2)} BGN
+                  {ta('avg')}: {data.avgPrice.toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
                 </p>
               </div>
             ))}
