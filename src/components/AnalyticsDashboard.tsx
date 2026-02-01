@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useRouter, usePathname } from '@/i18n/navigation';
+import { useMemo, useCallback } from 'react';
+import { useSearchParams, useParams } from 'next/navigation';
+import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import PriceTrendChart from '@/components/PriceTrendChart';
 import DateRangePicker, { getDefaultDateRange, getDateRangeFromPreset, type DateRange } from '@/components/DateRangePicker';
 import { calculateAnalyticsSummary } from '@/utils/analyticsCalculations';
 import type { EnrichedMeal } from '@/types/app';
 import { TrendingUp, TrendingDown, Package, BarChart3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { convert } from '@/utils/currencyConverter';
+import clientConfig from '@/config/client';
 
 interface AnalyticsDashboardProps {
   meals: EnrichedMeal[];
@@ -21,6 +22,8 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const params = useParams();
+  const venue = params.venue as string;
 
   // Read period from URL, fallback to default
   const dateRange = useMemo(() => {
@@ -35,7 +38,6 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
     router.push(`${pathname}?${params.toString()}`);
   }, [router, pathname, searchParams]);
 
-  const [selectedMeal, setSelectedMeal] = useState<EnrichedMeal | null>(null);
   const t = useTranslations();
   const ta = useTranslations('analytics');
 
@@ -126,10 +128,10 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             {summary.biggestIncreases.length > 0 ? (
               <div className="space-y-3">
                 {summary.biggestIncreases.map((item) => (
-                  <div
+                  <Link
                     key={item.mealName}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted cursor-pointer"
-                    onClick={() => setSelectedMeal(meals.find(m => m.name === item.mealName) || null)}
+                    href={`/${venue}/${item.mealName}`}
+                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
                   >
                     <div>
                       <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
@@ -137,9 +139,9 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-destructive">+{item.priceChange.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">{item.currentPrice.toFixed(2)} {item.currencyCode}</p>
+                      <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (
@@ -160,10 +162,10 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             {summary.biggestDecreases.length > 0 ? (
               <div className="space-y-3">
                 {summary.biggestDecreases.map((item) => (
-                  <div
+                  <Link
                     key={item.mealName}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted cursor-pointer"
-                    onClick={() => setSelectedMeal(meals.find(m => m.name === item.mealName) || null)}
+                    href={`/${venue}/${item.mealName}`}
+                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
                   >
                     <div>
                       <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
@@ -171,9 +173,9 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-green-600">{item.priceChange.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">{item.currentPrice.toFixed(2)} {item.currencyCode}</p>
+                      <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (
@@ -182,26 +184,6 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Selected Meal Chart */}
-      {selectedMeal && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>{ta('priceHistory')}: {selectedMeal.info?.name || selectedMeal.name}</span>
-              <button 
-                onClick={() => setSelectedMeal(null)}
-                className="text-muted-foreground hover:text-foreground text-sm"
-              >
-                {ta('clear')}
-              </button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PriceTrendChart priceHistory={selectedMeal.prices} height={300} />
-          </CardContent>
-        </Card>
-      )}
 
       {/* Category Breakdown */}
       <Card>

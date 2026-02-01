@@ -12,12 +12,16 @@ import {
 } from 'recharts';
 import { useMemo } from 'react';
 import { format } from 'date-fns';
+import currencyConverter from '@/utils/currencyConverter';
+import type { CurrencyCode } from '@/utils/currencyConverter';
+import clientConfig from '@/config/client';
 
 interface PriceTrendChartProps {
   priceHistory: PriceHistoryItem[];
   height?: number;
   showGrid?: boolean;
   showAxis?: boolean;
+  currency?: CurrencyCode;
 }
 
 interface ChartDataPoint {
@@ -32,6 +36,7 @@ const PriceTrendChart = ({
   height = 300,
   showGrid = true,
   showAxis = true,
+  currency = clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE,
 }: PriceTrendChartProps) => {
   const chartData = useMemo<ChartDataPoint[]>(() => {
     return priceHistory
@@ -40,10 +45,10 @@ const PriceTrendChart = ({
       .map((item) => ({
         date: item.date.toISOString(),
         dateLabel: format(item.date, 'MMM d, yyyy'),
-        price: item.amount,
+        price: currencyConverter(item, currency),
         delta: item.delta,
       }));
-  }, [priceHistory]);
+  }, [priceHistory, currency]);
 
   if (chartData.length === 0) {
     return (
