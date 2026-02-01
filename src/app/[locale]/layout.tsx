@@ -5,6 +5,7 @@ import type { FC, PropsWithChildren } from 'react';
 import { routing } from '@/i18n/routing';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import TopBar from '@/components/TopBar';
 import SidebarContainer from '@/components/SidebarContainer';
@@ -23,6 +24,12 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+  // Read sidebar state from cookie for server-side rendering
+  const cookieStore = await cookies();
+  const sidebarCookie = cookieStore.get('sidebar-collapsed');
+  const isSidebarCollapsed = sidebarCookie?.value !== 'false'; // default to collapsed
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
@@ -33,7 +40,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
               <TopBar />
               <div className="flex flex-1">
                 {/* Desktop sidebar */}
-                <SidebarContainer />
+                <SidebarContainer defaultCollapsed={isSidebarCollapsed} />
                 {/* Main content area */}
                 <main className="flex-1 p-4 md:p-8">
                   <div className="flex flex-col gap-8 max-w-3xl mx-auto">

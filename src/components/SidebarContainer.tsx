@@ -1,36 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Sidebar from './Sidebar';
 
-const STORAGE_KEY = 'sidebar-collapsed';
+const COOKIE_NAME = 'sidebar-collapsed';
 
-const SidebarContainer = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false);
+interface SidebarContainerProps {
+  defaultCollapsed?: boolean;
+}
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored !== null) {
-      setIsCollapsed(stored === 'true');
-    }
-    setHasMounted(true);
-  }, []);
+const SidebarContainer = ({ defaultCollapsed = true }: SidebarContainerProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   const toggleCollapsed = () => {
     const newValue = !isCollapsed;
     setIsCollapsed(newValue);
-    localStorage.setItem(STORAGE_KEY, String(newValue));
+    // Set cookie with 1 year expiry, accessible from all paths
+    document.cookie = `${COOKIE_NAME}=${newValue}; path=/; max-age=31536000; SameSite=Lax`;
   };
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!hasMounted) {
-    return (
-      <aside className="hidden md:flex w-16 border-r bg-background sticky top-14 h-[calc(100vh-3.5rem)]" />
-    );
-  }
 
   return (
     <aside
