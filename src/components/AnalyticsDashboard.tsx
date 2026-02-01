@@ -61,7 +61,14 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{summary.totalMeals}</div>
+            <div className="text-2xl font-bold">
+              {summary.totalMeals}
+              {summary.newItems.length > 0 && (
+                <span className="text-base font-normal text-muted-foreground ml-2">
+                  ({t('newCount', { count: summary.newItems.length })})
+                </span>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
               {ta('trackedInPeriod')}
             </p>
@@ -212,11 +219,23 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             <CardTitle>{ta('newItems')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
+            <div className="space-y-3">
               {summary.newItems.map((item) => (
-                <Badge key={item.name} variant="secondary">
-                  {item.info?.name || item.name}
-                </Badge>
+                <Link
+                  key={item.name}
+                  href={`/${venue}/${item.name}`}
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
+                >
+                  <div>
+                    <p className="font-medium text-sm">{item.info?.name || item.name}</p>
+                    <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">
+                      {convert(item.prices[item.prices.length - 1]?.amount ?? 0, item.prices[0]?.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                    </p>
+                  </div>
+                </Link>
               ))}
             </div>
           </CardContent>

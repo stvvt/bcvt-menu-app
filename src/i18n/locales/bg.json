@@ -8,6 +8,7 @@
   "hello": "Здравейте",
   "language": "Език",
   "new": "Ново",
+  "newCount": "{count, plural, one {# нов} other {# нови}}",
   "updated": "Променено",
   "days": "{count, plural, =1 {вчера} other {# дни}}",
   "закуски": "Закуски",

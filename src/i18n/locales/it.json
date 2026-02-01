@@ -8,6 +8,7 @@
   "hello": "Ciao",
   "language": "Lingua",
   "new": "Nuovo",
+  "newCount": "{count, plural, one {# nuovo} other {# nuovi}}",
   "updated": "Aggiornato",
   "days": "{count, plural, =1 {giorno} other {# giorni}}",
   "закуски": "Colazioni",
