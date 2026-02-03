@@ -216,7 +216,10 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       {summary.newItems.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{ta('newItems')}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              {ta('newItems')}
+              <Badge variant="secondary">{summary.newItems.length}</Badge>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
