@@ -1,6 +1,7 @@
 // Server-side venue configuration (includes dataUrl from env)
 import serverConfig from './server';
 import { venues as clientVenues, getAllVenueIds, type VenueClientConfig } from './venues.client';
+import { notFound } from 'next/navigation';
 
 export interface VenueConfig extends VenueClientConfig {
   dataUrl: string;      // Base URL for venue data
@@ -23,7 +24,7 @@ export function getVenue(venueId: string): VenueConfig | undefined {
 export function getVenueOrThrow(venueId: string): VenueConfig {
   const venue = getVenue(venueId);
   if (!venue) {
-    throw new Error(`Venue not found: ${venueId}`);
+    notFound();
   }
   return venue;
 }

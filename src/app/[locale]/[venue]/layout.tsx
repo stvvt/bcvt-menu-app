@@ -1,5 +1,4 @@
-import { getVenue, getAllVenueIds } from '@/config/venues';
-import { notFound } from 'next/navigation';
+import { getVenueOrThrow, getAllVenueIds } from '@/config/venues';
 import type { FC, PropsWithChildren } from 'react';
 
 type Props = {
@@ -13,12 +12,7 @@ export async function generateStaticParams() {
 
 const VenueLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) => {
   const { venue } = await params;
-  
-  // Validate venue exists
-  const venueConfig = getVenue(venue);
-  if (!venueConfig) {
-    notFound();
-  }
+  getVenueOrThrow(venue);
 
   return <>{children}</>;
 };
