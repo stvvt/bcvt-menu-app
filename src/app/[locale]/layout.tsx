@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: "BCVT cantine menu historical browser",
 };
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: Promise<{ locale: string }>
 };
