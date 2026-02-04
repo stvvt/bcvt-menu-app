@@ -54,7 +54,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{ta('totalItems')}</CardTitle>
@@ -102,105 +102,84 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{ta('priceIncreases')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">
-              {summary.itemsWithIncreases}
+            <CardTitle className="text-sm font-medium">{ta('priceChanges')}</CardTitle>
+            <div className="flex gap-1">
+              <TrendingUp className="h-4 w-4 text-destructive" />
+              <TrendingDown className="h-4 w-4 text-green-600" />
             </div>
-            <p className="text-xs text-muted-foreground">
-              {ta('itemsWithIncreases')}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{ta('priceDecreases')}</CardTitle>
-            <TrendingDown className="h-4 w-4 text-green-600" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {summary.itemsWithDecreases}
+          <CardContent className="space-y-3">
+            <div>
+              <div className="text-2xl font-bold text-destructive">
+                {summary.itemsWithIncreases}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {ta('itemsWithIncreases')}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {ta('itemsWithDecreases')}
-            </p>
+            <div>
+              <div className="text-2xl font-bold text-green-600">
+                {summary.itemsWithDecreases}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {ta('itemsWithDecreases')}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Biggest Movers */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Biggest Increases */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-destructive" />
-              {ta('biggestIncreases')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {summary.biggestIncreases.length > 0 ? (
-              <div className="space-y-3">
-                {summary.biggestIncreases.map((item) => (
-                  <Link
-                    key={item.mealName}
-                    href={`/${venue}/${item.mealName}`}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
-                  >
-                    <div>
-                      <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
-                      <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-destructive">+{item.priceChange.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
-                    </div>
-                  </Link>
-                ))}
+      {/* Biggest Price Changes */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            {ta('biggestChanges')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {(() => {
+            const allChanges = [...summary.biggestIncreases, ...summary.biggestDecreases]
+              .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
+              .slice(0, 10);
+            
+            if (allChanges.length === 0) {
+              return <p className="text-muted-foreground text-sm">{ta('noChanges')}</p>;
+            }
+            
+            return (
+              <div className="grid gap-3 md:grid-cols-2">
+                {allChanges.map((item) => {
+                  const isIncrease = item.priceChange > 0;
+                  return (
+                    <Link
+                      key={item.mealName}
+                      href={`/${venue}/${item.mealName}`}
+                      className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-muted"
+                    >
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {isIncrease ? (
+                          <TrendingUp className="h-4 w-4 text-destructive flex-shrink-0" />
+                        ) : (
+                          <TrendingDown className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        )}
+                        <span className="font-medium text-sm">{item.localizedName || item.mealName}</span>
+                        <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className={`font-bold ${isIncrease ? 'text-destructive' : 'text-green-600'}`}>
+                          {isIncrease ? '+' : ''}{item.priceChange.toFixed(1)}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">{ta('noIncreases')}</p>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Biggest Decreases */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingDown className="h-5 w-5 text-green-600" />
-              {ta('biggestDecreases')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {summary.biggestDecreases.length > 0 ? (
-              <div className="space-y-3">
-                {summary.biggestDecreases.map((item) => (
-                  <Link
-                    key={item.mealName}
-                    href={`/${venue}/${item.mealName}`}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
-                  >
-                    <div>
-                      <p className="font-medium text-sm">{item.localizedName || item.mealName}</p>
-                      <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-green-600">{item.priceChange.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">{ta('noDecreases')}</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            );
+          })()}
+        </CardContent>
+      </Card>
 
       {/* Category Breakdown */}
       <Card>

@@ -45,7 +45,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
                 <SidebarContainer defaultCollapsed={isSidebarCollapsed} />
                 {/* Main content area */}
                 <main className="flex-1 p-4 md:p-8">
-                  <div className="flex flex-col gap-8 max-w-3xl mx-auto">
+                  <div className="flex flex-col gap-8">
                     {children}
                   </div>
                 </main>

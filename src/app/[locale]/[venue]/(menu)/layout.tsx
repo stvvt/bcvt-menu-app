@@ -11,7 +11,7 @@ const MenuLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
   const venueConfig = getVenueOrThrow(venue);
 
   return (
-    <>
+    <div className="max-w-3xl mx-auto w-full">
       <h1 className="text-2xl font-bold text-center">
         <span className="flex items-center justify-center gap-2">
           <span className="text-muted-foreground">{venueConfig.name}{' '}</span>
@@ -22,7 +22,7 @@ const MenuLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
       <Fragment key="content">
         {children}
       </Fragment>
-    </>
+    </div>
   );
 };
 
