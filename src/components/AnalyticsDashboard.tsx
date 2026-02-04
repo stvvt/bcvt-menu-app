@@ -80,13 +80,23 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             <CardTitle className="text-sm font-medium">{ta('avgPriceChange')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${summary.avgPriceChange > 0 ? 'text-destructive' : summary.avgPriceChange < 0 ? 'text-green-600' : ''}`}>
-              {summary.avgPriceChange > 0 ? '+' : ''}{summary.avgPriceChange.toFixed(1)}%
+          <CardContent className="space-y-3">
+            <div>
+              <div className={`text-2xl font-bold ${summary.avgPriceChange > 0 ? 'text-destructive' : summary.avgPriceChange < 0 ? 'text-green-600' : ''}`}>
+                {summary.avgPriceChange > 0 ? '+' : ''}{summary.avgPriceChange.toFixed(1)}%
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {ta('acrossAllItems')}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {ta('acrossAllItems')}
-            </p>
+            <div>
+              <div className={`text-2xl font-bold ${summary.avgPriceChangeComparable > 0 ? 'text-destructive' : summary.avgPriceChangeComparable < 0 ? 'text-green-600' : ''}`}>
+                {summary.avgPriceChangeComparable > 0 ? '+' : ''}{summary.avgPriceChangeComparable.toFixed(1)}%
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {ta('excludingNewListings')}
+              </p>
+            </div>
           </CardContent>
         </Card>
 

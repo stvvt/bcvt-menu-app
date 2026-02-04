@@ -55,6 +55,7 @@ export interface MealPriceStats extends PriceStats {
 export interface AnalyticsSummary {
   totalMeals: number;
   avgPriceChange: number;
+  avgPriceChangeComparable: number;  // Excludes new listings (new items with no price changes)
   biggestIncreases: MealPriceStats[];
   biggestDecreases: MealPriceStats[];
   newItems: EnrichedMeal[];
