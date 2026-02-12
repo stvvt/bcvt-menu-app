@@ -3,7 +3,9 @@
 import { Link, usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { UtensilsCrossed } from 'lucide-react';
+import { UtensilsCrossed, TrendingUp, Home } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { venues } from '@/config/venues.client';
 
 interface NavItem {
   href: string;
@@ -11,9 +13,12 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const navItems: NavItem[] = [
-  { href: '/', labelKey: 'menu', icon: <UtensilsCrossed className="h-4 w-4" /> },
-];
+function getNavItems(venueId: string): NavItem[] {
+  return [
+    { href: `/${venueId}`, labelKey: 'menu', icon: <UtensilsCrossed className="h-4 w-4" /> },
+    { href: `/${venueId}/analytics`, labelKey: 'analytics', icon: <TrendingUp className="h-4 w-4" /> },
+  ];
+}
 
 interface SidebarProps {
   className?: string;
@@ -23,13 +28,22 @@ interface SidebarProps {
 
 const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) => {
   const pathname = usePathname();
+  const params = useParams();
   const t = useTranslations('nav');
+  
+  // Get current venue from URL params, or use first venue as default
+  const currentVenueId = (params.venue as string) || venues[0]?.id || 'bcvt';
+  const navItems = getNavItems(currentVenueId);
 
   return (
     <aside className={cn('flex flex-col gap-2 p-4', className)}>
+      {/* Navigation */}
       <nav className="flex flex-col gap-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
+        {navItems.map((item, index) => {
+          // For the first item (menu), only match exactly or paths not covered by other nav items
+          const isActive = index === 0
+            ? pathname === item.href || (pathname.startsWith(item.href + '/') && !navItems.slice(1).some(other => pathname.startsWith(other.href)))
+            : pathname === item.href || pathname.startsWith(item.href + '/');
           const label = t(item.labelKey);
           return (
             <Link
@@ -52,6 +66,35 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
           );
         })}
       </nav>
+
+      {/* Global links (when multiple venues exist) */}
+      {venues.length > 1 && (
+        <div className="mt-auto pt-4 border-t space-y-1">
+          <Link
+            href="/compare"
+            onClick={onNavClick}
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+              'hover:bg-accent hover:text-accent-foreground',
+              pathname === '/compare' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'
+            )}
+          >
+            <TrendingUp className="h-4 w-4" />
+            {t('compare')}
+          </Link>
+          <Link
+            href="/"
+            onClick={onNavClick}
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+              'hover:bg-accent hover:text-accent-foreground text-muted-foreground'
+            )}
+          >
+            <Home className="h-4 w-4" />
+            {t('allVenues')}
+          </Link>
+        </div>
+      )}
     </aside>
   );
 };

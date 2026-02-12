@@ -1,10 +1,14 @@
 {
   "nav": {
-    "menu": "Daily menu"
+    "menu": "Daily menu",
+    "analytics": "Analytics",
+    "compare": "Compare Prices",
+    "allVenues": "All Venues"
   },
   "hello": "Hello",
   "language": "Language",
   "new": "New",
+  "newCount": "{count, plural, one {# new} other {# new}}",
   "updated": "Updated",
   "days": "{count, plural, =1 {day} other {# days}}",
   "закуски": "Breakfasts",
@@ -15,7 +19,42 @@
   "основни ястия": "Main Dishes",
   "гарнитури": "Side Dishes",
   "напитки": "Beverages",
+  "other": "Other",
   "date": "Date",
   "price": "Price",
-  "todaysSurprises": "Today's Surprises"
+  "todaysSurprises": "Today's Surprises",
+  "analytics": {
+    "title": "Analytics",
+    "totalItems": "Total Items",
+    "trackedInPeriod": "tracked in this period",
+    "avgPriceChange": "Avg Price Change",
+    "acrossAllItems": "across all items",
+    "excludingNewListings": "excluding new listings",
+    "priceChanges": "Price Changes",
+    "itemsWithIncreases": "items with price increases",
+    "itemsWithDecreases": "items with price decreases",
+    "biggestChanges": "Biggest Price Changes",
+    "increases": "Increases",
+    "decreases": "Decreases",
+    "noIncreases": "No increases in this period",
+    "noDecreases": "No decreases in this period",
+    "noChanges": "No price changes in this period",
+    "priceHistory": "Price History",
+    "clear": "Clear",
+    "categoryBreakdown": "Category Breakdown",
+    "avg": "Avg",
+    "newItems": "New Items in This Period",
+    "priceChangeActivity": "Price Change Activity",
+    "less": "Less",
+    "more": "More",
+    "changes": "{count, plural, one {# change} other {# changes}}"
+  },
+  "dateRange": {
+    "last7days": "Last 7 days",
+    "last30days": "Last 30 days",
+    "last3months": "Last 3 months",
+    "last6months": "Last 6 months",
+    "lastYear": "Last year",
+    "allTime": "All time"
+  }
 }

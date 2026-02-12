@@ -8,9 +8,10 @@ import { getTranslations } from 'next-intl/server';
 type DailyMenuProps = {
   menuData: Promise<MealGroup[]>;
   refDate: Date;
+  venue: string;
 };
 
-const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate }) => {
+const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate, venue }) => {
   const t = await getTranslations();
 
   const groups = await menuData;
@@ -32,7 +33,7 @@ const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate }) => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
               {group.meals.map((meal, index) => (
-                <Link key={index} href={`/${meal.name}`} className="h-full">
+                <Link key={index} href={`/${venue}/${meal.name}`} className="h-full">
                     <MealCard meal={meal} refDate={refDate} />
                 </Link>
               ))}

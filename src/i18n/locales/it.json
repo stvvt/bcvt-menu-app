@@ -1,10 +1,14 @@
 {
   "nav": {
-    "menu": "Menu del giorno"
+    "menu": "Menu del giorno",
+    "analytics": "Analisi",
+    "compare": "Confronta prezzi",
+    "allVenues": "Tutti i locali"
   },
   "hello": "Ciao",
   "language": "Lingua",
   "new": "Nuovo",
+  "newCount": "{count, plural, one {# nuovo} other {# nuovi}}",
   "updated": "Aggiornato",
   "days": "{count, plural, =1 {giorno} other {# giorni}}",
   "закуски": "Colazioni",
@@ -15,7 +19,42 @@
   "основни ястия": "Piatti Principali",
   "гарнитури": "Contorni",
   "напитки": "Bevande",
+  "other": "Altro",
   "date": "Data",
   "price": "Prezzo",
-  "todaysSurprises": "Sorprese di oggi"
+  "todaysSurprises": "Sorprese di oggi",
+  "analytics": {
+    "title": "Analisi",
+    "totalItems": "Articoli totali",
+    "trackedInPeriod": "monitorati in questo periodo",
+    "avgPriceChange": "Variazione media",
+    "acrossAllItems": "su tutti gli articoli",
+    "excludingNewListings": "escl. nuove voci",
+    "priceChanges": "Variazioni di prezzo",
+    "itemsWithIncreases": "articoli con prezzo aumentato",
+    "itemsWithDecreases": "articoli con prezzo ridotto",
+    "biggestChanges": "Maggiori variazioni di prezzo",
+    "increases": "Aumenti",
+    "decreases": "Riduzioni",
+    "noIncreases": "Nessun aumento in questo periodo",
+    "noDecreases": "Nessuna riduzione in questo periodo",
+    "noChanges": "Nessuna variazione di prezzo in questo periodo",
+    "priceHistory": "Storico prezzi",
+    "clear": "Cancella",
+    "categoryBreakdown": "Per categoria",
+    "avg": "Media",
+    "newItems": "Nuovi articoli in questo periodo",
+    "priceChangeActivity": "Attivita variazioni prezzo",
+    "less": "Meno",
+    "more": "Di piu",
+    "changes": "{count, plural, one {# variazione} other {# variazioni}}"
+  },
+  "dateRange": {
+    "last7days": "Ultimi 7 giorni",
+    "last30days": "Ultimi 30 giorni",
+    "last3months": "Ultimi 3 mesi",
+    "last6months": "Ultimi 6 mesi",
+    "lastYear": "Ultimo anno",
+    "allTime": "Tutto il periodo"
+  }
 }

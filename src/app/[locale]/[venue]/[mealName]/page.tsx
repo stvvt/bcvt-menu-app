@@ -1,6 +1,6 @@
 import getMeal from '@/backend/getMeal';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getTranslations } from 'next-intl/server';
 import { type FC } from 'react';
@@ -10,19 +10,21 @@ import FormatPrice from '@/components/FormatPrice';
 import FormatDate from '@/components/FormatDate';
 import getPriceDisplay from '@/i18n/getPriceDisplay';
 import { cn } from '@/lib/utils';
+import PriceTrendChart from '@/components/PriceTrendChart';
 
 interface MealPageProps {
   params: Promise<{
     locale: string;
+    venue: string;
     mealName: string;
   }>;
 }
 
 const MealPage: FC<MealPageProps> = async ({ params }) => {
-  const { mealName, locale } = await params;
+  const { mealName, locale, venue } = await params;
   const { NEXT_PUBLIC_BASE_CURRENCY_CODE, NEXT_PUBLIC_SECONDARY_CURRENCY_CODE } = clientConfig;
 
-  const mealData = await getMeal(decodeURIComponent(mealName), locale);
+  const mealData = await getMeal(venue, decodeURIComponent(mealName), locale);
   const t = await getTranslations();
   return (
     <>
@@ -79,8 +81,16 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
           </div>
         </CardContent>
       </Card>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>{t('analytics.priceHistory')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PriceTrendChart priceHistory={mealData.prices} height={300} />
+        </CardContent>
+      </Card>
     </>
   );
 };
 
-export default MealPage; 
+export default MealPage;

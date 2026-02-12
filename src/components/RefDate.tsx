@@ -8,7 +8,7 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { FC } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import DatePicker from '@/components/DatePicker';
 import { format, isToday } from 'date-fns';
@@ -16,6 +16,7 @@ import { Link as NextLink } from '@/i18n/navigation';
 
 const RefDate: FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
 
@@ -25,8 +26,8 @@ const RefDate: FC = () => {
     date = date || new Date();
     const params = new URLSearchParams(searchParams);
     params.set('date', date.toISOString().split('T')[0]);
-    router.push(`/?${params.toString()}`);
-  }, [router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`);
+  }, [router, searchParams, pathname]);
 
   return (
     <>
@@ -45,7 +46,7 @@ const RefDate: FC = () => {
         dateFormat="dd.MM.yyyy"
       />
       {!isToday(loadingDate) && (
-        <NextLink href="/" className="text-sm text-blue-500 hover:text-blue-700 underline">
+        <NextLink href={pathname} className="text-sm text-blue-500 hover:text-blue-700 underline">
           today
         </NextLink>
       )}

@@ -4,7 +4,7 @@ import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
 import { getMealInfo } from './getMealInfo';
 import { getPriceHistory } from './getPriceHistory';
-import config from '@/config/server';
+import { getVenueOrThrow } from '@/config/venues';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
 import type { EnrichedMeal } from '@/types/app';
 import { NotFoundError } from '@/errors/NotFoundError';
@@ -17,14 +17,16 @@ export type MealGroup = {
   meals: EnrichedMeal[];
 };
 
-export async function getMenu(date: Date, locale: string): Promise<MealGroup[]> {
+export async function getMenu(venueId: string, date: Date, locale: string): Promise<MealGroup[]> {
+  const venue = getVenueOrThrow(venueId);
+  
   // Format the date as needed for the URL (adjust format as required)
   const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
 
   // await new Promise(resolve => setTimeout(resolve, 3000));
   
   // Replace with your actual API endpoint URL
-  const url = `${config.DATA_BASE_URL}/daily/${formattedDate}.json`;
+  const url = `${venue.dataUrl}/daily/${formattedDate}.json`;
   
   let menuData: DailyMenu;
   try {
@@ -41,9 +43,9 @@ export async function getMenu(date: Date, locale: string): Promise<MealGroup[]> 
 
   // Fetch categories, price history data, and meal info
   const [categories, priceHistoryData, mealInfo] = await Promise.all([
-    getCategories(),
-    getPriceHistory(),
-    getMealInfo()
+    getCategories(venueId),
+    getPriceHistory(venueId),
+    getMealInfo(venueId)
   ]);
   
   // Create a map of price history by meal name for efficient lookup

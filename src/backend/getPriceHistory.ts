@@ -1,17 +1,19 @@
 'use server'
 
-import config from '@/config/server';
+import { getVenueOrThrow } from '@/config/venues';
 import type { Merged } from '@/types/db';
 import fetchJson from '@/utils/fetchJson';
 
-export async function getPriceHistory() {
-  // URL for price history data
-  const url = `${config.DATA_BASE_URL}/merged.json`;
+export async function getPriceHistory(venueId: string) {
+  const venue = getVenueOrThrow(venueId);
   
-  const priceHistoryData  = await fetchJson<Merged>(url, {
+  // URL for price history data
+  const url = `${venue.dataUrl}/merged.json`;
+  
+  const priceHistoryData = await fetchJson<Merged>(url, {
     // Add cache control if needed
     next: { revalidate: 3600 } // Revalidate every hour
   });
 
-  return priceHistoryData
+  return priceHistoryData;
 } 

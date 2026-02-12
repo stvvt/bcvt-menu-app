@@ -1,10 +1,14 @@
 {
   "nav": {
-    "menu": "Дневно меню"
+    "menu": "Дневно меню",
+    "analytics": "Анализи",
+    "compare": "Сравни цени",
+    "allVenues": "Всички обекти"
   },
   "hello": "Здравейте",
   "language": "Език",
   "new": "Ново",
+  "newCount": "{count, plural, one {# нов} other {# нови}}",
   "updated": "Променено",
   "days": "{count, plural, =1 {вчера} other {# дни}}",
   "закуски": "Закуски",
@@ -15,7 +19,42 @@
   "основни ястия": "Основни ястия",
   "гарнитури": "Гарнитури",
   "напитки": "Напитки",
+  "other": "Други",
   "date": "Дата",
   "price": "Цена",
-  "todaysSurprises": "Изненадите днес"
+  "todaysSurprises": "Изненадите днес",
+  "analytics": {
+    "title": "Анализи",
+    "totalItems": "Общо артикули",
+    "trackedInPeriod": "проследени за периода",
+    "avgPriceChange": "Средна промяна",
+    "acrossAllItems": "за всички артикули",
+    "excludingNewListings": "без новите позиции",
+    "priceChanges": "Промени в цените",
+    "itemsWithIncreases": "артикули с увеличена цена",
+    "itemsWithDecreases": "артикули с намалена цена",
+    "biggestChanges": "Най-големи промени в цените",
+    "increases": "Поскъпвания",
+    "decreases": "Поевтинявания",
+    "noIncreases": "Няма поскъпвания за този период",
+    "noDecreases": "Няма поевтинявания за този период",
+    "noChanges": "Няма промени в цените за този период",
+    "priceHistory": "История на цената",
+    "clear": "Изчисти",
+    "categoryBreakdown": "По категории",
+    "avg": "Средно",
+    "newItems": "Нови артикули за периода",
+    "priceChangeActivity": "Активност на промените",
+    "less": "По-малко",
+    "more": "Повече",
+    "changes": "{count, plural, one {# промяна} other {# промени}}"
+  },
+  "dateRange": {
+    "last7days": "Последните 7 дни",
+    "last30days": "Последните 30 дни",
+    "last3months": "Последните 3 месеца",
+    "last6months": "Последните 6 месеца",
+    "lastYear": "Последната година",
+    "allTime": "Всичко време"
+  }
 }
