@@ -1,6 +1,9 @@
 import type { EnrichedMeal, PriceHistoryItem, MealPriceStats, AnalyticsSummary } from '@/types/app';
 import { convert } from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
+import { format } from 'date-fns';
+
+export type DailyPriceChangeData = Record<string, number>;
 
 export function filterPricesByDateRange(
   prices: PriceHistoryItem[],
@@ -200,4 +203,29 @@ export function calculateAnalyticsSummary(
     totalIncreaseEvents,
     totalDecreaseEvents,
   };
+}
+
+/**
+ * Aggregate the number of price change events per calendar day across all meals.
+ * A price change event is any price entry where |delta| > EPSILON (i.e. price moved).
+ * Returns a Record keyed by ISO date string (YYYY-MM-DD) with event counts as values.
+ */
+export function calculateDailyPriceChanges(
+  meals: EnrichedMeal[],
+  from: Date,
+  to: Date
+): DailyPriceChangeData {
+  const daily: DailyPriceChangeData = {};
+
+  for (const meal of meals) {
+    const pricesInRange = filterPricesByDateRange(meal.prices, from, to);
+    for (const price of pricesInRange) {
+      if (Math.abs(price.delta) > Number.EPSILON) {
+        const key = format(price.date, 'yyyy-MM-dd');
+        daily[key] = (daily[key] ?? 0) + 1;
+      }
+    }
+  }
+
+  return daily;
 }

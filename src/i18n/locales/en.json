@@ -19,6 +19,7 @@
   "основни ястия": "Main Dishes",
   "гарнитури": "Side Dishes",
   "напитки": "Beverages",
+  "other": "Other",
   "date": "Date",
   "price": "Price",
   "todaysSurprises": "Today's Surprises",
@@ -42,7 +43,11 @@
     "clear": "Clear",
     "categoryBreakdown": "Category Breakdown",
     "avg": "Avg",
-    "newItems": "New Items in This Period"
+    "newItems": "New Items in This Period",
+    "priceChangeActivity": "Price Change Activity",
+    "less": "Less",
+    "more": "More",
+    "changes": "{count, plural, one {# change} other {# changes}}"
   },
   "dateRange": {
     "last7days": "Last 7 days",

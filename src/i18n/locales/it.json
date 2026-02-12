@@ -19,6 +19,7 @@
   "основни ястия": "Piatti Principali",
   "гарнитури": "Contorni",
   "напитки": "Bevande",
+  "other": "Altro",
   "date": "Data",
   "price": "Prezzo",
   "todaysSurprises": "Sorprese di oggi",
@@ -42,7 +43,11 @@
     "clear": "Cancella",
     "categoryBreakdown": "Per categoria",
     "avg": "Media",
-    "newItems": "Nuovi articoli in questo periodo"
+    "newItems": "Nuovi articoli in questo periodo",
+    "priceChangeActivity": "Attivita variazioni prezzo",
+    "less": "Meno",
+    "more": "Di piu",
+    "changes": "{count, plural, one {# variazione} other {# variazioni}}"
   },
   "dateRange": {
     "last7days": "Ultimi 7 giorni",

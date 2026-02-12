@@ -6,9 +6,10 @@ import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import DateRangePicker, { getDefaultDateRange, getDateRangeFromPreset, type DateRange } from '@/components/DateRangePicker';
-import { calculateAnalyticsSummary } from '@/utils/analyticsCalculations';
+import { calculateAnalyticsSummary, calculateDailyPriceChanges } from '@/utils/analyticsCalculations';
+import CalendarHeatmap from '@/components/CalendarHeatmap';
 import type { EnrichedMeal } from '@/types/app';
-import { TrendingUp, TrendingDown, Package, BarChart3 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Package, BarChart3, CalendarDays } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { convert } from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
@@ -43,6 +44,10 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
 
   const summary = useMemo(() => {
     return calculateAnalyticsSummary(meals, dateRange.from, dateRange.to);
+  }, [meals, dateRange]);
+
+  const dailyChanges = useMemo(() => {
+    return calculateDailyPriceChanges(meals, dateRange.from, dateRange.to);
   }, [meals, dateRange]);
 
   return (
@@ -128,6 +133,23 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Price Change Activity Heatmap */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CalendarDays className="h-5 w-5" />
+            {ta('priceChangeActivity')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CalendarHeatmap
+            data={dailyChanges}
+            from={dateRange.from}
+            to={dateRange.to}
+          />
+        </CardContent>
+      </Card>
 
       {/* Biggest Price Changes */}
       <Card>
