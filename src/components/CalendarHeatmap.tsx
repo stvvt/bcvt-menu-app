@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   eachDayOfInterval,
   startOfWeek,
@@ -61,7 +61,10 @@ const CalendarHeatmap = ({ data, from: rawFrom, to }: CalendarHeatmapProps) => {
   const ta = useTranslations('analytics');
   const locale = useLocale();
   const dfLocale = dateFnsLocales[locale] ?? enUS;
-  const fmt = (date: Date, pattern: string) => format(date, pattern, { locale: dfLocale });
+  const fmt = useCallback(
+    (date: Date, pattern: string) => format(date, pattern, { locale: dfLocale }),
+    [dfLocale],
+  );
 
   // Clamp the effective start so we never show dates before the first data day
   const from = rawFrom < DATA_START ? DATA_START : rawFrom;
@@ -76,7 +79,7 @@ const CalendarHeatmap = ({ data, from: rawFrom, to }: CalendarHeatmapProps) => {
       }
       return '';
     });
-  }, [from, dfLocale]);
+  }, [from, fmt]);
 
   const { weeks, monthLabels } = useMemo(() => {
     // Align the start to the Monday of the week containing `from`
@@ -127,7 +130,7 @@ const CalendarHeatmap = ({ data, from: rawFrom, to }: CalendarHeatmapProps) => {
     }
 
     return { weeks: weekGroups, monthLabels: labels };
-  }, [from, to, data, dfLocale]);
+  }, [from, to, fmt]);
 
   // Width of the day-of-week label column
   const dayLabelWidth = 28; // px
