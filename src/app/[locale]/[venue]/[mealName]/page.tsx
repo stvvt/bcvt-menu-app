@@ -1,6 +1,6 @@
 import getMeal from '@/backend/getMeal';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getTranslations } from 'next-intl/server';
 import { type FC } from 'react';
@@ -27,22 +27,32 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   const t = await getTranslations();
   return (
     <>
-      <h1 className="text-3xl font-bold">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">
         {mealData.info?.name}
         {' '}
         <Badge variant="default" className="align-middle whitespace-nowrap">{t(mealData.category)}</Badge>
       </h1>
-      {mealData.info?.description && (
-        <p className="text-muted-foreground leading-relaxed">
-          {mealData.info.description}
-        </p>
-      )}
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <div className="rounded-lg overflow-hidden w-full sm:w-56 sm:shrink-0 aspect-square sm:aspect-auto sm:h-56">
+          <MealImage meal={mealData} size="100%" />
+        </div>
+        <div className="min-w-0 flex-1 flex flex-col gap-2">
+          {mealData.info?.description && (
+            <p className="text-muted-foreground leading-relaxed">
+              {mealData.info.description}
+            </p>
+          )}
+        </div>
+      </div>
+
       <Card className="w-full">
+        <CardHeader>
+          <CardTitle>{t('analytics.priceHistory')}</CardTitle>
+        </CardHeader>
         <CardContent className="p-0">
-          <div className="flex">
-            <MealImage meal={mealData} size="200px" />
-            <div className="flex-1 p-4">
-              <Table>
+          <div className="overflow-x-auto">
+            <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-full">{t('date')}</TableHead>
@@ -77,7 +87,6 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                   }
                 </TableBody>
               </Table>
-            </div>
           </div>
         </CardContent>
       </Card>
