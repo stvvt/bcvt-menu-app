@@ -1,20 +1,28 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import { useSearchParams, useParams } from 'next/navigation';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import DateRangePicker, { getDefaultDateRange, getDateRangeFromPreset, type DateRange } from '@/components/DateRangePicker';
 import { calculateAnalyticsSummary, calculateDailyPriceChanges } from '@/utils/analyticsCalculations';
 import CalendarHeatmap from '@/components/CalendarHeatmap';
 import type { EnrichedMeal } from '@/types/app';
 import { TrendingUp, TrendingDown, Package, BarChart3, CalendarDays } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { convert } from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
 import { AnalyticsMealRow, AnalyticsMealList } from '@/components/AnalyticsMealRow';
 import FormatCurrencyAmount from '@/components/FormatCurrencyAmount';
+import { formatDistanceToNow } from 'date-fns';
+import { enUS } from 'date-fns/locale/en-US';
+import { bg } from 'date-fns/locale/bg';
+import { it } from 'date-fns/locale/it';
+import type { Locale } from 'date-fns';
+
+const dateFnsLocales: Record<string, Locale> = { en: enUS, bg, it };
 
 interface AnalyticsDashboardProps {
   meals: EnrichedMeal[];
@@ -43,6 +51,9 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
 
   const t = useTranslations();
   const ta = useTranslations('analytics');
+  const locale = useLocale();
+  const dfLocale = dateFnsLocales[locale] ?? enUS;
+  const [newItemsVisible, setNewItemsVisible] = useState(20);
 
   const summary = useMemo(() => {
     return calculateAnalyticsSummary(meals, dateRange.from, dateRange.to);
@@ -242,13 +253,27 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           </CardHeader>
           <CardContent>
             <AnalyticsMealList>
-              {summary.newItems.map((item) => (
+              {[...summary.newItems]
+                .sort((a, b) => {
+                  const addedA = [...a.prices].sort((x, y) => x.date.getTime() - y.date.getTime())[0]?.date?.getTime() ?? 0;
+                  const addedB = [...b.prices].sort((x, y) => x.date.getTime() - y.date.getTime())[0]?.date?.getTime() ?? 0;
+                  return addedB - addedA;
+                })
+                .slice(0, newItemsVisible)
+                .map((item) => {
+                const sortedPrices = [...item.prices].sort((a, b) => a.date.getTime() - b.date.getTime());
+                const addedDate = sortedPrices[0]?.date;
+                const timeAgo = addedDate
+                  ? formatDistanceToNow(addedDate, { addSuffix: true, locale: dfLocale })
+                  : null;
+                return (
                 <AnalyticsMealRow
                   key={item.name}
                   mealName={item.name}
                   localizedName={item.info?.name}
                   category={item.category}
                   venue={venue}
+                  subtitle={timeAgo}
                   rightContent={
                     <div className="text-right">
                       <p className="font-medium text-sm">
@@ -266,8 +291,20 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                     </div>
                   }
                 />
-              ))}
+              );
+              })}
             </AnalyticsMealList>
+            {summary.newItems.length > 20 && newItemsVisible < summary.newItems.length && (
+              <div className="mt-3 flex justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setNewItemsVisible(summary.newItems.length)}
+                >
+                  {ta('showMore')}
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

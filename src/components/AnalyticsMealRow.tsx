@@ -12,6 +12,8 @@ interface AnalyticsMealRowProps {
   venue: string;
   rightContent: ReactNode;
   icon?: ReactNode;
+  /** Optional subtitle shown under the meal name (e.g. "3 days ago") */
+  subtitle?: ReactNode;
 }
 
 interface AnalyticsMealListProps {
@@ -29,6 +31,7 @@ export function AnalyticsMealRow({
   venue,
   rightContent,
   icon,
+  subtitle,
 }: AnalyticsMealRowProps) {
   const t = useTranslations();
 
@@ -37,12 +40,17 @@ export function AnalyticsMealRow({
       href={`/${venue}/${mealName}`}
       className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-muted"
     >
-      <div className="flex items-center gap-2 flex-wrap">
-        {icon}
-        <span className="font-medium text-sm">{localizedName || mealName}</span>
-        <Badge variant="default" className="text-[10px] px-1.5 py-0">
-          {t(category)}
-        </Badge>
+      <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-2 flex-wrap">
+          {icon}
+          <span className="font-medium text-sm">{localizedName || mealName}</span>
+          <Badge variant="default" className="text-[10px] px-1.5 py-0">
+            {t(category)}
+          </Badge>
+        </div>
+        {subtitle && (
+          <span className="text-xs text-muted-foreground">{subtitle}</span>
+        )}
       </div>
       <div className="text-right flex-shrink-0">{rightContent}</div>
     </Link>
