@@ -53,7 +53,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
   const ta = useTranslations('analytics');
   const locale = useLocale();
   const dfLocale = dateFnsLocales[locale] ?? enUS;
-  const [newItemsVisible, setNewItemsVisible] = useState(20);
+  const [newItemsVisible, setNewItemsVisible] = useState(10);
 
   const summary = useMemo(() => {
     return calculateAnalyticsSummary(meals, dateRange.from, dateRange.to);
@@ -72,7 +72,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{ta('totalItems')}</CardTitle>
@@ -98,22 +98,24 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             <CardTitle className="text-sm font-medium">{ta('avgPriceChange')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <div className={`text-2xl font-bold ${summary.avgPriceChange > 0 ? 'text-destructive' : summary.avgPriceChange < 0 ? 'text-green-600' : ''}`}>
-                {summary.avgPriceChange > 0 ? '+' : ''}{summary.avgPriceChange.toFixed(1)}%
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <div className={`text-2xl font-bold ${summary.avgPriceChange > 0 ? 'text-destructive' : summary.avgPriceChange < 0 ? 'text-green-600' : ''}`}>
+                  {summary.avgPriceChange > 0 ? '+' : ''}{summary.avgPriceChange.toFixed(1)}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {ta('acrossAllItems')}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {ta('acrossAllItems')}
-              </p>
-            </div>
-            <div>
-              <div className={`text-2xl font-bold ${summary.avgPriceChangeComparable > 0 ? 'text-destructive' : summary.avgPriceChangeComparable < 0 ? 'text-green-600' : ''}`}>
-                {summary.avgPriceChangeComparable > 0 ? '+' : ''}{summary.avgPriceChangeComparable.toFixed(1)}%
+              <div>
+                <div className={`text-2xl font-bold ${summary.avgPriceChangeComparable > 0 ? 'text-destructive' : summary.avgPriceChangeComparable < 0 ? 'text-green-600' : ''}`}>
+                  {summary.avgPriceChangeComparable > 0 ? '+' : ''}{summary.avgPriceChangeComparable.toFixed(1)}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {ta('excludingNewListings')}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {ta('excludingNewListings')}
-              </p>
             </div>
           </CardContent>
         </Card>
@@ -126,22 +128,24 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
               <TrendingDown className="h-4 w-4 text-green-600" />
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <div className="text-2xl font-bold text-destructive">
-                {summary.itemsWithIncreases}
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <div className="text-2xl font-bold text-destructive">
+                  {summary.itemsWithIncreases}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {ta('itemsWithIncreases')}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {ta('itemsWithIncreases')}
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-green-600">
-                {summary.itemsWithDecreases}
+              <div>
+                <div className="text-2xl font-bold text-green-600">
+                  {summary.itemsWithDecreases}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {ta('itemsWithDecreases')}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {ta('itemsWithDecreases')}
-              </p>
             </div>
           </CardContent>
         </Card>
@@ -228,7 +232,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
           <CardTitle>{ta('categoryBreakdown')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Object.entries(summary.categoryBreakdown).map(([category, data]) => (
               <div key={category} className="p-3 rounded-lg border flex justify-between items-start gap-4">
                 <div>
@@ -305,12 +309,12 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
               );
               })}
             </AnalyticsMealList>
-            {summary.newItems.length > 20 && newItemsVisible < summary.newItems.length && (
+            {summary.newItems.length > 10 && newItemsVisible < summary.newItems.length && (
               <div className="mt-3 flex justify-center">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setNewItemsVisible(summary.newItems.length)}
+                  onClick={() => setNewItemsVisible((prev) => prev + 20)}
                 >
                   {ta('showMore')}
                 </Button>
