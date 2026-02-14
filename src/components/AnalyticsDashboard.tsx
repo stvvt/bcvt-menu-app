@@ -26,10 +26,9 @@ const dateFnsLocales: Record<string, Locale> = { en: enUS, bg, it };
 
 interface AnalyticsDashboardProps {
   meals: EnrichedMeal[];
-  venueName: string;
 }
 
-const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
+const AnalyticsDashboard = ({ meals }: AnalyticsDashboardProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -67,7 +66,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">{venueName} - {ta('title')}</h1>
+        <h1 className="text-2xl font-bold">{ta('title')}</h1>
         <DateRangePicker value={dateRange} onChange={setDateRange} />
       </div>
 

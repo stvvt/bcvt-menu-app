@@ -24,7 +24,6 @@ const MobileNav = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="mr-2"
         onClick={() => setOpen(true)}
         aria-label="Open menu"
       >

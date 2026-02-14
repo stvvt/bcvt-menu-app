@@ -12,10 +12,10 @@ interface AnalyticsPageProps {
 
 const AnalyticsPage: FC<AnalyticsPageProps> = async ({ params }) => {
   const { venue, locale } = await params;
-  const venueConfig = getVenueOrThrow(venue);
+  getVenueOrThrow(venue); // validates venue exists
   const meals = await getAllMeals(venue, locale);
 
-  return <AnalyticsDashboard meals={meals} venueName={venueConfig.name} />;
+  return <AnalyticsDashboard meals={meals} />;
 };
 
 export default AnalyticsPage;
