@@ -28,9 +28,10 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
   const t = await getTranslations();
   return (
     <>
-      <h1 className="text-3xl font-bold flex items-center gap-2">
+      <h1 className="text-3xl font-bold">
         {mealData.info?.name}
-        <Badge variant="default">{t(mealData.category)}</Badge>
+        {' '}
+        <Badge variant="default" className="align-middle whitespace-nowrap">{t(mealData.category)}</Badge>
       </h1>
       {mealData.info?.description && (
         <p className="text-muted-foreground leading-relaxed">

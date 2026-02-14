@@ -46,7 +46,7 @@ export function AnalyticsMealRow({
           <span className="font-medium text-sm">
             {localizedName || mealName}
             {' '}
-            <Badge variant="default" className="text-[10px] px-1.5 py-0 align-middle ml-1.5">
+            <Badge variant="default" className="align-middle whitespace-nowrap">
               {t(category)}
             </Badge>
           </span>
