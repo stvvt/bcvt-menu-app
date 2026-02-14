@@ -75,7 +75,7 @@ const PriceSurprises: FC<PriceSurprisesProps> = ({ menuData, refDate, venue }) =
           const arrow = isIncrease ? '↗' : '↘';
 
           return (
-            <li key={meal.name} className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-muted">
+            <li key={meal.name} className="flex items-start justify-between gap-2 p-2 rounded-lg hover:bg-muted">
               <Link 
                 href={`/${venue}/${meal.name}`} 
                 className="flex-1 min-w-0 flex items-center gap-2"
