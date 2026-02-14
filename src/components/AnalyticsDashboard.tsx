@@ -14,6 +14,7 @@ import { useTranslations } from 'next-intl';
 import { convert } from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
 import { AnalyticsMealRow, AnalyticsMealList } from '@/components/AnalyticsMealRow';
+import FormatCurrencyAmount from '@/components/FormatCurrencyAmount';
 
 interface AnalyticsDashboardProps {
   meals: EnrichedMeal[];
@@ -194,7 +195,10 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                             {isIncrease ? '+' : ''}{item.priceChange.toFixed(1)}%
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                            <FormatCurrencyAmount
+                              amount={convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE)}
+                              currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                            />
                           </p>
                         </>
                       }
@@ -219,7 +223,7 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                 <p className="font-medium">{t(category)}</p>
                 <p className="text-2xl font-bold">{data.count}</p>
                 <p className="text-xs text-muted-foreground">
-                  {ta('avg')}: {data.avgPrice.toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                  {ta('avg')}: <FormatCurrencyAmount amount={data.avgPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
                 </p>
               </div>
             ))}
@@ -246,9 +250,20 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
                   category={item.category}
                   venue={venue}
                   rightContent={
-                    <p className="font-medium text-sm">
-                      {convert(item.prices[item.prices.length - 1]?.amount ?? 0, item.prices[0]?.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
-                    </p>
+                    <div className="text-right">
+                      <p className="font-medium text-sm">
+                        <FormatCurrencyAmount
+                          amount={convert(item.prices[item.prices.length - 1]?.amount ?? 0, item.prices[0]?.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE)}
+                          currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                        />
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <FormatCurrencyAmount
+                          amount={convert(item.prices[item.prices.length - 1]?.amount ?? 0, item.prices[0]?.currencyCode, clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE)}
+                          currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE}
+                        />
+                      </p>
+                    </div>
                   }
                 />
               ))}

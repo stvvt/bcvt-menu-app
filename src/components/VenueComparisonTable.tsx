@@ -3,6 +3,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import PriceSparkline from '@/components/PriceSparkline';
+import FormatCurrencyAmount from '@/components/FormatCurrencyAmount';
 import type { PriceComparison } from '@/types/app';
 import { findCheapestVenue, findMostExpensiveVenue } from '@/utils/buildComparison';
 import { cn } from '@/lib/utils';
@@ -69,7 +70,10 @@ const VenueComparisonTable = ({
                           isCheapest && 'text-green-600',
                           isMostExpensive && 'text-destructive'
                         )}>
-                          {venueData.currentPrice.amount.toFixed(2)} {venueData.currentPrice.currencyCode}
+                          <FormatCurrencyAmount
+                          amount={venueData.currentPrice.amount}
+                          currency={venueData.currentPrice.currencyCode}
+                        />
                         </span>
                         {isCheapest && (
                           <Badge variant="outline" className="text-xs bg-green-500/10 text-green-600">
