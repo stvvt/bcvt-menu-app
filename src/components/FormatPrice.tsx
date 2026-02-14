@@ -9,15 +9,17 @@ type Props = {
   price: PriceHistoryItem;
   currency: CurrencyCode;
   showDelta?: boolean;
+  /** Optional class for the percent when showDelta. Default: text-muted-foreground */
+  deltaClassName?: string;
 };
-const FormatPrice: FC<Props> = ({ price, currency, showDelta = false }) => {
+const FormatPrice: FC<Props> = ({ price, currency, showDelta = false, deltaClassName }) => {
   const format = useFormatter();
   const convertedAmount = currencyConverter(price, currency);
   const percent = Math.round(price.delta * 100);
   const arrow = percent > 0 ? '↗' : percent < 0 ? '↘' : '';
   if (showDelta && percent != 0) {
       return <>
-        <span className="text-xs text-muted-foreground font-normal">
+        <span className={deltaClassName ?? 'text-xs text-muted-foreground font-normal'}>
           {arrow}{`${Math.abs(percent)}%`}
         </span>
         {' '}

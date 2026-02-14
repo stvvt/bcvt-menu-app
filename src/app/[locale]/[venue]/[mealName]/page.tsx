@@ -9,7 +9,6 @@ import clientConfig from '@/config/client';
 import FormatPrice from '@/components/FormatPrice';
 import FormatDate from '@/components/FormatDate';
 import getPriceDisplay from '@/i18n/getPriceDisplay';
-import { cn } from '@/lib/utils';
 
 interface MealPageProps {
   params: Promise<{
@@ -56,7 +55,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-full">{t('date')}</TableHead>
-                    <TableHead className="text-center" colSpan={3} align="center">{t('price')}</TableHead>
+                    <TableHead className="text-right">{t('price')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -64,7 +63,7 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                     const displayPrice = getPriceDisplay(price, price.date);
                     return (
                       <TableRow key={index}>
-                        <TableCell>
+                        <TableCell className="align-top">
                           <FormatDate date={new Date(price.date)} />
                           {price.weight && price.unit && (
                             <span className="text-xs text-muted-foreground ml-2">
@@ -72,14 +71,19 @@ const MealPage: FC<MealPageProps> = async ({ params }) => {
                             </span>
                           )}
                         </TableCell>
-                        <TableCell 
-                          className={cn("whitespace-nowrap text-right", displayPrice?.colorClass)}
-                        >
-                          <FormatPrice price={price} currency={NEXT_PUBLIC_BASE_CURRENCY_CODE} showDelta/>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          <div className="text-right text-xs text-muted-foreground">
-                            <FormatPrice price={price} currency={NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
+                        <TableCell className="whitespace-nowrap text-right align-top">
+                          <div className="flex flex-col items-end gap-0.5">
+                            <span>
+                              <FormatPrice
+                                price={price}
+                                currency={NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                                showDelta
+                                deltaClassName={displayPrice?.colorClass ? `text-xs font-normal ${displayPrice.colorClass}` : undefined}
+                              />
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              <FormatPrice price={price} currency={NEXT_PUBLIC_SECONDARY_CURRENCY_CODE} />
+                            </span>
                           </div>
                         </TableCell>
                       </TableRow>
