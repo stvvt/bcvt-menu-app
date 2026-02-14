@@ -230,12 +230,23 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {Object.entries(summary.categoryBreakdown).map(([category, data]) => (
-              <div key={category} className="p-3 rounded-lg border">
-                <p className="font-medium">{t(category)}</p>
-                <p className="text-2xl font-bold">{data.count}</p>
-                <p className="text-xs text-muted-foreground">
-                  {ta('avg')}: <FormatCurrencyAmount amount={data.avgPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
-                </p>
+              <div key={category} className="p-3 rounded-lg border flex justify-between items-start gap-4">
+                <div>
+                  <p className="font-medium">{t(category)}</p>
+                  <p className="text-2xl font-bold">{data.count}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">{ta('avg')}</p>
+                  <p className="text-2xl font-bold">
+                    <FormatCurrencyAmount amount={data.avgPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    <FormatCurrencyAmount
+                      amount={convert(data.avgPrice, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE, clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE)}
+                      currency={clientConfig.NEXT_PUBLIC_SECONDARY_CURRENCY_CODE}
+                    />
+                  </p>
+                </div>
               </div>
             ))}
           </div>
