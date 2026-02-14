@@ -2,7 +2,7 @@
 
 import { useMemo, useCallback } from 'react';
 import { useSearchParams, useParams } from 'next/navigation';
-import { useRouter, usePathname, Link } from '@/i18n/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import DateRangePicker, { getDefaultDateRange, getDateRangeFromPreset, type DateRange } from '@/components/DateRangePicker';
@@ -13,6 +13,7 @@ import { TrendingUp, TrendingDown, Package, BarChart3, CalendarDays } from 'luci
 import { useTranslations } from 'next-intl';
 import { convert } from '@/utils/currencyConverter';
 import clientConfig from '@/config/client';
+import { AnalyticsMealRow, AnalyticsMealList } from '@/components/AnalyticsMealRow';
 
 interface AnalyticsDashboardProps {
   meals: EnrichedMeal[];
@@ -164,40 +165,43 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             const allChanges = [...summary.biggestIncreases, ...summary.biggestDecreases]
               .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
               .slice(0, 10);
-            
+
             if (allChanges.length === 0) {
               return <p className="text-muted-foreground text-sm">{ta('noChanges')}</p>;
             }
-            
+
             return (
-              <div className="grid gap-3 md:grid-cols-2">
+              <AnalyticsMealList>
                 {allChanges.map((item) => {
                   const isIncrease = item.priceChange > 0;
                   return (
-                    <Link
+                    <AnalyticsMealRow
                       key={item.mealName}
-                      href={`/${venue}/${item.mealName}`}
-                      className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-muted"
-                    >
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {isIncrease ? (
+                      mealName={item.mealName}
+                      localizedName={item.localizedName}
+                      category={item.category}
+                      venue={venue}
+                      icon={
+                        isIncrease ? (
                           <TrendingUp className="h-4 w-4 text-destructive flex-shrink-0" />
                         ) : (
                           <TrendingDown className="h-4 w-4 text-green-600 flex-shrink-0" />
-                        )}
-                        <span className="font-medium text-sm">{item.localizedName || item.mealName}</span>
-                        <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className={`font-bold ${isIncrease ? 'text-destructive' : 'text-green-600'}`}>
-                          {isIncrease ? '+' : ''}{item.priceChange.toFixed(1)}%
-                        </p>
-                        <p className="text-xs text-muted-foreground">{convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}</p>
-                      </div>
-                    </Link>
+                        )
+                      }
+                      rightContent={
+                        <>
+                          <p className={`font-bold ${isIncrease ? 'text-destructive' : 'text-green-600'}`}>
+                            {isIncrease ? '+' : ''}{item.priceChange.toFixed(1)}%
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {convert(item.currentPrice, item.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
+                          </p>
+                        </>
+                      }
+                    />
                   );
                 })}
-              </div>
+              </AnalyticsMealList>
             );
           })()}
         </CardContent>
@@ -233,25 +237,22 @@ const AnalyticsDashboard = ({ meals, venueName }: AnalyticsDashboardProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <AnalyticsMealList>
               {summary.newItems.map((item) => (
-                <Link
+                <AnalyticsMealRow
                   key={item.name}
-                  href={`/${venue}/${item.name}`}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-muted"
-                >
-                  <div>
-                    <p className="font-medium text-sm">{item.info?.name || item.name}</p>
-                    <Badge variant="outline" className="text-xs">{t(item.category)}</Badge>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">
+                  mealName={item.name}
+                  localizedName={item.info?.name}
+                  category={item.category}
+                  venue={venue}
+                  rightContent={
+                    <p className="font-medium text-sm">
                       {convert(item.prices[item.prices.length - 1]?.amount ?? 0, item.prices[0]?.currencyCode, clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE).toFixed(2)} {clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE}
                     </p>
-                  </div>
-                </Link>
+                  }
+                />
               ))}
-            </div>
+            </AnalyticsMealList>
           </CardContent>
         </Card>
       )}
