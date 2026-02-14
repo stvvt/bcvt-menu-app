@@ -27,7 +27,7 @@ const DailyMenu: FC<DailyMenuProps> = async ({ menuData, refDate, venue }) => {
   return (
     <div>
         {groups.map((group) => (
-          <div key={group.category} className="pb-16 flex flex-col items-center gap-4">
+          <div key={group.category} className="pt-16 flex flex-col items-center gap-4">
             <h2 className="text-sm font-semibold text-center bg-blue-300 text-white mb-4 p-2 rounded-md">
               {t(group.category?.toLowerCase() ?? '')?.toUpperCase()}
             </h2>

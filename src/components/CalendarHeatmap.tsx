@@ -13,6 +13,7 @@ import { it } from 'date-fns/locale/it';
 import { enUS } from 'date-fns/locale/en-US';
 import { useTranslations, useLocale } from 'next-intl';
 import type { Locale } from 'date-fns';
+import { Link } from '@/i18n/navigation';
 import type { DailyPriceChangeData } from '@/utils/analyticsCalculations';
 
 const dateFnsLocales: Record<string, Locale> = { en: enUS, bg, it };
@@ -21,6 +22,7 @@ interface CalendarHeatmapProps {
   data: DailyPriceChangeData;
   from: Date;
   to: Date;
+  venue: string;
 }
 
 /**
@@ -57,7 +59,7 @@ const DATA_START = new Date(2025, 5, 25); // 2025-06-25
 /** Minimum column distance between two month labels to avoid overlap. */
 const MIN_LABEL_GAP_COLS = 3;
 
-const CalendarHeatmap = ({ data, from: rawFrom, to }: CalendarHeatmapProps) => {
+const CalendarHeatmap = ({ data, from: rawFrom, to, venue }: CalendarHeatmapProps) => {
   const ta = useTranslations('analytics');
   const locale = useLocale();
   const dfLocale = dateFnsLocales[locale] ?? enUS;
@@ -188,19 +190,32 @@ const CalendarHeatmap = ({ data, from: rawFrom, to }: CalendarHeatmapProps) => {
                     const count = data[key] ?? 0;
                     const level = getLevel(count);
                     const isOutOfRange = day < from || day > to;
+                    const title = isOutOfRange
+                      ? undefined
+                      : `${fmt(day, 'PP')}: ${ta('changes', { count })}`;
+                    const className = `rounded-[2px] ${
+                      isOutOfRange ? 'bg-transparent' : levelClasses[level]
+                    }`;
+                    const style = { width: CELL_PX, height: CELL_PX };
+
+                    if (!isOutOfRange) {
+                      return (
+                        <Link
+                          key={dayIdx}
+                          href={`/${venue}?date=${key}`}
+                          title={title}
+                          className={`block hover:ring-2 hover:ring-foreground/20 ${className}`}
+                          style={style}
+                        />
+                      );
+                    }
 
                     return (
                       <div
                         key={dayIdx}
-                        title={
-                          isOutOfRange
-                            ? undefined
-                            : `${fmt(day, 'PP')}: ${ta('changes', { count })}`
-                        }
-                        className={`rounded-[2px] ${
-                          isOutOfRange ? 'bg-transparent' : levelClasses[level]
-                        }`}
-                        style={{ width: CELL_PX, height: CELL_PX }}
+                        title={title}
+                        className={className}
+                        style={style}
                       />
                     );
                   })}

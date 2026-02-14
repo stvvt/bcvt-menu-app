@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 
 type SurpriseItem = {
   meal: EnrichedMeal;
+  category: string;
   currentPrice: PriceHistoryItem;
   previousPrice: PriceHistoryItem;
 };
@@ -38,7 +39,7 @@ function getPriceSurprises(groups: MealGroup[], refDate: Date): SurpriseItem[] {
       
       // Check if the most recent price change happened on refDate and has a delta
       if (isSameDay(new Date(currentPrice.date), refDate) && currentPrice.delta !== 0) {
-        surprises.push({ meal, currentPrice, previousPrice });
+        surprises.push({ meal, category: group.category, currentPrice, previousPrice });
       }
     }
   }
@@ -54,31 +55,38 @@ interface PriceSurprisesProps {
 
 const PriceSurprises: FC<PriceSurprisesProps> = ({ menuData, refDate, venue }) => {
   const t = useTranslations();
-  const surprises = getPriceSurprises(menuData, refDate);
+  const surprises = getPriceSurprises(menuData, refDate)
+    .sort((a, b) => Math.abs(Math.round(b.currentPrice.delta * 100)) - Math.abs(Math.round(a.currentPrice.delta * 100)));
 
   if (surprises.length === 0) {
     return null;
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg p-4 mb-6 bg-gray-50 dark:bg-gray-900">
+    <div className="border border-gray-300 rounded-lg p-4 mt-6 bg-gray-50 dark:bg-gray-900">
       <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 flex items-center gap-2">
         {t('todaysSurprises')}
         <Badge className="text-sm px-3 py-1 bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-900">{surprises.length}</Badge>
       </h2>
       <ul className="space-y-2">
-        {surprises.map(({ meal, currentPrice, previousPrice }) => {
+        {surprises.map(({ meal, category, currentPrice, previousPrice }) => {
           const percent = Math.round(currentPrice.delta * 100);
           const isIncrease = percent > 0;
           const arrow = isIncrease ? '↗' : '↘';
 
           return (
-            <li key={meal.name} className="flex items-center justify-between gap-2">
+            <li key={meal.name} className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-muted">
               <Link 
                 href={`/${venue}/${meal.name}`} 
-                className="hover:underline font-medium flex-1 truncate"
+                className="flex-1 min-w-0 flex items-center gap-2"
               >
-                {meal.info?.name || meal.name}
+                <span className="font-medium text-sm">
+                  {meal.info?.name || meal.name}
+                  {' '}
+                  <Badge variant="default" className="align-middle whitespace-nowrap">
+                    {t(category)}
+                  </Badge>
+                </span>
               </Link>
               <span className="text-sm text-gray-400 line-through">
                 <FormatPrice price={previousPrice} currency={clientConfig.NEXT_PUBLIC_BASE_CURRENCY_CODE} />

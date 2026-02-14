@@ -163,6 +163,7 @@ const AnalyticsDashboard = ({ meals }: AnalyticsDashboardProps) => {
             data={dailyChanges}
             from={dateRange.from}
             to={dateRange.to}
+            venue={venue}
           />
         </CardContent>
       </Card>

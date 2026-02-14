@@ -30,7 +30,7 @@ const RefDate: FC = () => {
   }, [router, searchParams, pathname]);
 
   return (
-    <>
+    <span className="inline-flex items-center gap-2">
       {format(loadingDate, 'dd.MM.yyyy')}
       <DatePicker
         selected={loadingDate}
@@ -50,7 +50,7 @@ const RefDate: FC = () => {
           today
         </NextLink>
       )}
-    </>
+    </span>
   );
 };
 
