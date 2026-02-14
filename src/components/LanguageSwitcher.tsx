@@ -1,12 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Languages } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 const LanguageSwitcher = () => {
+  const [open, setOpen] = useState(false);
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -14,24 +18,33 @@ const LanguageSwitcher = () => {
 
   const handleLocaleChange = (newLocale: string) => {
     router.replace(`${pathname}?${searchParams}`, { locale: newLocale });
+    setOpen(false);
   };
 
   return (
-    <div className="flex">
-      {routing.locales.map((loc, index) => (
-        <Button
-          key={loc}
-          onClick={() => handleLocaleChange(loc)}
-          variant={locale === loc ? 'default' : 'outline'}
-          size="sm"
-          className={`${
-            index === 0 ? 'rounded-r-none' : index === routing.locales.length - 1 ? 'rounded-l-none' : 'rounded-none'
-          } ${index > 0 ? 'border-l-0' : ''}`}
-        >
-          {loc.toUpperCase()}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="justify-start text-left font-normal">
+          <Languages className="mr-2 h-4 w-4" />
+          {locale.toUpperCase()}
         </Button>
-      ))}
-    </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-2" align="end">
+        <div className="flex flex-col gap-1">
+          {routing.locales.map((loc) => (
+            <Button
+              key={loc}
+              variant={locale === loc ? 'secondary' : 'ghost'}
+              size="sm"
+              className="justify-start"
+              onClick={() => handleLocaleChange(loc)}
+            >
+              {loc.toUpperCase()}
+            </Button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 
