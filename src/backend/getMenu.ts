@@ -1,10 +1,9 @@
 'use server'
 
-import fetchJson from '@/utils/fetchJson';
 import { getCategories } from './getCategories';
 import { getMealInfo } from './getMealInfo';
 import { getPriceHistory } from './getPriceHistory';
-import { getVenueOrThrow } from '@/config/venues';
+import { getDatasource } from '@/datasources/factory';
 import type { DailyMenu, MergedMealItem } from '@/types/db';
 import type { EnrichedMeal } from '@/types/app';
 import { NotFoundError } from '@/errors/NotFoundError';
@@ -18,22 +17,12 @@ export type MealGroup = {
 };
 
 export async function getMenu(venueId: string, date: Date, locale: string): Promise<MealGroup[]> {
-  const venue = getVenueOrThrow(venueId);
-  
-  // Format the date as needed for the URL (adjust format as required)
+  const ds = getDatasource(venueId);
   const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
 
-  // await new Promise(resolve => setTimeout(resolve, 3000));
-  
-  // Replace with your actual API endpoint URL
-  const url = `${venue.dataUrl}/daily/${formattedDate}.json`;
-  
   let menuData: DailyMenu;
   try {
-    menuData = await fetchJson<DailyMenu>(url, {
-      // Add cache control if needed
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
+    menuData = await ds.getDailyMenu(formattedDate);
   } catch (error) {
     if (error instanceof NotFoundError) {
       return [];

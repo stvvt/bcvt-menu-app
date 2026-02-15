@@ -1,20 +1,16 @@
-// Server-side venue configuration (includes dataUrl from env)
-import serverConfig from './server';
+// Server-side venue configuration (includes datasource config)
 import { venues as clientVenues, getAllVenueIds, type VenueClientConfig } from './venues.client';
+import { getVenueDatasource } from './datasources';
 import { notFound } from 'next/navigation';
+import type { DatasourceConfig } from '@/datasources/types';
 
 export interface VenueConfig extends VenueClientConfig {
-  dataUrl: string;      // Base URL for venue data
+  datasource: DatasourceConfig;
 }
-
-// Map client venues to server venues with dataUrl
-const venueDataUrls: Record<string, string> = {
-  'bcvt': serverConfig.DATA_BASE_URL,
-};
 
 export const venues: VenueConfig[] = clientVenues.map(v => ({
   ...v,
-  dataUrl: venueDataUrls[v.id] || serverConfig.DATA_BASE_URL,
+  datasource: getVenueDatasource(v.id),
 }));
 
 export function getVenue(venueId: string): VenueConfig | undefined {
