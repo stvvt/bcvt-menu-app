@@ -1,4 +1,8 @@
 {
+  "venues": {
+    "bcvt": "BCVT Canteen",
+    "asenevtsi": "Asenevtsi"
+  },
   "nav": {
     "menu": "Daily menu",
     "analytics": "Analytics",

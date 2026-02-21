@@ -4,6 +4,7 @@ import type { DatasourceConfig, DatasourceOverrides } from '@/datasources/types'
 // Base datasource configuration per venue (git tracked)
 const datasources: Record<string, DatasourceConfig> = {
   bcvt: { type: 'httpJson', baseUrl: serverConfig.DATA_BASE_URL },
+  asenevtsi: { type: 'httpJson', baseUrl: serverConfig.DATA_BASE_URL },
 };
 
 // Load overrides from datasources.override.ts (gitignored) if present

@@ -13,6 +13,12 @@ export const venues: VenueClientConfig[] = [
     name: 'BCVT Canteen',
     currency: 'BGN',
     locale: 'bg'
+  },
+  {
+    id: 'asenevtsi',
+    name: 'Asenevtsi',
+    currency: 'BGN',
+    locale: 'bg'
   }
 ];
 

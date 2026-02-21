@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, UtensilsCrossed, TrendingUp } from 'lucide-react';
 import { redirect } from '@/i18n/navigation';
+import { getTranslations } from 'next-intl/server';
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -10,6 +11,7 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
+  const t = await getTranslations('venues');
 
   // If only one venue, redirect directly to it
   if (venues.length === 1) {
@@ -32,7 +34,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  {venue.name}
+                  {t(venue.id)}
                 </CardTitle>
                 <CardDescription>
                   Default currency: {venue.currency}

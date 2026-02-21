@@ -6,6 +6,7 @@ import { buildPriceComparison, type VenueMealsData } from '@/utils/buildComparis
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 import { type FC } from 'react';
+import { getTranslations } from 'next-intl/server';
 
 interface ComparePageProps {
   params: Promise<{
@@ -15,6 +16,7 @@ interface ComparePageProps {
 
 const ComparePage: FC<ComparePageProps> = async ({ params }) => {
   const { locale } = await params;
+  const t = await getTranslations('venues');
 
   // If only one venue, show a message
   if (venues.length < 2) {
@@ -55,7 +57,7 @@ const ComparePage: FC<ComparePageProps> = async ({ params }) => {
   // Build venue names map
   const venueNames: Record<string, string> = {};
   for (const venue of clientVenues) {
-    venueNames[venue.id] = venue.name;
+    venueNames[venue.id] = t(venue.id);
   }
 
   return (

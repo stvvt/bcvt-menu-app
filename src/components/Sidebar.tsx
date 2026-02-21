@@ -70,6 +70,7 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
       {/* Global links (when multiple venues exist) */}
       {venues.length > 1 && (
         <div className="mt-auto pt-4 border-t space-y-1">
+          {/* TODO: re-enable when price comparison is ready
           <Link
             href="/compare"
             onClick={onNavClick}
@@ -82,6 +83,7 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
             <TrendingUp className="h-4 w-4" />
             {t('compare')}
           </Link>
+          */}
           <Link
             href="/"
             onClick={onNavClick}
