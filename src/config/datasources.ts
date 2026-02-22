@@ -1,10 +1,11 @@
 import serverConfig from './server';
 import type { DatasourceConfig, DatasourceOverrides } from '@/datasources/types';
+import path from 'path';
 
 // Base datasource configuration per venue (git tracked)
 const datasources: Record<string, DatasourceConfig> = {
-  bcvt: { type: 'httpJson', baseUrl: serverConfig.DATA_BASE_URL },
-  asenevtsi: { type: 'httpJson', baseUrl: serverConfig.DATA_BASE_URL },
+  bcvt: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'bcvt') },
+  asenevtsi: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asenevtsi') },
 };
 
 // Load overrides from datasources.override.ts (gitignored) if present
