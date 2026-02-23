@@ -25,6 +25,12 @@ export const venues: VenueClientConfig[] = [
     name: 'ASTI',
     currency: 'BGN',
     locale: 'bg'
+  },
+  {
+    id: 'kambanata',
+    name: 'Kambanata',
+    currency: 'BGN',
+    locale: 'bg'
   }
 ];
 
