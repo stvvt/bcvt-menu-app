@@ -6,6 +6,7 @@ import path from 'path';
 const datasources: Record<string, DatasourceConfig> = {
   bcvt: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'bcvt') },
   asenevtsi: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asenevtsi') },
+  asti: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asti') },
 };
 
 // Load overrides from datasources.override.ts (gitignored) if present
