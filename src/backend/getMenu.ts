@@ -40,7 +40,7 @@ export async function getMenu(venueId: string, date: Date, locale: string): Prom
   // Create a map of price history by meal name for efficient lookup
   const priceHistoryMap = new Map<string, MergedMealItem>();
   priceHistoryData.forEach((item) => {
-    priceHistoryMap.set(item.name, item);
+    priceHistoryMap.set(item.name.toLowerCase(), item);
   });
   
   // Enrich menu data with categories, price history, and meal info
@@ -48,8 +48,8 @@ export async function getMenu(venueId: string, date: Date, locale: string): Prom
     return {
       name: meal.name,
       category: categories[meal.name],
-      prices: transformPriceHistory(priceHistoryMap.get(meal.name)?.prices ?? []),
-      images: priceHistoryMap.get(meal.name)?.images ?? [],
+      prices: transformPriceHistory(priceHistoryMap.get(meal.name.toLowerCase())?.prices ?? []),
+      images: priceHistoryMap.get(meal.name.toLowerCase())?.images ?? [],
       info: mealInfo[meal.name]?.[locale]
     }
   }) || [];
