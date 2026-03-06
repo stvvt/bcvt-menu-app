@@ -6,7 +6,7 @@ import ColorModeToggle from '@/components/ColorModeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileNav from '@/components/MobileNav';
 import { useTranslations } from 'next-intl';
-import { getVenueClient, venues } from '@/config/venues.client';
+import { useActiveVenues } from '@/contexts/ActiveVenuesContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
@@ -16,8 +16,9 @@ const TopBar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('venues');
+  const venues = useActiveVenues();
   const venueSlug = pathname.split('/').filter(Boolean)[0];
-  const venue = venueSlug ? getVenueClient(venueSlug) : undefined;
+  const venue = venueSlug ? venues.find(v => v.id === venueSlug) : undefined;
 
   const handleVenueChange = (newVenueId: string) => {
     const segments = pathname.split('/').filter(Boolean);

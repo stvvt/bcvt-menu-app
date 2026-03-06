@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { UtensilsCrossed, TrendingUp, Home } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { venues } from '@/config/venues.client';
+import { useActiveVenues } from '@/contexts/ActiveVenuesContext';
 
 interface NavItem {
   href: string;
@@ -30,8 +30,8 @@ const Sidebar = ({ className, onNavClick, isCollapsed = false }: SidebarProps) =
   const pathname = usePathname();
   const params = useParams();
   const t = useTranslations('nav');
+  const venues = useActiveVenues();
   
-  // Get current venue from URL params, or use first venue as default
   const currentVenueId = (params.venue as string) || venues[0]?.id || 'bcvt';
   const navItems = getNavItems(currentVenueId);
 

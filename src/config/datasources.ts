@@ -5,9 +5,9 @@ import path from 'path';
 // Base datasource configuration per venue (git tracked)
 const datasources: Record<string, DatasourceConfig> = {
   bcvt: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'bcvt') },
-  asenevtsi: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asenevtsi') },
-  asti: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asti') },
-  kambanata: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'kambanata') },
+  // asenevtsi: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asenevtsi') },
+  // asti: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'asti') },
+  // kambanata: { type: 'httpJson', baseUrl: path.join(serverConfig.DATA_BASE_URL, 'kambanata') },
 };
 
 // Load overrides from datasources.override.ts (gitignored) if present
@@ -19,17 +19,13 @@ try {
   // No override file — use base config as-is
 }
 
-export function getVenueDatasource(venueId: string): DatasourceConfig {
+export function getVenueDatasource(venueId: string): DatasourceConfig | undefined {
   const base = datasources[venueId];
-  if (!base) {
-    throw new Error(`No datasource configured for venue: ${venueId}`);
-  }
-
   const defaultOverride = overrides.default;
   const venueOverride = overrides[venueId];
 
-  if (!defaultOverride && !venueOverride) {
-    return base;
+  if (!base && !venueOverride && !defaultOverride) {
+    return undefined;
   }
 
   return { ...base, ...defaultOverride, ...venueOverride } as DatasourceConfig;

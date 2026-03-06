@@ -1,6 +1,5 @@
 import { getAllMeals } from '@/backend/getAllMeals';
 import { venues } from '@/config/venues';
-import { venues as clientVenues } from '@/config/venues.client';
 import VenueComparisonTable from '@/components/VenueComparisonTable';
 import { buildPriceComparison, type VenueMealsData } from '@/utils/buildComparison';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,7 +44,7 @@ const ComparePage: FC<ComparePageProps> = async ({ params }) => {
 
   // Fetch meals from all venues
   const venueData: VenueMealsData[] = await Promise.all(
-    clientVenues.map(async (venue) => ({
+    venues.map(async (venue) => ({
       venue,
       meals: await getAllMeals(venue.id, locale),
     }))
@@ -56,7 +55,7 @@ const ComparePage: FC<ComparePageProps> = async ({ params }) => {
 
   // Build venue names map
   const venueNames: Record<string, string> = {};
-  for (const venue of clientVenues) {
+  for (const venue of venues) {
     venueNames[venue.id] = t(venue.id);
   }
 
@@ -102,7 +101,7 @@ const ComparePage: FC<ComparePageProps> = async ({ params }) => {
 
       <VenueComparisonTable
         comparisons={comparisons}
-        venueIds={clientVenues.map(v => v.id)}
+        venueIds={venues.map(v => v.id)}
         venueNames={venueNames}
       />
     </div>

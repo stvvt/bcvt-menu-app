@@ -1,4 +1,4 @@
-import { venues } from '@/config/venues.client';
+import { venues } from '@/config/venues';
 import { Link } from '@/i18n/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, UtensilsCrossed, TrendingUp } from 'lucide-react';

@@ -9,6 +9,8 @@ import { cookies } from 'next/headers';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import TopBar from '@/components/TopBar';
 import SidebarContainer from '@/components/SidebarContainer';
+import { venues } from '@/config/venues';
+import { ActiveVenuesProvider } from '@/contexts/ActiveVenuesContext';
 
 export const metadata: Metadata = {
   title: "BCVT menu",
@@ -38,6 +40,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
         <GoogleAnalytics />
         <Providers>
           <NextIntlClientProvider>
+          <ActiveVenuesProvider venues={venues}>
             <div className="min-h-screen flex flex-col">
               <TopBar />
               <div className="flex flex-1">
@@ -51,6 +54,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = async ({ children, params }) =>
                 </main>
               </div>
             </div>
+          </ActiveVenuesProvider>
           </NextIntlClientProvider>
         </Providers>
       </body>
